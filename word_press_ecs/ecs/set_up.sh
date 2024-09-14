@@ -126,6 +126,14 @@ LOAD_BALANCER_ARN=$(aws elbv2 describe-load-balancers \
 
 echo $LOAD_BALANCER_ARN
 
+LISTENER_ARN=$(aws elbv2 create-listener \
+    --load-balancer-arn $LOAD_BALANCER_ARN \
+    --protocol HTTP \
+    --port 80 \
+    --default-actions Type=forward,TargetGroupArn=$TARGET_GROUP_ARN)
+
+echo $LISTENER_ARN
+
 # Add an inbound rule to allow HTTP traffic from ALBAllowHttp
 OUTPUT=$(aws ec2 authorize-security-group-ingress \
     --group-id $APP_SECURITY_GROUP_ID \
