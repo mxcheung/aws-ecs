@@ -56,6 +56,9 @@ container_definitions=$(cat <<EOF
 EOF
 )
 
+
+echo "Create Task Definition"
+
 ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
     --family wordpress-td \
     --network-mode awsvpc \
