@@ -37,7 +37,9 @@ YOUR_RDS_ENDPOINT=$(aws rds create-db-instance \
     --master-user-password secret99 && \
     aws rds wait db-instance-available --db-instance-identifier wordpress && \
     aws rds describe-db-instances --db-instance-identifier wordpress --query 'DBInstances[0].Endpoint.Address' --output text)
-    
+
+ echo $YOUR_RDS_ENDPOINT
+ 
  aws ssm put-parameter \
     --name "/dev/WORDPRESS_DB_HOST" \
     --description "Wordpress RDS endpoint" \
