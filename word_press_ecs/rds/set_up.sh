@@ -16,8 +16,22 @@ subnet_c=$(aws ec2 describe-subnets \
     --query "Subnets[0].SubnetId" --output text)
 
 
-DB_SUBNET_GROUP_ID=$(aws rds create-db-subnet-group \
+DB_SUBNET_GROUP_ID_OUTPUT=$(aws rds create-db-subnet-group \
     --db-subnet-group-name my-db-subnet-group \
     --db-subnet-group-description "Subnet group for RDS in us-east-1a, us-east-1b, us-east-1c" \
     --subnet-ids $subnet_a $subnet_b $subnet_c \
     --tags Key=Name,Value=my-db-subnet-group)
+
+
+# Create the RDS Instance
+RDS_OUTPUT=$(aws rds create-db-instance \
+    --db-instance-identifier wordpress \
+    --db-instance-class db.t4g.micro \
+    --engine mysql \
+    --engine-version 8.0.32 \
+    --allocated-storage 20 \
+    --storage-type gp3 \
+    --db-subnet-group-name my-db-subnet-group \
+    --vpc-security-group-ids $SECURITY_GROUP_ID \
+    --master-username admin \
+    --master-user-password secret99) 
