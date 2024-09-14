@@ -116,6 +116,9 @@ TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
     --query 'TargetGroups[0].TargetGroupArn' \
     --output text)
 
+echo $TARGET_GROUP_ARN
+
+
 # Add an inbound rule to allow HTTP traffic from ALBAllowHttp
 OUTPUT=$(aws ec2 authorize-security-group-ingress \
     --group-id $APP_SECURITY_GROUP_ID \
