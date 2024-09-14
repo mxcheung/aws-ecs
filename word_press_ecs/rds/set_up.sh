@@ -24,7 +24,7 @@ DB_SUBNET_GROUP_ID_OUTPUT=$(aws rds create-db-subnet-group \
 
 
 # Create the RDS Instance
-YOUR_RDS_ENDPOINT=$(aws rds create-db-instance \
+CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --db-instance-identifier wordpress \
     --db-instance-class db.t4g.micro \
     --engine mysql \
@@ -35,8 +35,10 @@ YOUR_RDS_ENDPOINT=$(aws rds create-db-instance \
     --vpc-security-group-ids $SECURITY_GROUP_ID \
     --master-username admin \
     --master-user-password secret99 && \
-    aws rds wait db-instance-available --db-instance-identifier wordpress && \
-    aws rds describe-db-instances --db-instance-identifier wordpress --query 'DBInstances[0].Endpoint.Address' --output text)
+    aws rds wait db-instance-available --db-instance-identifier wordpress 
+
+YOUR_RDS_ENDPOINT=$(aws rds describe-db-instances --db-instance-identifier wordpress --query 'DBInstances[0].Endpoint.Address' --output text)
+
 
  echo $YOUR_RDS_ENDPOINT
  
