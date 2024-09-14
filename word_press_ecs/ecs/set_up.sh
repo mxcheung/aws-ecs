@@ -99,6 +99,9 @@ OUTPUT=$(aws ec2 authorize-security-group-ingress \
     --port 80 \
     --source-group $ALB_ALLOW_HTTP_SG_ID)
 
+    
+ECS_CREATE_CLUSTER_OUTPUT=$(aws ecs create-cluster --cluster-name Wordpress-Cluster)
+    
 ECS_SERVICE_OUTPUT=$(aws ecs create-service \
     --cluster Wordpress-Cluster \
     --service-name wordpress-service \
