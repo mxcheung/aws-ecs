@@ -27,9 +27,12 @@ container_definitions=$(cat <<EOF
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "/ecs/wordpress",
+        "awslogs-group": "/ecs/wordpress-td",
+        "awslogs-create-group": "true",
         "awslogs-region": "us-east-1",
         "awslogs-stream-prefix": "ecs"
+        "mode": "non-blocking",
+        "max-buffer-size": "25m",
       }
     },
     "secrets": [
