@@ -1,14 +1,3 @@
-# export aws_access_key_id=AXXXXXXXXXXX
-# export aws_secret_access_key=NM122222222222222222
-
-aws configure set aws_access_key_id $aws_access_key_id --profile cloud_user
-aws configure set aws_secret_access_key $aws_secret_access_key --profile cloud_user
-aws configure set region us-east-1 --profile cloud_user
-aws configure set output json --profile cloud_user
-export AWS_PROFILE=cloud_user
-aws sts get-caller-identity
-
-
 # Get Subnet ID for Database Subnet AZ A
 subnet_a=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=Database Subnet AZ A" "Name=availability-zone,Values=us-east-1a" \
