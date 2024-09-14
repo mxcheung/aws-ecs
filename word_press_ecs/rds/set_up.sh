@@ -34,7 +34,7 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --db-subnet-group-name my-db-subnet-group \
     --vpc-security-group-ids $SECURITY_GROUP_ID \
     --master-username admin \
-    --master-user-password secret99)
+    --manage-master-user-password)
     
 WAIT_RDS_OUTPUT=$(aws rds wait db-instance-available --db-instance-identifier wordpress) 
 
