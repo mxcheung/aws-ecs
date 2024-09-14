@@ -16,7 +16,7 @@ subnet_c=$(aws ec2 describe-subnets \
     --query "Subnets[0].SubnetId" --output text)
 
 
-OUTPUT=$(aws rds create-db-subnet-group \
+DB_SUBNET_GROUP_ID=$(aws rds create-db-subnet-group \
     --db-subnet-group-name my-db-subnet-group \
     --db-subnet-group-description "Subnet group for RDS in us-east-1a, us-east-1b, us-east-1c" \
     --subnet-ids $subnet_a $subnet_b $subnet_c \
