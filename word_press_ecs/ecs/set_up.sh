@@ -107,7 +107,7 @@ ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
 
 echo "Creating Target Group --> aws elbv2 create-target-group"
 
-TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
+CREATE_TARGET_GROUP_OUTPUT=$(aws elbv2 create-target-group \
     --name wordpress-tg \
     --protocol HTTP \
     --port 80 \
@@ -119,6 +119,12 @@ TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
     --target-type ip \
     --ip-address-type ipv4
     --query 'TargetGroups[0].TargetGroupArn' \
+    --output text)
+
+
+TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups \
+    --names wordpress-tg \
+    --query "TargetGroups[0].TargetGroupArn" \
     --output text)
 
 echo $TARGET_GROUP_ARN
