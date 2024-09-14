@@ -56,3 +56,32 @@ ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
     --execution-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskExecutionRole \
     --task-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskRole \
     --container-definitions "$container_definitions")
+
+
+# Assign the VPC ID to a variable
+VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your Custom VPC']].{VpcId:VpcId}" --output text)
+
+APP_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
+    --group-name app-sg \
+    --description "Security group for application" \
+    --vpc-id "$VPC_ID" \
+    --query "GroupId" \
+    --output text)
+
+
+# Get the Security Group ID for ALBAllowHttp
+ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
+    --filters Name=group-name,Values=ALBAllowHttp \
+    --query 'SecurityGroups[0].GroupId' \
+    --output text)
+
+
+# Add an inbound rule to allow HTTP traffic from ALBAllowHttp
+OUTPUT=$(aws ec2 authorize-security-group-ingress \
+    --group-id $APP_SECURITY_GROUP_ID \
+    --protocol tcp \
+    --port 80 \
+    --source-group $ALB_ALLOW_HTTP_SG_ID)
+
+
+   
