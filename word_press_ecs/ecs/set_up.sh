@@ -103,6 +103,16 @@ ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
     --query 'SecurityGroups[0].GroupId' \
     --output text)
 
+ALB_TG=$(aws elbv2 create-target-group \
+    --name wordpress-tg \
+    --protocol HTTP \
+    --port 80 \
+    --vpc-id $VPC_ID \
+    --health-check-protocol HTTP \
+    --health-check-port 80 \
+    --health-check-path / \
+    --matcher HttpCode=200 \
+    --region us-east-1)
 
 # Add an inbound rule to allow HTTP traffic from ALBAllowHttp
 OUTPUT=$(aws ec2 authorize-security-group-ingress \
