@@ -77,7 +77,7 @@ subnet_c=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=Database Subnet AZ C" "Name=availability-zone,Values=us-east-1c" \
     --query "Subnets[0].SubnetId" --output text)
     
-APP_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
+APP_SG_ID=$(aws ec2 create-security-group \
     --group-name app-sg \
     --description "Security group for application" \
     --vpc-id "$VPC_ID" \
@@ -99,5 +99,12 @@ OUTPUT=$(aws ec2 authorize-security-group-ingress \
     --port 80 \
     --source-group $ALB_ALLOW_HTTP_SG_ID)
 
-
+aws ecs create-service \
+    --cluster Wordpress-Cluster \
+    --service-name wordpress-service \
+    --task-definition wordpress-td:1 \
+    --launch-type FARGATE \
+    --platform-version LATEST \
+    --desired-count 1 \
+    --network-configuration "awsvpcConfiguration={subnets=[$subnet_a,$subnet_b,$subnet_c],securityGroups=[$APP_SG_ID],assignPublicIp=DISABLED}" 
    
