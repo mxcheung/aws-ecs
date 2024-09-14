@@ -99,12 +99,12 @@ OUTPUT=$(aws ec2 authorize-security-group-ingress \
     --port 80 \
     --source-group $ALB_ALLOW_HTTP_SG_ID)
 
-aws ecs create-service \
+ECS_SERVICE_OUTPUT=$(aws ecs create-service \
     --cluster Wordpress-Cluster \
     --service-name wordpress-service \
     --task-definition wordpress-td:1 \
     --launch-type FARGATE \
     --platform-version LATEST \
     --desired-count 1 \
-    --network-configuration "awsvpcConfiguration={subnets=[$subnet_a,$subnet_b,$subnet_c],securityGroups=[$APP_SG_ID],assignPublicIp=DISABLED}" 
+    --network-configuration "awsvpcConfiguration={subnets=[$subnet_a,$subnet_b,$subnet_c],securityGroups=[$APP_SG_ID],assignPublicIp=DISABLED}") 
    
