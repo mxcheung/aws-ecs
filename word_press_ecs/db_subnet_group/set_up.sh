@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Get Subnet ID for Database Subnet AZ A
 subnet_a=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=Database Subnet AZ A" "Name=availability-zone,Values=us-east-1a" \
