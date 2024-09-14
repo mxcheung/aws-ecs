@@ -43,7 +43,7 @@ YOUR_RDS_ENDPOINT=$(aws rds create-db-instance \
     --description "Wordpress RDS endpoint" \
     --tier Standard \
     --type String \
-    --value "YOUR_RDS_ENDPOINT:3306" \
+    --value "$YOUR_RDS_ENDPOINT:3306" \
     --overwrite
 
 
@@ -54,3 +54,4 @@ aws ssm put-parameter \
     --type SecureString \
     --value "wordpress" \
     --overwrite
+
