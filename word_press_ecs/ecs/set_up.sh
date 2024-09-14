@@ -32,7 +32,7 @@ container_definitions=$(cat <<EOF
         "awslogs-region": "us-east-1",
         "awslogs-stream-prefix": "ecs"
         "mode": "non-blocking",
-        "max-buffer-size": "25m",
+        "max-buffer-size": "25m"
       }
     },
     "secrets": [
