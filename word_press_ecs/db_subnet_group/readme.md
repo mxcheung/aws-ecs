@@ -22,4 +22,10 @@ SECURITY_GROUP_ID=$(aws ec2 create-security-group \
     --vpc-id "$VPC_ID" \
     --query "GroupId" \
     --output text)
+
+aws ec2 authorize-security-group-ingress \
+   --group-id $SECURITY_GROUP_ID \
+   --ip-permissions IpProtocol=tcp,FromPort=3306,ToPort=3306,IpRanges="[{CidrIp=10.0.0.0/16,Description='Allow MySQL access from VPC'}]"
+
+
 ```
