@@ -119,6 +119,12 @@ TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
 
 echo $TARGET_GROUP_ARN
 
+LOAD_BALANCER_ARN=$(aws elbv2 describe-load-balancers \
+    --names OurApplicationLoadBalancer \
+    --query "LoadBalancers[0].LoadBalancerArn" \
+    --output text)
+
+echo $LOAD_BALANCER_ARN
 
 # Add an inbound rule to allow HTTP traffic from ALBAllowHttp
 OUTPUT=$(aws ec2 authorize-security-group-ingress \
