@@ -23,7 +23,7 @@ container_definitions=$(cat <<EOF
         "awslogs-stream-prefix": "ecs"
       }
     },
-    "environment": [
+    "secrets": [
       {
         "name": "WORDPRESS_DB_HOST",
         "valueFrom": "arn:aws:ssm:us-east-1:$AWS_ACCOUNT_ID:parameter/dev/WORDPRESS_DB_HOST"
