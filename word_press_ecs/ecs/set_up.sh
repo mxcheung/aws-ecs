@@ -43,11 +43,11 @@ container_definitions=$(cat <<EOF
       },
       {
         "name": "WORDPRESS_DB_USER",
-        "valueFrom": "$SECRET_NAME:username::"
+        "valueFrom": "$SECRET_ARN:username::"
       },
       {
         "name": "WORDPRESS_DB_PASSWORD",
-        "valueFrom": "$SECRET_NAME:password::"
+        "valueFrom": "$SECRET_ARN:password::"
       }
     ]
   }
