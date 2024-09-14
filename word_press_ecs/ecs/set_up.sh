@@ -1,5 +1,6 @@
 #!/bin/bash
 
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 
 image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wordpress:latest"
 
