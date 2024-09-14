@@ -29,7 +29,7 @@ EOF
 )
 
 
-aws ecs register-task-definition \
+ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
     --family wordpress-td \
     --network-mode awsvpc \
     --requires-compatibilities FARGATE \
@@ -37,4 +37,4 @@ aws ecs register-task-definition \
     --memory "512" \
     --execution-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskExecutionRole \
     --task-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskRole \
-    --container-definitions "$container_definitions"
+    --container-definitions "$container_definitions")
