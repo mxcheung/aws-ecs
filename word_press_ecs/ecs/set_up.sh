@@ -10,7 +10,7 @@ image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wordpress:latest"
 SECRET_ARN=$(aws rds describe-db-instances --db-instance-identifier wordpress --query 'DBInstances[0].MasterUserSecret.SecretArn' --output text)
 
 
-echo "Secret Name: $SECRET_NAME"
+echo "Secret Name: $SECRET_ARN"
 
 
 container_definitions=$(cat <<EOF
