@@ -109,8 +109,10 @@ TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
     --vpc-id $VPC_ID \
     --health-check-protocol HTTP \
     --health-check-port 80 \
-    --health-check-path / \
+    --health-check-path "/wp-admin/images/wordpress-logo.svg" \
     --matcher HttpCode=200 \
+    --target-type ip \
+    --ip-address-type ipv4
     --region us-east-1 \
     --query 'TargetGroups[0].TargetGroupArn' \
     --output text)
