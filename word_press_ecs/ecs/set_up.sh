@@ -102,6 +102,8 @@ ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
     --query 'SecurityGroups[0].GroupId' \
     --output text)
 
+echo "Creating Target Group --> aws elbv2 create-target-group"
+
 TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
     --name wordpress-tg \
     --protocol HTTP \
@@ -113,7 +115,6 @@ TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
     --matcher HttpCode=200 \
     --target-type ip \
     --ip-address-type ipv4
-    --region us-east-1 \
     --query 'TargetGroups[0].TargetGroupArn' \
     --output text)
 
@@ -125,6 +126,9 @@ LOAD_BALANCER_ARN=$(aws elbv2 describe-load-balancers \
     --output text)
 
 echo $LOAD_BALANCER_ARN
+
+echo "Creating listener --> aws elbv2 create-listener"
+
 
 LISTENER_ARN=$(aws elbv2 create-listener \
     --load-balancer-arn $LOAD_BALANCER_ARN \
