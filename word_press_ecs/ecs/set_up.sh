@@ -103,7 +103,7 @@ ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
     --query 'SecurityGroups[0].GroupId' \
     --output text)
 
-ALB_TG=$(aws elbv2 create-target-group \
+$TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
     --name wordpress-tg \
     --protocol HTTP \
     --port 80 \
