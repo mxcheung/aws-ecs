@@ -1,0 +1,32 @@
+# export aws_access_key_id=AXXXXXXXXXXX
+# export aws_secret_access_key=NM122222222222222222
+
+aws configure set aws_access_key_id $aws_access_key_id --profile cloud_user
+aws configure set aws_secret_access_key $aws_secret_access_key --profile cloud_user
+aws configure set region us-east-1 --profile cloud_user
+aws configure set output json --profile cloud_user
+export AWS_PROFILE=cloud_user
+aws sts get-caller-identity
+
+
+# Get Subnet ID for Database Subnet AZ A
+subnet_a=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=Database Subnet AZ A" "Name=availability-zone,Values=us-east-1a" \
+    --query "Subnets[0].SubnetId" --output text)
+
+# Get Subnet ID for Database Subnet AZ B
+subnet_b=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=Database Subnet AZ B" "Name=availability-zone,Values=us-east-1b" \
+    --query "Subnets[0].SubnetId" --output text)
+
+# Get Subnet ID for Database Subnet AZ C
+subnet_c=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=Database Subnet AZ C" "Name=availability-zone,Values=us-east-1c" \
+    --query "Subnets[0].SubnetId" --output text)
+
+
+aws rds create-db-subnet-group \
+    --db-subnet-group-name my-db-subnet-group \
+    --db-subnet-group-description "Subnet group for RDS in us-east-1a, us-east-1b, us-east-1c" \
+    --subnet-ids $subnet_a $subnet_b $subnet_c \
+    --tags Key=Name,Value=my-db-subnet-group
