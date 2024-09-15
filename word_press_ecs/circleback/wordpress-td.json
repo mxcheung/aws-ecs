@@ -1,0 +1,111 @@
+{
+    "taskDefinition": {
+        "taskDefinitionArn": "arn:aws:ecs:us-east-1:066559867436:task-definition/wordpress-td:1",
+        "containerDefinitions": [
+            {
+                "name": "wordpress",
+                "image": "066559867436.dkr.ecr.us-east-1.amazonaws.com/wordpress:latest",
+                "cpu": 0,
+                "portMappings": [
+                    {
+                        "containerPort": 80,
+                        "hostPort": 80,
+                        "protocol": "tcp"
+                    }
+                ],
+                "essential": true,
+                "environment": [],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "secrets": [
+                    {
+                        "name": "WORDPRESS_DB_HOST",
+                        "valueFrom": "arn:aws:ssm:us-east-1:066559867436:parameter/dev/WORDPRESS_DB_HOST"
+                    },
+                    {
+                        "name": "WORDPRESS_DB_NAME",
+                        "valueFrom": "arn:aws:ssm:us-east-1:066559867436:parameter/dev/WORDPRESS_DB_NAME"
+                    },
+                    {
+                        "name": "WORDPRESS_DB_USER",
+                        "valueFrom": "arn:aws:secretsmanager:us-east-1:066559867436:secret:rds!db-ef546734-3b9c-4a8b-8d06-1d4e28a7a520-eiVWCq:username::"
+                    },
+                    {
+                        "name": "WORDPRESS_DB_PASSWORD",
+                        "valueFrom": "arn:aws:secretsmanager:us-east-1:066559867436:secret:rds!db-ef546734-3b9c-4a8b-8d06-1d4e28a7a520-eiVWCq:password::"
+                    }
+                ],
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                        "awslogs-group": "/ecs/wordpress-td",
+                        "mode": "non-blocking",
+                        "awslogs-create-group": "true",
+                        "max-buffer-size": "25m",
+                        "awslogs-region": "us-east-1",
+                        "awslogs-stream-prefix": "ecs"
+                    }
+                },
+                "systemControls": []
+            }
+        ],
+        "family": "wordpress-td",
+        "taskRoleArn": "arn:aws:iam::066559867436:role/OurEcsTaskRole",
+        "executionRoleArn": "arn:aws:iam::066559867436:role/OurEcsTaskExecutionRole",
+        "networkMode": "awsvpc",
+        "revision": 1,
+        "volumes": [],
+        "status": "ACTIVE",
+        "requiresAttributes": [
+            {
+                "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+            },
+            {
+                "name": "ecs.capability.execution-role-awslogs"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+            },
+            {
+                "name": "ecs.capability.secrets.asm.environment-variables"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.task-iam-role"
+            },
+            {
+                "name": "ecs.capability.execution-role-ecr-pull"
+            },
+            {
+                "name": "ecs.capability.secrets.ssm.environment-variables"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+            },
+            {
+                "name": "ecs.capability.task-eni"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+            }
+        ],
+        "placementConstraints": [],
+        "compatibilities": [
+            "EC2",
+            "FARGATE"
+        ],
+        "requiresCompatibilities": [
+            "FARGATE"
+        ],
+        "cpu": "256",
+        "memory": "512",
+        "registeredAt": "2024-09-15T13:16:58.077000+00:00",
+        "registeredBy": "arn:aws:iam::066559867436:user/cloud_user"
+    },
+    "tags": []
+}
