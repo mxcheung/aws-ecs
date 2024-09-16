@@ -4,6 +4,7 @@
 git clone https://github.com/mxcheung/aws-ecs.git
 export aws_access_key_id=AKIAVOxxx
 export aws_secret_access_key=qC8VQTxxxxxxxxxxxxx
+aws logs create-log-group --log-group-name /ecs/wordpress-td
 cd /home/ec2-user/environment/aws-ecs/
 cd /home/ec2-user/environment/aws-ecs/word_press_ecs/user_credentials
 . ./set_up.sh
