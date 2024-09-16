@@ -15,3 +15,6 @@ aws elbv2 describe-load-balancers --names OurApplicationLoadBalancer > OurApplic
 OUR_APP_LB=$(aws elbv2 describe-load-balancers --names OurApplicationLoadBalancer --query "LoadBalancers[0].LoadBalancerArn" --output text)
 
 aws elbv2 describe-listeners --load-balancer-arn $OUR_APP_LB > OurApplicationLoadBalancerListeners.json
+
+
+aws ec2 describe-security-groups --filters Name=group-name,Values=app-sg > app-sg.json
