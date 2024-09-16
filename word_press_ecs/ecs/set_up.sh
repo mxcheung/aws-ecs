@@ -25,6 +25,10 @@ subnet_c=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=Private Subnet AZ C" "Name=availability-zone,Values=us-east-1c" \
     --query "Subnets[0].SubnetId" --output text)
 
+echo "Waiting rds service  wordpress-service --> aws rds wait db-instance-available --db-instance-identifier wordpress"
+
+WAIT_RDS_OUTPUT=$(aws rds wait db-instance-available --db-instance-identifier wordpress) 
+
 echo "Creating ecs service  wordpress-service --> aws ecs create-service"
     
 ECS_SERVICE_OUTPUT=$(aws ecs create-service \
