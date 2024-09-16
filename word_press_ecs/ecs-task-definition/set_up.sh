@@ -23,8 +23,11 @@ container_definitions=$(cat <<EOF
     "essential": true,
     "portMappings": [
       {
+        "name": "wordpress-80-tcp",
         "containerPort": 80,
-        "protocol": "tcp"
+        "hostPort": 80,
+        "protocol": "tcp",
+        "appProtocol": "http"
       }
     ],
     "logConfiguration": {
