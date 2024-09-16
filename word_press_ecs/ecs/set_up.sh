@@ -111,7 +111,7 @@ APP_SG_ID=$(aws ec2 create-security-group \
 echo $APP_SG_ID
 
 
-echo "Add  app-sg inbound rule allow HTTP traffic from ALBAllowHttp --> (aws ec2 authorize-security-group-ingress
+echo "Add  app-sg inbound rule allow HTTP traffic from ALBAllowHttp --> aws ec2 authorize-security-group-ingress"
 
 # Add an inbound rule to allow HTTP traffic from ALBAllowHttp
 INGRESS_OUTPUT=$(aws ec2 authorize-security-group-ingress \
