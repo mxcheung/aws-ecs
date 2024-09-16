@@ -1,3 +1,26 @@
+Start date
+Status
+Failed tasks
+Tasks
+Version
+Task definition
+Revision
+Last deployment
+Deployment ID
+September 17, 2024 at 07:29 (UTC+10:00)
+Primary
+100%
+0
+1 Running | 0 Pending | 1 Desired
+1.4.0
+wordpress-td
+1
+Completed
+
+ecs-svc/9378310748176942251
+
+
+
 September 17, 2024 at 07:30 (UTC+10:00)
 service wordpress-service has reached a steady state.
 f4a2d86a-166b-4745-8d94-893e2b288b3b
