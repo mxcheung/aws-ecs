@@ -35,11 +35,21 @@ echo "Waiting rds service  wordpress-service --> aws rds wait db-instance-availa
 WAIT_RDS_OUTPUT=$(aws rds wait db-instance-available --db-instance-identifier wordpress) 
 
 echo "Creating ecs service  wordpress-service --> aws ecs create-service"
+
+LOAD_BALANCER="[ 
+    {
+        \"targetGroupArn\": \"$TARGET_GROUP_ARN\",
+        \"containerName\": \"wordpress\",
+        \"containerPort\": 80
+    }
+]"
+
     
 ECS_SERVICE_OUTPUT=$(aws ecs create-service \
     --cluster Wordpress-Cluster \
     --service-name wordpress-service \
     --task-definition wordpress-td:1 \
+    --load-balancers $LOAD_BALANCER \
     --launch-type FARGATE \
     --platform-version LATEST \
     --desired-count 1 \
