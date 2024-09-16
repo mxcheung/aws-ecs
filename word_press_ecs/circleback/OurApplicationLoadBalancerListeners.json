@@ -1,0 +1,27 @@
+{
+    "Listeners": [
+        {
+            "ListenerArn": "arn:aws:elasticloadbalancing:us-east-1:532124739991:listener/app/OurApplicationLoadBalancer/52b81dccd3380d53/9a6ab0d077098023",
+            "LoadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:532124739991:loadbalancer/app/OurApplicationLoadBalancer/52b81dccd3380d53",
+            "Port": 80,
+            "Protocol": "HTTP",
+            "DefaultActions": [
+                {
+                    "Type": "forward",
+                    "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:532124739991:targetgroup/wordpress-tg/990686ba83a38982",
+                    "ForwardConfig": {
+                        "TargetGroups": [
+                            {
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:532124739991:targetgroup/wordpress-tg/990686ba83a38982",
+                                "Weight": 1
+                            }
+                        ],
+                        "TargetGroupStickinessConfig": {
+                            "Enabled": false
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
