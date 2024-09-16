@@ -10,3 +10,8 @@ aws ecs describe-task-definition --task-definition wordpress-td > wordpress-td.j
 
 
 aws elbv2 describe-load-balancers --names OurApplicationLoadBalancer > OurApplicationLoadBalancer.json
+
+
+OUR_APP_LB=$(aws elbv2 describe-load-balancers --names OurApplicationLoadBalancer --query "LoadBalancers[0].LoadBalancerArn" --output text)
+
+aws elbv2 describe-listeners --load-balancer-arn $OUR_APP_LB > OurApplicationLoadBalancerListeners.json
