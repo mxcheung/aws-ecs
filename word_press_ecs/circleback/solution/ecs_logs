@@ -1,0 +1,61 @@
+	
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:08 +0000] "GET /wp-admin/install.php HTTP/1.1" 200 4649 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /favicon.ico HTTP/1.1" 302 399 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+10.0.1.94 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-admin/images/wordpress-logo.svg HTTP/1.1" 200 1774 "-" "ELB-HealthChecker/2.0"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-admin/images/wordpress-logo.svg?ver=20131107 HTTP/1.1" 200 1755 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/css/install.min.css?ver=6.6.2" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-admin/images/spinner.gif HTTP/1.1" 200 3886 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/css/install.min.css?ver=6.6.2" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-admin/js/language-chooser.min.js?ver=6.6.2 HTTP/1.1" 200 560 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1 HTTP/1.1" 200 5161 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-includes/js/jquery/jquery.min.js?ver=3.7.1 HTTP/1.1" 200 30659 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-admin/css/forms.min.css?ver=6.6.2 HTTP/1.1" 200 7006 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-admin/css/l10n.min.css?ver=6.6.2 HTTP/1.1" 200 1047 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-admin/css/install.min.css?ver=6.6.2 HTTP/1.1" 200 2078 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-includes/css/buttons.min.css?ver=6.6.2 HTTP/1.1" 200 1752 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:07 +0000] "GET /wp-includes/css/dashicons.min.css?ver=6.6.2 HTTP/1.1" 200 36013 "http://ourapplicationloadbalancer-887238165.us-east-1.elb.amazonaws.com/wp-admin/install.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:06 +0000] "GET /wp-admin/install.php HTTP/1.1" 200 4649 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
+September 17, 2024 at 07:37 (UTC+10:00)
+49.176.90.31 - - [16/Sep/2024:21:37:05 +0000] "GET / HTTP/1.1" 302 399 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+b86c282bd5b44891a45776a5a490f9d9
+wordpress
