@@ -1,0 +1,130 @@
+{
+    "services": [
+        {
+            "serviceArn": "arn:aws:ecs:us-east-1:324262702463:service/Wordpress-Cluster/wordpress-service",
+            "serviceName": "wordpress-service",
+            "clusterArn": "arn:aws:ecs:us-east-1:324262702463:cluster/Wordpress-Cluster",
+            "loadBalancers": [
+                {
+                    "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:324262702463:targetgroup/wordpress-tg/b1e06343fa3ab1b2",
+                    "containerName": "wordpress",
+                    "containerPort": 80
+                }
+            ],
+            "serviceRegistries": [],
+            "status": "ACTIVE",
+            "desiredCount": 1,
+            "runningCount": 1,
+            "pendingCount": 0,
+            "capacityProviderStrategy": [
+                {
+                    "capacityProvider": "FARGATE",
+                    "weight": 1,
+                    "base": 0
+                }
+            ],
+            "platformVersion": "LATEST",
+            "platformFamily": "Linux",
+            "taskDefinition": "arn:aws:ecs:us-east-1:324262702463:task-definition/wordpress-td:1",
+            "deploymentConfiguration": {
+                "deploymentCircuitBreaker": {
+                    "enable": true,
+                    "rollback": true
+                },
+                "maximumPercent": 200,
+                "minimumHealthyPercent": 100,
+                "alarms": {
+                    "alarmNames": [],
+                    "enable": false,
+                    "rollback": false
+                }
+            },
+            "deployments": [
+                {
+                    "id": "ecs-svc/9378310748176942251",
+                    "status": "PRIMARY",
+                    "taskDefinition": "arn:aws:ecs:us-east-1:324262702463:task-definition/wordpress-td:1",
+                    "desiredCount": 1,
+                    "pendingCount": 0,
+                    "runningCount": 1,
+                    "failedTasks": 0,
+                    "createdAt": "2024-09-16T21:29:01.730000+00:00",
+                    "updatedAt": "2024-09-16T21:30:09.603000+00:00",
+                    "capacityProviderStrategy": [
+                        {
+                            "capacityProvider": "FARGATE",
+                            "weight": 1,
+                            "base": 0
+                        }
+                    ],
+                    "platformVersion": "1.4.0",
+                    "platformFamily": "Linux",
+                    "networkConfiguration": {
+                        "awsvpcConfiguration": {
+                            "subnets": [
+                                "subnet-0da33e7ff57753d73",
+                                "subnet-0a68eeb9ee16f08ce",
+                                "subnet-09adef3e0152a1557"
+                            ],
+                            "securityGroups": [
+                                "sg-00b076e2595a3aa43"
+                            ],
+                            "assignPublicIp": "ENABLED"
+                        }
+                    },
+                    "rolloutState": "COMPLETED",
+                    "rolloutStateReason": "ECS deployment ecs-svc/9378310748176942251 completed."
+                }
+            ],
+            "roleArn": "arn:aws:iam::324262702463:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+            "events": [
+                {
+                    "id": "f4a2d86a-166b-4745-8d94-893e2b288b3b",
+                    "createdAt": "2024-09-16T21:30:09.609000+00:00",
+                    "message": "(service wordpress-service) has reached a steady state."
+                },
+                {
+                    "id": "e956bf4b-6c00-469a-ae09-6d61396eeced",
+                    "createdAt": "2024-09-16T21:30:09.608000+00:00",
+                    "message": "(service wordpress-service) (deployment ecs-svc/9378310748176942251) deployment completed."
+                },
+                {
+                    "id": "1c3d6fd3-19e0-4fd6-b443-d0abd85dd4da",
+                    "createdAt": "2024-09-16T21:29:59.664000+00:00",
+                    "message": "(service wordpress-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-1:324262702463:targetgroup/wordpress-tg/b1e06343fa3ab1b2)"
+                },
+                {
+                    "id": "a4120d7b-ad1e-4922-9141-294bd475d659",
+                    "createdAt": "2024-09-16T21:29:20.189000+00:00",
+                    "message": "(service wordpress-service) has started 1 tasks: (task b86c282bd5b44891a45776a5a490f9d9)."
+                }
+            ],
+            "createdAt": "2024-09-16T21:29:01.730000+00:00",
+            "placementConstraints": [],
+            "placementStrategy": [],
+            "networkConfiguration": {
+                "awsvpcConfiguration": {
+                    "subnets": [
+                        "subnet-0da33e7ff57753d73",
+                        "subnet-0a68eeb9ee16f08ce",
+                        "subnet-09adef3e0152a1557"
+                    ],
+                    "securityGroups": [
+                        "sg-00b076e2595a3aa43"
+                    ],
+                    "assignPublicIp": "ENABLED"
+                }
+            },
+            "healthCheckGracePeriodSeconds": 30,
+            "schedulingStrategy": "REPLICA",
+            "deploymentController": {
+                "type": "ECS"
+            },
+            "createdBy": "arn:aws:iam::324262702463:user/cloud_user",
+            "enableECSManagedTags": true,
+            "propagateTags": "NONE",
+            "enableExecuteCommand": false
+        }
+    ],
+    "failures": []
+}
