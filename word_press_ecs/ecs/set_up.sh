@@ -6,9 +6,9 @@ AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 # Assign the VPC ID to a variable
 VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your Custom VPC']].{VpcId:VpcId}" --output text)
 
-$APP_SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=app-sg --query "SecurityGroups[0].GroupId" --output text)
+$APP_SG_ID_2=$(aws ec2 describe-security-groups --filters Name=group-name,Values=app-sg --query "SecurityGroups[0].GroupId" --output text)
 
-echo $APP_SG_ID
+echo $APP_SG_ID_2
 
 # Get Subnet ID for Private Subnet AZ A
 subnet_a=$(aws ec2 describe-subnets \
@@ -38,5 +38,5 @@ ECS_SERVICE_OUTPUT=$(aws ecs create-service \
     --launch-type FARGATE \
     --platform-version LATEST \
     --desired-count 1 \
-    --network-configuration "awsvpcConfiguration={subnets=[$subnet_a,$subnet_b,$subnet_c],securityGroups=[$APP_SG_ID],assignPublicIp=ENABLED}") 
+    --network-configuration "awsvpcConfiguration={subnets=[$subnet_a,$subnet_b,$subnet_c],securityGroups=[$APP_SG_ID_2],assignPublicIp=ENABLED}") 
    
