@@ -18,3 +18,6 @@ aws elbv2 describe-listeners --load-balancer-arn $OUR_APP_LB > OurApplicationLoa
 
 
 aws ec2 describe-security-groups --filters Name=group-name,Values=app-sg > app-sg.json
+
+
+aws ec2 describe-security-groups --filters Name=group-name,Values=database-sg > database-sg.json
