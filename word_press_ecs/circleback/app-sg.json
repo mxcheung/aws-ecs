@@ -1,0 +1,40 @@
+{
+    "SecurityGroups": [
+        {
+            "Description": "Security group for application",
+            "GroupName": "app-sg",
+            "IpPermissions": [
+                {
+                    "FromPort": 80,
+                    "IpProtocol": "tcp",
+                    "IpRanges": [],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [],
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [
+                        {
+                            "GroupId": "sg-0d4942d53374bb0f6",
+                            "UserId": "532124739991"
+                        }
+                    ]
+                }
+            ],
+            "OwnerId": "532124739991",
+            "GroupId": "sg-067af1f29d1f4d2de",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [],
+                    "UserIdGroupPairs": []
+                }
+            ],
+            "VpcId": "vpc-0fcefdad6e3e1bf98"
+        }
+    ]
+}
