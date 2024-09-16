@@ -90,7 +90,17 @@ subnet_b=$(aws ec2 describe-subnets \
 subnet_c=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=Private Subnet AZ C" "Name=availability-zone,Values=us-east-1c" \
     --query "Subnets[0].SubnetId" --output text)
-    
+
+# Get the Security Group ID for ALBAllowHttp
+ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
+    --filters Name=group-name,Values=ALBAllowHttp \
+    --query 'SecurityGroups[0].GroupId' \
+    --output text)
+
+echo $ALB_ALLOW_HTTP_SG_ID
+
+echo "Creating securit Group  app-sg --> aws elbv2 create-security-group"
+
 APP_SG_ID=$(aws ec2 create-security-group \
     --group-name app-sg \
     --description "Security group for application" \
@@ -98,12 +108,17 @@ APP_SG_ID=$(aws ec2 create-security-group \
     --query "GroupId" \
     --output text)
 
+echo $APP_SG_ID
 
-# Get the Security Group ID for ALBAllowHttp
-ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
-    --filters Name=group-name,Values=ALBAllowHttp \
-    --query 'SecurityGroups[0].GroupId' \
-    --output text)
+
+echo "Add  app-sg inbound rule allow HTTP traffic from ALBAllowHttp --> (aws ec2 authorize-security-group-ingress
+
+# Add an inbound rule to allow HTTP traffic from ALBAllowHttp
+INGRESS_OUTPUT=$(aws ec2 authorize-security-group-ingress \
+    --group-id $APP_SG_ID \
+    --protocol tcp \
+    --port 80 \
+    --source-group $ALB_ALLOW_HTTP_SG_ID)
 
 echo "Creating Target Group --> aws elbv2 create-target-group"
 
@@ -147,12 +162,6 @@ LISTENER_ARN=$(aws elbv2 create-listener \
 
 echo $LISTENER_ARN
 
-# Add an inbound rule to allow HTTP traffic from ALBAllowHttp
-INGRESS_OUTPUT=$(aws ec2 authorize-security-group-ingress \
-    --group-id $APP_SG_ID \
-    --protocol tcp \
-    --port 80 \
-    --source-group $ALB_ALLOW_HTTP_SG_ID)
 
     
 ECS_CREATE_CLUSTER_OUTPUT=$(aws ecs create-cluster --cluster-name Wordpress-Cluster)
