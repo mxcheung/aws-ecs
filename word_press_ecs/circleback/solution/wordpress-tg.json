@@ -1,0 +1,28 @@
+{
+    "TargetGroups": [
+        {
+            "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:324262702463:targetgroup/wordpress-tg/b1e06343fa3ab1b2",
+            "TargetGroupName": "wordpress-tg",
+            "Protocol": "HTTP",
+            "Port": 80,
+            "VpcId": "vpc-03a7a84a09f10c138",
+            "HealthCheckProtocol": "HTTP",
+            "HealthCheckPort": "traffic-port",
+            "HealthCheckEnabled": true,
+            "HealthCheckIntervalSeconds": 30,
+            "HealthCheckTimeoutSeconds": 5,
+            "HealthyThresholdCount": 5,
+            "UnhealthyThresholdCount": 2,
+            "HealthCheckPath": "/wp-admin/images/wordpress-logo.svg",
+            "Matcher": {
+                "HttpCode": "200"
+            },
+            "LoadBalancerArns": [
+                "arn:aws:elasticloadbalancing:us-east-1:324262702463:loadbalancer/app/OurApplicationLoadBalancer/dce227575d1f1b9a"
+            ],
+            "TargetType": "ip",
+            "ProtocolVersion": "HTTP1",
+            "IpAddressType": "ipv4"
+        }
+    ]
+}
