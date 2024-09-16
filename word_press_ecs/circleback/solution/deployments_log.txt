@@ -1,0 +1,12 @@
+September 17, 2024 at 07:30 (UTC+10:00)
+service wordpress-service has reached a steady state.
+f4a2d86a-166b-4745-8d94-893e2b288b3b
+September 17, 2024 at 07:30 (UTC+10:00)
+service wordpress-service deployment ecs-svc/9378310748176942251 deployment completed.
+e956bf4b-6c00-469a-ae09-6d61396eeced
+September 17, 2024 at 07:29 (UTC+10:00)
+service wordpress-service registered 1 targets in target-group wordpress-tg 
+1c3d6fd3-19e0-4fd6-b443-d0abd85dd4da
+September 17, 2024 at 07:29 (UTC+10:00)
+service wordpress-service has started 1 tasks: task b86c282bd5b44891a45776a5a490f9d9.
+a4120d7b-ad1e-4922-9141-294bd475d659
