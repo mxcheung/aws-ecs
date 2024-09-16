@@ -4,6 +4,11 @@ AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 
 image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wordpress:latest"
 
+
+echo "Waiting rds service  wordpress-service --> aws rds wait db-instance-available --db-instance-identifier wordpress"
+WAIT_RDS_OUTPUT=$(aws rds wait db-instance-available --db-instance-identifier wordpress) 
+
+
 # Get the secret ARN
 SECRET_ARN=$(aws rds describe-db-instances --db-instance-identifier wordpress --query 'DBInstances[0].MasterUserSecret.SecretArn' --output text)
 SECRET_NAME=$(aws secretsmanager describe-secret --secret-id $SECRET_ARN --query 'Name' --output text)
