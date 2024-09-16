@@ -21,3 +21,6 @@ aws ec2 describe-security-groups --filters Name=group-name,Values=app-sg > app-s
 
 
 aws ec2 describe-security-groups --filters Name=group-name,Values=database-sg > database-sg.json
+
+
+aws rds describe-db-instances --db-instance-identifier wordpress > rds-wordpress.json
