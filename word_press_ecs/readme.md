@@ -16,12 +16,13 @@ cd /home/ec2-user/environment/aws-ecs/word_press_ecs/rds
 nohup bash ./set_up.sh  > /home/ec2-user/environment/aws-ecs/word_press_ecs/rds/set_up.log 2>&1 &
 cd /home/ec2-user/environment/aws-ecs/word_press_ecs/ecs-cluster
 . ./set_up.sh
-cd /home/ec2-user/environment/aws-ecs/word_press_ecs/ecs-task-definition
-. ./set_up.sh
 cd /home/ec2-user/environment/aws-ecs/word_press_ecs/ecr
+. ./set_up.sh
+cd /home/ec2-user/environment/aws-ecs/word_press_ecs/ecs-task-definition
 . ./set_up.sh
 cd /home/ec2-user/environment/aws-ecs/word_press_ecs/ecs
 . ./set_up.sh
+
 ```
 
 
