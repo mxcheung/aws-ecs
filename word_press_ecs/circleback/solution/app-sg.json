@@ -1,0 +1,54 @@
+{
+    "SecurityGroups": [
+        {
+            "Description": "Created in ECS Console",
+            "GroupName": "app-sg",
+            "IpPermissions": [
+                {
+                    "FromPort": 80,
+                    "IpProtocol": "tcp",
+                    "IpRanges": [],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [],
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [
+                        {
+                            "GroupId": "sg-0419511aa02d5b28d",
+                            "UserId": "324262702463"
+                        }
+                    ]
+                }
+            ],
+            "OwnerId": "324262702463",
+            "GroupId": "sg-00b076e2595a3aa43",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [],
+                    "UserIdGroupPairs": []
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "aws:cloudformation:logical-id",
+                    "Value": "SecurityGroup"
+                },
+                {
+                    "Key": "aws:cloudformation:stack-name",
+                    "Value": "ECS-Console-V2-Service-wordpress-service-Wordpress-Cluster-4f2d51bd"
+                },
+                {
+                    "Key": "aws:cloudformation:stack-id",
+                    "Value": "arn:aws:cloudformation:us-east-1:324262702463:stack/ECS-Console-V2-Service-wordpress-service-Wordpress-Cluster-4f2d51bd/a333cef0-7472-11ef-a2f6-0afff0186185"
+                }
+            ],
+            "VpcId": "vpc-03a7a84a09f10c138"
+        }
+    ]
+}
