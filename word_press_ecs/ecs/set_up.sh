@@ -76,19 +76,19 @@ ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
 VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your Custom VPC']].{VpcId:VpcId}" --output text)
 
 
-# Get Subnet ID for Database Subnet AZ A
+# Get Subnet ID for Private Subnet AZ A
 subnet_a=$(aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=Database Subnet AZ A" "Name=availability-zone,Values=us-east-1a" \
+    --filters "Name=tag:Name,Values=Private Subnet AZ A" "Name=availability-zone,Values=us-east-1a" \
     --query "Subnets[0].SubnetId" --output text)
 
-# Get Subnet ID for Database Subnet AZ B
+# Get Subnet ID for Private Subnet AZ B
 subnet_b=$(aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=Database Subnet AZ B" "Name=availability-zone,Values=us-east-1b" \
+    --filters "Name=tag:Name,Values=Private Subnet AZ B" "Name=availability-zone,Values=us-east-1b" \
     --query "Subnets[0].SubnetId" --output text)
 
-# Get Subnet ID for Database Subnet AZ C
+# Get Subnet ID for Private Subnet AZ C
 subnet_c=$(aws ec2 describe-subnets \
-    --filters "Name=tag:Name,Values=Database Subnet AZ C" "Name=availability-zone,Values=us-east-1c" \
+    --filters "Name=tag:Name,Values=Private Subnet AZ C" "Name=availability-zone,Values=us-east-1c" \
     --query "Subnets[0].SubnetId" --output text)
     
 APP_SG_ID=$(aws ec2 create-security-group \
@@ -148,8 +148,8 @@ LISTENER_ARN=$(aws elbv2 create-listener \
 echo $LISTENER_ARN
 
 # Add an inbound rule to allow HTTP traffic from ALBAllowHttp
-OUTPUT=$(aws ec2 authorize-security-group-ingress \
-    --group-id $APP_SECURITY_GROUP_ID \
+INGRESS_OUTPUT=$(aws ec2 authorize-security-group-ingress \
+    --group-id $APP_SG_ID \
     --protocol tcp \
     --port 80 \
     --source-group $ALB_ALLOW_HTTP_SG_ID)
@@ -164,5 +164,5 @@ ECS_SERVICE_OUTPUT=$(aws ecs create-service \
     --launch-type FARGATE \
     --platform-version LATEST \
     --desired-count 1 \
-    --network-configuration "awsvpcConfiguration={subnets=[$subnet_a,$subnet_b,$subnet_c],securityGroups=[$APP_SG_ID],assignPublicIp=DISABLED}") 
+    --network-configuration "awsvpcConfiguration={subnets=[$subnet_a,$subnet_b,$subnet_c],securityGroups=[$APP_SG_ID],assignPublicIp=ENABLED}") 
    
