@@ -162,9 +162,6 @@ LISTENER_ARN=$(aws elbv2 create-listener \
 
 echo $LISTENER_ARN
 
-
-    
-ECS_CREATE_CLUSTER_OUTPUT=$(aws ecs create-cluster --cluster-name Wordpress-Cluster)
     
 ECS_SERVICE_OUTPUT=$(aws ecs create-service \
     --cluster Wordpress-Cluster \
