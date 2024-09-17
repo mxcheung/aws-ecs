@@ -1,5 +1,18 @@
 #!/bin/bash
 
+DB_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
+    --group-name database-sg \
+    --description "Security group for RDS instance" \
+    --vpc-id "$VPC_ID" \
+    --query "GroupId" \
+    --output text)
+
+DB_SECURITY_GROUP_ID-INGRESS=$(aws ec2 authorize-security-group-ingress \
+   --group-id $DB_SECURITY_GROUP_ID \
+   --ip-permissions IpProtocol=tcp,FromPort=3306,ToPort=3306,IpRanges="[{CidrIp=10.0.0.0/16,Description='Allow MySQL access from VPC'}]")
+
+
+   
 # Get Subnet ID for Database Subnet AZ A
 subnet_a=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=Database Subnet AZ A" "Name=availability-zone,Values=us-east-1a" \
