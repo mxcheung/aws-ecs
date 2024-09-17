@@ -37,6 +37,10 @@ DB_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
     --query "GroupId" \
     --output text)
 
+echo "aws ec2 describe-security-groups -> database-sg"
+
+echo $DATABASE_SG_ID
+
 echo "Allow MySQL access from VPC ->aws ec2 authorize-security-group-ingressg"
 
 
