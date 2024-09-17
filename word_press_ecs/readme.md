@@ -24,6 +24,15 @@ cd /home/ec2-user/environment/aws-ecs/word_press_ecs/ecs
 ```
 
 # Test RDS Connection Cloud 9
+```
+cloud_user:~/environment/aws-ecs/word_press_ecs/rds (main) $ sudo yum -y install telnet
+
+cloud_user:~/environment/aws-ecs/word_press_ecs/rds (main) $ telnet wordpress.cw86n944zjs4.us-east-1.rds.amazonaws.com 3306
+Trying 10.0.20.160...
+Connected to wordpress.cw86n944zjs4.us-east-1.rds.amazonaws.com.
+Escape character is '^]'.
+J
+```
 
 ```
 cloud_user:~/environment/aws-ecs/word_press_ecs/rds (main) $ mysql --user=admin --password  -h wordpress.xxxxxx.us-east-1.rds.amazonaws.com
