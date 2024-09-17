@@ -64,8 +64,8 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --storage-type gp3 \
     --allocated-storage 20 \
     --max-allocated-storage 1000 \
-    --storage-encrypted \    
     --db-subnet-group-name database-subnet-group \
+    --storage-encrypted \
     --vpc-security-group-ids $DATABASE_SG_ID \
     --master-username admin \
     --manage-master-user-password)
