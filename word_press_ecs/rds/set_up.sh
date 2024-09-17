@@ -30,10 +30,10 @@ subnet_c=$(aws ec2 describe-subnets \
 
 
 DB_SUBNET_GROUP_ID_OUTPUT=$(aws rds create-db-subnet-group \
-    --db-subnet-group-name my-db-subnet-group \
+    --db-subnet-group-name database-subnet-group \
     --db-subnet-group-description "Subnet group for RDS in us-east-1a, us-east-1b, us-east-1c" \
     --subnet-ids $subnet_a $subnet_b $subnet_c \
-    --tags Key=Name,Value=my-db-subnet-group)
+    --tags Key=Name,Value=database-subnet-group)
 
 DATABASE_SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=database-sg --query "SecurityGroups[0].GroupId" --output text)
 
@@ -45,7 +45,7 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --engine-version 8.0.32 \
     --allocated-storage 20 \
     --storage-type gp3 \
-    --db-subnet-group-name my-db-subnet-group \
+    --db-subnet-group-name database-subnet-group \
     --vpc-security-group-ids $DATABASE_SG_ID \
     --master-username admin \
     --manage-master-user-password)
