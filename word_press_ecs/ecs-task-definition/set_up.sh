@@ -8,6 +8,32 @@ image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wordpress:latest"
 echo "Waiting rds service  wordpress-service --> aws rds wait db-instance-available --db-instance-identifier wordpress"
 WAIT_RDS_OUTPUT=$(aws rds wait db-instance-available --db-instance-identifier wordpress) 
 
+YOUR_RDS_ENDPOINT=$(aws rds describe-db-instances --db-instance-identifier wordpress --query 'DBInstances[0].Endpoint.Address' --output text)
+
+ echo $YOUR_RDS_ENDPOINT
+
+ echo "Parameter Store WORDPRESS_DB_HOST -> aws ssm put-parameter"
+
+ 
+ aws ssm put-parameter \
+    --name "/dev/WORDPRESS_DB_HOST" \
+    --description "Wordpress RDS endpoint" \
+    --tier Standard \
+    --type String \
+    --value "$YOUR_RDS_ENDPOINT:3306" \
+    --overwrite
+
+echo "Parameter Store WORDPRESS_DB_NAME -> aws ssm put-parameter"
+
+aws ssm put-parameter \
+    --name "/dev/WORDPRESS_DB_NAME" \
+    --description "Wordpress RDS Database Name" \
+    --tier Standard \
+    --type SecureString \
+    --value "wordpress" \
+    --overwrite
+
+
 
 # Get the secret ARN
 SECRET_ARN=$(aws rds describe-db-instances --db-instance-identifier wordpress --query 'DBInstances[0].MasterUserSecret.SecretArn' --output text)
