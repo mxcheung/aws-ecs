@@ -21,10 +21,6 @@ container_definitions=$(cat <<EOF
     "name": "wordpress",
     "image": "$image_uri",
     "essential": true,
-    "runtimePlatform": {
-        "cpuArchitecture": "X86_64",
-        "operatingSystemFamily": "LINUX"
-    },
     "portMappings": [
       {
         "name": "wordpress-80-tcp",
@@ -68,6 +64,10 @@ container_definitions=$(cat <<EOF
 EOF
 )
 
+    --runtime-platform '{
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    }' 
 echo "Create Task Definition"
 
 ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
@@ -78,4 +78,8 @@ ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
     --memory "3072" \
     --execution-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskExecutionRole \
     --task-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskRole \
+    --runtime-platform '{
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    }'  \
     --container-definitions "$container_definitions")
