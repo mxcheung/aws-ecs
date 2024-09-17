@@ -10,8 +10,6 @@ cd /home/ec2-user/environment/aws-ecs/word_press_ecs/user_credentials
 aws logs create-log-group --log-group-name /ecs/wordpress-td
 cd /home/ec2-user/environment/aws-ecs/word_press_ecs/networks
 . ./set_up.sh
-cd /home/ec2-user/environment/aws-ecs/word_press_ecs/security_group
-. ./set_up.sh
 cd /home/ec2-user/environment/aws-ecs/word_press_ecs/rds
 nohup bash ./set_up.sh  > /home/ec2-user/environment/aws-ecs/word_press_ecs/rds/set_up.log 2>&1 &
 cd /home/ec2-user/environment/aws-ecs/word_press_ecs/ecs-cluster
