@@ -58,36 +58,10 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --engine-version 8.0.35 \
     --allocated-storage 20 \
     --storage-type gp3 \
+    --iops 3000 \
+    --storage-encrypted \    
     --db-subnet-group-name database-subnet-group \
     --vpc-security-group-ids $DATABASE_SG_ID \
     --master-username admin \
     --manage-master-user-password)
     
-WAIT_RDS_OUTPUT=$(aws rds wait db-instance-available --db-instance-identifier wordpress) 
-
-YOUR_RDS_ENDPOINT=$(aws rds describe-db-instances --db-instance-identifier wordpress --query 'DBInstances[0].Endpoint.Address' --output text)
-
-
- echo $YOUR_RDS_ENDPOINT
-
- echo "Parameter Store WORDPRESS_DB_HOST -> aws ssm put-parameter"
-
- 
- aws ssm put-parameter \
-    --name "/dev/WORDPRESS_DB_HOST" \
-    --description "Wordpress RDS endpoint" \
-    --tier Standard \
-    --type String \
-    --value "$YOUR_RDS_ENDPOINT:3306" \
-    --overwrite
-
-echo "Parameter Store WORDPRESS_DB_NAME -> aws ssm put-parameter"
-
-aws ssm put-parameter \
-    --name "/dev/WORDPRESS_DB_NAME" \
-    --description "Wordpress RDS Database Name" \
-    --tier Standard \
-    --type SecureString \
-    --value "wordpress" \
-    --overwrite
-
