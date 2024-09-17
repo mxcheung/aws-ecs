@@ -56,7 +56,7 @@ echo "Allow MySQL access from VPC ->aws ec2 authorize-security-group-ingressg"
 
 
 DB_SECURITY_GROUP_ID_INGRESS=$(aws ec2 authorize-security-group-ingress \
-   --group-id $DB_SECURITY_GROUP_ID \
+   --group-id $DATABASE_SG_ID \
    --ip-permissions IpProtocol=tcp,FromPort=3306,ToPort=3306,IpRanges="[{CidrIp=10.0.0.0/16,Description='Allow MySQL access from VPC'}]")
 
 
