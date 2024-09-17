@@ -34,7 +34,7 @@ echo "Create Security Group -> create-security-group database-sg"
 RDS_KMS_KEY_ID=$(aws kms describe-key \
     --key-id alias/aws/rds \
     --query 'KeyMetadata.Arn' \
-    --output text
+    --output text)
 
 echo "aws kms describe-key --> key-id alias/aws/rds"
 echo $RDS_KMS_KEY_ID
