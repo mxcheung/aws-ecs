@@ -70,8 +70,8 @@ ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
     --family wordpress-td \
     --network-mode awsvpc \
     --requires-compatibilities FARGATE \
-    --cpu "256" \
-    --memory "512" \
+    --cpu "1024" \
+    --memory "3072" \
     --execution-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskExecutionRole \
     --task-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskRole \
     --container-definitions "$container_definitions")
