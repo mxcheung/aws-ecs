@@ -72,6 +72,7 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --allocated-storage 20 \
     --storage-type gp3 \
     --allocated-storage 20 \
+    --kms-key-id $RDS_KMS_KEY_ID \
     --max-allocated-storage 1000 \
     --db-subnet-group-name database-subnet-group \
     --storage-encrypted \
