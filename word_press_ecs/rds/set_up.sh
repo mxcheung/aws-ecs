@@ -1,23 +1,5 @@
 #!/bin/bash
 
-# Assign the VPC ID to a variable
-VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your Custom VPC']].{VpcId:VpcId}" --output text)
-echo "Create Security Group -> create-security-group database-sg"
-
-DB_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
-    --group-name database-sg \
-    --description "Security group for RDS instance" \
-    --vpc-id "$VPC_ID" \
-    --query "GroupId" \
-    --output text)
-
-echo "Allow MySQL access from VPC ->aws ec2 authorize-security-group-ingressg"
-
-
-DB_SECURITY_GROUP_ID_INGRESS=$(aws ec2 authorize-security-group-ingress \
-   --group-id $DB_SECURITY_GROUP_ID \
-   --ip-permissions IpProtocol=tcp,FromPort=3306,ToPort=3306,IpRanges="[{CidrIp=10.0.0.0/16,Description='Allow MySQL access from VPC'}]")
-
 
    
 # Get Subnet ID for Database Subnet AZ A
@@ -42,6 +24,27 @@ DB_SUBNET_GROUP_ID_OUTPUT=$(aws rds create-db-subnet-group \
     --db-subnet-group-description "Subnet group for RDS in us-east-1a, us-east-1b, us-east-1c" \
     --subnet-ids $subnet_a $subnet_b $subnet_c \
     --tags Key=Name,Value=database-subnet-group)
+
+    
+# Assign the VPC ID to a variable
+VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your Custom VPC']].{VpcId:VpcId}" --output text)
+echo "Create Security Group -> create-security-group database-sg"
+
+DB_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
+    --group-name database-sg \
+    --description "Security group for RDS instance" \
+    --vpc-id "$VPC_ID" \
+    --query "GroupId" \
+    --output text)
+
+echo "Allow MySQL access from VPC ->aws ec2 authorize-security-group-ingressg"
+
+
+DB_SECURITY_GROUP_ID_INGRESS=$(aws ec2 authorize-security-group-ingress \
+   --group-id $DB_SECURITY_GROUP_ID \
+   --ip-permissions IpProtocol=tcp,FromPort=3306,ToPort=3306,IpRanges="[{CidrIp=10.0.0.0/16,Description='Allow MySQL access from VPC'}]")
+
+
 
 DATABASE_SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=database-sg --query "SecurityGroups[0].GroupId" --output text)
 
