@@ -64,6 +64,9 @@ YOUR_RDS_ENDPOINT=$(aws rds describe-db-instances --db-instance-identifier wordp
 
 
  echo $YOUR_RDS_ENDPOINT
+
+ echo "Parameter Store WORDPRESS_DB_HOST -> aws ssm put-parameter"
+
  
  aws ssm put-parameter \
     --name "/dev/WORDPRESS_DB_HOST" \
@@ -73,6 +76,7 @@ YOUR_RDS_ENDPOINT=$(aws rds describe-db-instances --db-instance-identifier wordp
     --value "$YOUR_RDS_ENDPOINT:3306" \
     --overwrite
 
+echo "Parameter Store WORDPRESS_DB_NAME -> aws ssm put-parameter"
 
 aws ssm put-parameter \
     --name "/dev/WORDPRESS_DB_NAME" \
