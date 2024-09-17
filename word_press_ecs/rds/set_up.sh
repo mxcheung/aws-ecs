@@ -52,7 +52,7 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --db-instance-identifier wordpress \
     --db-instance-class db.t4g.micro \
     --engine mysql \
-    --engine-version 8.0.32 \
+    --engine-version 8.0.35 \
     --allocated-storage 20 \
     --storage-type gp3 \
     --db-subnet-group-name database-subnet-group \
