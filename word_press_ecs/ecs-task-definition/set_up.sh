@@ -64,10 +64,6 @@ container_definitions=$(cat <<EOF
 EOF
 )
 
-    --runtime-platform '{
-        "cpuArchitecture": "X86_64",
-        "operatingSystemFamily": "LINUX"
-    }' 
 echo "Create Task Definition"
 
 ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
