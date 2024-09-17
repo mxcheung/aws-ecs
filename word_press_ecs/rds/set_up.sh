@@ -30,6 +30,15 @@ DB_SUBNET_GROUP_ID_OUTPUT=$(aws rds create-db-subnet-group \
 VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your Custom VPC']].{VpcId:VpcId}" --output text)
 echo "Create Security Group -> create-security-group database-sg"
 
+
+RDS_KMS_KEY_ID=$(aws kms describe-key \
+    --key-id alias/aws/rds \
+    --query 'KeyMetadata.Arn' \
+    --output text
+
+echo "aws kms describe-key --> key-id alias/aws/rds"
+echo $RDS_KMS_KEY_ID
+
 DB_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
     --group-name database-sg \
     --description "Security group for RDS instance" \
