@@ -62,7 +62,8 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --engine-version 8.0.35 \
     --allocated-storage 20 \
     --storage-type gp3 \
-    --iops 3000 \
+    --allocated-storage 20 \
+    --max-allocated-storage 1000 \
     --storage-encrypted \    
     --db-subnet-group-name database-subnet-group \
     --vpc-security-group-ids $DATABASE_SG_ID \
