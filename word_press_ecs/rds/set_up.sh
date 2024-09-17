@@ -22,6 +22,7 @@ DB_SUBNET_GROUP_ID_OUTPUT=$(aws rds create-db-subnet-group \
     --subnet-ids $subnet_a $subnet_b $subnet_c \
     --tags Key=Name,Value=my-db-subnet-group)
 
+DATABASE_SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=app-sg --query "SecurityGroups[0].GroupId" --output text)
 
 # Create the RDS Instance
 CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
@@ -32,7 +33,7 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --allocated-storage 20 \
     --storage-type gp3 \
     --db-subnet-group-name my-db-subnet-group \
-    --vpc-security-group-ids $SECURITY_GROUP_ID \
+    --vpc-security-group-ids $DATABASE_SG_ID \
     --master-username admin \
     --manage-master-user-password)
     
