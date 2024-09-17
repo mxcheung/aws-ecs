@@ -21,6 +21,10 @@ container_definitions=$(cat <<EOF
     "name": "wordpress",
     "image": "$image_uri",
     "essential": true,
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
     "portMappings": [
       {
         "name": "wordpress-80-tcp",
