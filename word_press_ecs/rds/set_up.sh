@@ -1,11 +1,16 @@
 #!/bin/bash
 
+echo "Create Security Group -> create-security-group database-sg"
+
 DB_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
     --group-name database-sg \
     --description "Security group for RDS instance" \
     --vpc-id "$VPC_ID" \
     --query "GroupId" \
     --output text)
+
+echo "Allow MySQL access from VPC ->aws ec2 authorize-security-group-ingressg"
+
 
 DB_SECURITY_GROUP_ID_INGRESS=$(aws ec2 authorize-security-group-ingress \
    --group-id $DB_SECURITY_GROUP_ID \
@@ -28,6 +33,7 @@ subnet_c=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=Database Subnet AZ C" "Name=availability-zone,Values=us-east-1c" \
     --query "Subnets[0].SubnetId" --output text)
 
+echo "Create database subnet group -> aws rds create-db-subnet-group"
 
 DB_SUBNET_GROUP_ID_OUTPUT=$(aws rds create-db-subnet-group \
     --db-subnet-group-name database-subnet-group \
@@ -36,6 +42,8 @@ DB_SUBNET_GROUP_ID_OUTPUT=$(aws rds create-db-subnet-group \
     --tags Key=Name,Value=database-subnet-group)
 
 DATABASE_SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=database-sg --query "SecurityGroups[0].GroupId" --output text)
+
+echo "Create the RDS Instance -> aws rds create-db-instance"
 
 # Create the RDS Instance
 CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
