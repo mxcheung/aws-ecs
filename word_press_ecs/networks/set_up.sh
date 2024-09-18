@@ -48,9 +48,7 @@ CREATE_TARGET_GROUP_OUTPUT=$(aws elbv2 create-target-group \
     --health-check-path "/wp-admin/images/wordpress-logo.svg" \
     --matcher HttpCode=200 \
     --target-type ip \
-    --ip-address-type ipv4
-    --query 'TargetGroups[0].TargetGroupArn' \
-    --output text)
+    --ip-address-type ipv4)
 
 
 TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups \
