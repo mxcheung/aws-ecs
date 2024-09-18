@@ -24,8 +24,7 @@ echo "export aws_secret_access_key=$aws_secret_access_key"
 ```
 git clone https://github.com/mxcheung/aws-ecs.git
 cd /home/ec2-user/environment/aws-ecs/word_press_ecs/
-. ./setup.sh
-
+. ./set_up.sh
 ```
 
 
