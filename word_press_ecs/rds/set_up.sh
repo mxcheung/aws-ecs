@@ -69,6 +69,7 @@ echo "Create the RDS Instance -> aws rds create-db-instance"
 CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --db-instance-identifier wordpress \
     --db-instance-class db.t4g.micro \
+    --db-name wordpress \
     --engine mysql \
     --engine-version 8.0.35 \
     --allocated-storage 20 \
