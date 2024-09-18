@@ -22,8 +22,8 @@ echo "export aws_secret_access_key=$aws_secret_access_key"
 
 # step 1 - quickstart
 ```
-git clone https://github.com/mxcheung/aws-codebuild.git
-cd /home/ec2-user/environment/aws-codebuild/multi-repo
+git clone https://github.com/mxcheung/aws-ecs.git
+cd /home/ec2-user/environment/aws-ecs/word_press_ecs/
 . ./setup.sh
 
 ```
