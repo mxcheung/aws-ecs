@@ -1,8 +1,24 @@
 
 https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/users/details/cloud_user/create-access-key
 
-export aws_access_key_id=AKIAV2YTDxxx
-export aws_secret_access_key=mkc+d8XD3O3xxxx
+
+# create aws_access_key_id and aws_secret_access_key via cloudshell
+```
+
+response=$(aws iam create-access-key --output json)
+
+# Extract AccessKeyId and SecretAccessKey from the response
+aws_access_key_id=$(echo $response | jq -r '.AccessKey.AccessKeyId')
+aws_secret_access_key=$(echo $response | jq -r '.AccessKey.SecretAccessKey')
+
+# Print the keys to verify
+echo "export aws_access_key_id=$aws_access_key_id"
+echo "export aws_secret_access_key=$aws_secret_access_key"
+
+# copy export aws_access_key_id and export aws_secret_access_key
+```
+
+ 
 
 # step 1 - quickstart
 ```
