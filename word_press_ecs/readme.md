@@ -20,7 +20,7 @@ echo "Secret Access Key: $aws_secret_access_key"
 # step 1 - quickstart
 ```
 git clone https://github.com/mxcheung/aws-ecs.git
-cd /home/ec2-user/environment/aws-ecs/word_press_ecs/
+cd /home/cloudshell-user/environment/aws-ecs/word_press_ecs/
 . ./set_up.sh
 ```
 
