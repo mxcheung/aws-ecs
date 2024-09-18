@@ -4,7 +4,6 @@ https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/users/detail
 
 # create aws_access_key_id and aws_secret_access_key via cloudshell
 ```
-
 response=$(aws iam create-access-key --output json)
 
 # Extract AccessKeyId and SecretAccessKey from the response
