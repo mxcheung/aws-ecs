@@ -13,7 +13,7 @@ ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
 
 echo $ALB_ALLOW_HTTP_SG_ID
 
-echo "Creating securit Group  app-sg --> aws elbv2 create-security-group"
+echo "Creating security Group  app-sg --> aws elbv2 create-security-group"
 
 APP_SG_ID=$(aws ec2 create-security-group \
     --group-name app-sg \
