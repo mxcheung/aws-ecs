@@ -12,10 +12,8 @@ aws_access_key_id=$(echo $response | jq -r '.AccessKey.AccessKeyId')
 aws_secret_access_key=$(echo $response | jq -r '.AccessKey.SecretAccessKey')
 
 # Print the keys to verify
-echo "export aws_access_key_id=$aws_access_key_id"
-echo "export aws_secret_access_key=$aws_secret_access_key"
-
-# copy export aws_access_key_id and export aws_secret_access_key
+echo "Access Key ID: $aws_access_key_id"
+echo "Secret Access Key: $aws_secret_access_key"
 ```
 
  
@@ -32,6 +30,8 @@ cd /home/ec2-user/environment/aws-ecs/word_press_ecs/
 # Install step by step
 
 ```
+export aws_access_key_id=AKIA5Wzzzzzzz
+export aws_secret_access_key=k8NWd1mtCRazzzzzzzzzzzzzzzzzz
 git clone https://github.com/mxcheung/aws-ecs.git
 export aws_access_key_id=AKIAZXXXXXXXXX
 export aws_secret_access_key=rjQ68lnGFhjezzzzzzzzzzzzzzzzzzz
