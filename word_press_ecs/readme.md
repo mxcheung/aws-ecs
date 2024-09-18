@@ -1,4 +1,20 @@
-# Quick start
+
+https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/users/details/cloud_user/create-access-key
+
+export aws_access_key_id=AKIAV2YTDxxx
+export aws_secret_access_key=mkc+d8XD3O3xxxx
+
+# step 1 - quickstart
+```
+git clone https://github.com/mxcheung/aws-codebuild.git
+cd /home/ec2-user/environment/aws-codebuild/multi-repo
+. ./setup.sh
+
+```
+
+
+
+# Install step by step
 
 ```
 git clone https://github.com/mxcheung/aws-ecs.git
