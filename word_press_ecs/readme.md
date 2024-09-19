@@ -13,6 +13,11 @@ aws_secret_access_key=$(echo $response | jq -r '.AccessKey.SecretAccessKey')
 # Print the keys to verify
 echo "Access Key ID: $aws_access_key_id"
 echo "Secret Access Key: $aws_secret_access_key"
+
+git clone https://github.com/mxcheung/aws-ecs.git
+cd /home/cloudshell-user/aws-ecs/word_press_ecs/
+. ./set_up.sh
+
 ```
 
  
