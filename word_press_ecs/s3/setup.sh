@@ -1,10 +1,11 @@
 
 #!/bin/bash
 
-#!/bin/bash
 
 # Set environment variables
-export AWS_ACCOUNT_ID=717541894311
+
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+
 export AWS_REGION=us-east-1
 
 # Define the bucket names (for access logs and connection logs)
@@ -12,7 +13,12 @@ export ACCESS_LOGS_BUCKET=my-loadbalancer-access-logs-${AWS_ACCOUNT_ID}
 export CONNECTION_LOGS_BUCKET=my-loadbalancer-connection-logs-${AWS_ACCOUNT_ID}
 
 # Define the Load Balancer ARN
-export LOAD_BALANCER_ARN=arn:aws:elasticloadbalancing:us-east-1:${AWS_ACCOUNT_ID}:loadbalancer/app/OurApplicationLoadBalancer/db8639bd5df9f98b
+LOAD_BALANCER_ARN=$(aws elbv2 describe-load-balancers \
+    --names OurApplicationLoadBalancer \
+    --query "LoadBalancers[0].LoadBalancerArn" \
+    --output text)
+
+echo $LOAD_BALANCER_ARN
 
 # Function to create S3 bucket and apply bucket policy
 create_bucket_and_apply_policy() {
