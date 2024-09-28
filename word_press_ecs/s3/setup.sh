@@ -1,13 +1,7 @@
-
 #!/bin/bash
 
-
 # Set environment variables
-
-export ELB_ACCOUNT_ID=127311923021
-
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-
+export AWS_ACCOUNT_ID=717541894311
 export AWS_REGION=us-east-1
 
 # Define the bucket names (for access logs and connection logs)
@@ -15,12 +9,7 @@ export ACCESS_LOGS_BUCKET=my-loadbalancer-access-logs-${AWS_ACCOUNT_ID}
 export CONNECTION_LOGS_BUCKET=my-loadbalancer-connection-logs-${AWS_ACCOUNT_ID}
 
 # Define the Load Balancer ARN
-LOAD_BALANCER_ARN=$(aws elbv2 describe-load-balancers \
-    --names OurApplicationLoadBalancer \
-    --query "LoadBalancers[0].LoadBalancerArn" \
-    --output text)
-
-echo $LOAD_BALANCER_ARN
+export LOAD_BALANCER_ARN=arn:aws:elasticloadbalancing:us-east-1:${AWS_ACCOUNT_ID}:loadbalancer/app/OurApplicationLoadBalancer/db8639bd5df9f98b
 
 # Function to create S3 bucket and apply bucket policy
 create_bucket_and_apply_policy() {
@@ -33,28 +22,35 @@ create_bucket_and_apply_policy() {
 
     # Create the bucket policy
     cat <<EoF > bucket-policy.json
-    {
-    	"Version": "2012-10-17",
-    	"Statement": [
-    		{
-    			"Effect": "Allow",
-    			"Principal": {
-    				"AWS": "arn:aws:iam::${ELB_ACCOUNT_ID}:root"
-    			},
-    			"Action": "s3:PutObject",
-    			"Resource": "arn:aws:s3:::${BUCKET_NAME}/AWSLogs/${AWS_ACCOUNT_ID/*"
-    		}
-    	]
-    }    
-    EoF
-
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::${bucket_name}/*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:SourceAccount": "${AWS_ACCOUNT_ID}"
+                },
+                "ArnLike": {
+                    "aws:SourceArn": "${load_balancer_arn}"
+                }
+            }
+        }
+    ]
+}
+EoF
 
     # Apply the bucket policy
     echo "Applying bucket policy to: ${bucket_name}"
     aws s3api put-bucket-policy --bucket ${bucket_name} --policy file://bucket-policy.json
 
     # Clean up
-    # rm bucket-policy.json
+    rm bucket-policy.json
 }
 
 # Create the S3 bucket for access logs and apply its policy
