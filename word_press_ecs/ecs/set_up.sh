@@ -42,7 +42,7 @@ CONTAINER_PORT=80
 ECS_SERVICE_OUTPUT=$(aws ecs create-service \
     --cluster Wordpress-Cluster \
     --service-name wordpress-service \
-    --task-definition wordpress-td:1 \
+    --task-definition wordpress-td \
     --load-balancers "targetGroupArn=$TARGET_GROUP_ARN,containerName=$CONTAINER_NAME,containerPort=$CONTAINER_PORT" \
     --launch-type FARGATE \
     --platform-version LATEST \
