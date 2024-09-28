@@ -77,8 +77,6 @@ LOAD_BALANCE_MODIFY_OUTPUT=$(aws elbv2 modify-load-balancer-attributes \
     Key=connection_logs.s3.bucket,Value=${CONNECTION_LOGS_BUCKET} 
 )
 
-
-
 # Enable VPC Flow Logs for connection logs
 FLOW_LOGS_OUTPUT=$(aws ec2 create-flow-logs \
     --resource-type VPC \
