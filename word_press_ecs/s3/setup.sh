@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # Set environment variables
-export AWS_ACCOUNT_ID=717541894311
+export ELB_ACCOUNT_ID=127311923021
 export AWS_REGION=us-east-1
+
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 
 # Define the bucket names (for access logs and connection logs)
 export ACCESS_LOGS_BUCKET=my-loadbalancer-access-logs-${AWS_ACCOUNT_ID}
@@ -28,18 +30,10 @@ create_bucket_and_apply_policy() {
         {
             "Effect": "Allow",
             "Principal": {
-                "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
+                "AWS": "arn:aws:iam::${ELB_ACCOUNT_ID}:root"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${bucket_name}/*",
-            "Condition": {
-                "StringEquals": {
-                    "aws:SourceAccount": "${AWS_ACCOUNT_ID}"
-                },
-                "ArnLike": {
-                    "aws:SourceArn": "${load_balancer_arn}"
-                }
-            }
+            "Resource": "arn:aws:s3:::${BUCKET_NAME}/AWSLogs/${AWS_ACCOUNT_ID}/*"
         }
     ]
 }
