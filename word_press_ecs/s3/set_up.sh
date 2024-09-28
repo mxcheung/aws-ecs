@@ -6,6 +6,9 @@ export AWS_REGION=us-east-1
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 
+# Assign the VPC ID to a variable
+VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your Custom VPC']].{VpcId:VpcId}" --output text)
+
 # Define the bucket names (for access logs and connection logs)
 export ACCESS_LOGS_BUCKET=my-loadbalancer-access-logs-${AWS_ACCOUNT_ID}
 export CONNECTION_LOGS_BUCKET=my-loadbalancer-connection-logs-${AWS_ACCOUNT_ID}
@@ -66,5 +69,13 @@ aws elbv2 modify-load-balancer-attributes \
     Key=access_logs.s3.prefix,Value=AWSLogs/${AWS_ACCOUNT_ID}/ \
     Key=access_logs.s3.interval,Value=60
 
+# Enable VPC Flow Logs for connection logs
+aws ec2 create-flow-logs \
+    --resource-type VPC \
+    --resource-id ${VPC_ID} \
+    --traffic-type ALL \
+    --log-destination-type s3 \
+    --log-destination arn:aws:s3:::${CONNECTION_LOGS_BUCKET} \
+    --region ${AWS_REGION}
 
     
