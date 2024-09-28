@@ -46,7 +46,7 @@ create_bucket_and_apply_policy() {
             }
         ]
     }
-    EoF
+
 
     # Apply the bucket policy
     echo "Applying bucket policy to: ${bucket_name}"
