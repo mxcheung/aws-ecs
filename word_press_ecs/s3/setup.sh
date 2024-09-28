@@ -4,6 +4,8 @@
 
 # Set environment variables
 
+export ELB_ACCOUNT_ID=127311923021
+
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 
 export AWS_REGION=us-east-1
@@ -31,28 +33,20 @@ create_bucket_and_apply_policy() {
 
     # Create the bucket policy
     cat <<EoF > bucket-policy.json
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
-            },
-            "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${bucket_name}/*",
-            "Condition": {
-                "StringEquals": {
-                    "aws:SourceAccount": "${AWS_ACCOUNT_ID}"
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": {
+                    "AWS": "arn:aws:iam::${ELB_ACCOUNT_ID}:root"
                 },
-                "ArnLike": {
-                    "aws:SourceArn": "${load_balancer_arn}"
-                }
+                "Action": "s3:PutObject",
+                "Resource": "arn:aws:s3:::${BUCKET_NAME}/AWSLogs/${AWS_ACCOUNT_ID}/*"
             }
-        }
-    ]
-}
-EoF
+        ]
+    }
+    EoF
 
     # Apply the bucket policy
     echo "Applying bucket policy to: ${bucket_name}"
