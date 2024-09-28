@@ -6,6 +6,9 @@ https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/users/detail
 ```
 response=$(aws iam create-access-key --output json)
 
+# Write the response to a JSON file
+echo "$response" > access-key-response.json
+
 # Extract AccessKeyId and SecretAccessKey from the response
 aws_access_key_id=$(echo $response | jq -r '.AccessKey.AccessKeyId')
 aws_secret_access_key=$(echo $response | jq -r '.AccessKey.SecretAccessKey')
