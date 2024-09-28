@@ -63,6 +63,9 @@ create_bucket_and_apply_policy "${ACCESS_LOGS_BUCKET}" "${LOAD_BALANCER_ARN}"
 # Create the S3 bucket for connection logs and apply its policy
 create_bucket_and_apply_policy "${CONNECTION_LOGS_BUCKET}" "${LOAD_BALANCER_ARN}"
 
+# Create the S3 bucket for flow logs and apply its policy
+create_bucket_and_apply_policy "${FLOW_LOGS_BUCKET}" "${LOAD_BALANCER_ARN}"
+
 
 # Enable Access Logs for Load Balancer
 # Enable Access Logs and Connection Logs for Load Balancer
