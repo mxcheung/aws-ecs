@@ -9,6 +9,14 @@ response=$(aws iam create-access-key --output json)
 # Write the response to a JSON file
 echo "$response" > access-key-response.json
 
+# Extract AccessKeyId and SecretAccessKey from the response file
+access_key_id=$(jq -r '.AccessKey.AccessKeyId' access-key-response.json)
+secret_access_key=$(jq -r '.AccessKey.SecretAccessKey' access-key-response.json)
+
+# Print the extracted values (optional)
+echo "AccessKeyId: $access_key_id"
+echo "SecretAccessKey: $secret_access_key"
+
 # Extract AccessKeyId and SecretAccessKey from the response
 aws_access_key_id=$(echo $response | jq -r '.AccessKey.AccessKeyId')
 aws_secret_access_key=$(echo $response | jq -r '.AccessKey.SecretAccessKey')
