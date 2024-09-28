@@ -13,6 +13,7 @@ aws configure set aws_secret_access_key $aws_secret_access_key --profile cloud_u
 aws configure set region us-east-1 --profile cloud_user
 aws configure set output json --profile cloud_user
 export AWS_PROFILE=cloud_user
+sleep 5
 AWS_CALLER_IDENTITY=$(aws sts get-caller-identity)
 echo $AWS_CALLER_IDENTITY
 
