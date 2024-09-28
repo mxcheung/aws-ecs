@@ -23,7 +23,6 @@ echo "SecretAccessKey: $secret_access_key"
 
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/user_credentials/
 . ./set_up.sh
-read -p "Press enter to continue"
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/
 . ./set_up.sh
 
