@@ -20,10 +20,6 @@ secret_access_key=$(jq -r '.AccessKey.SecretAccessKey' access-key-response.json)
 echo "AccessKeyId: $access_key_id"
 echo "SecretAccessKey: $secret_access_key"
 
-# Extract AccessKeyId and SecretAccessKey from the response
-aws_access_key_id=$(echo $response | jq -r '.AccessKey.AccessKeyId')
-aws_secret_access_key=$(echo $response | jq -r '.AccessKey.SecretAccessKey')
-
 # Print the keys to verify
 echo "Access Key ID: $aws_access_key_id"
 echo "Secret Access Key: $aws_secret_access_key"
