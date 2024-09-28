@@ -65,7 +65,8 @@ create_bucket_and_apply_policy "${CONNECTION_LOGS_BUCKET}" "${LOAD_BALANCER_ARN}
 
 # Enable Access Logs for Load Balancer
 # Enable Access Logs and Connection Logs for Load Balancer
-aws elbv2 modify-load-balancer-attributes \
+
+LOAD_BALANCE_MODIFY_OUTPUT=$(aws elbv2 modify-load-balancer-attributes \
     --load-balancer-arn ${LOAD_BALANCER_ARN} \
     --region ${AWS_REGION} \
     --attributes \
@@ -73,6 +74,6 @@ aws elbv2 modify-load-balancer-attributes \
     Key=access_logs.s3.bucket,Value=${ACCESS_LOGS_BUCKET} \
     Key=connection_logs.s3.enabled,Value=true \
     Key=connection_logs.s3.bucket,Value=${CONNECTION_LOGS_BUCKET} 
+)
 
-
-    
+ 
