@@ -15,7 +15,7 @@ echo "Access Key ID: $aws_access_key_id"
 echo "Secret Access Key: $aws_secret_access_key"
 
 git clone https://github.com/mxcheung/aws-ecs.git
-cd /home/cloudshell-user/aws-ecs/word_press_ecs/user_credentials
+cd /home/cloudshell-user/aws-ecs/word_press_ecs/user_credentials/
 . ./set_up.sh
 read -p "Press enter to continue"
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/
