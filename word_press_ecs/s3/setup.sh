@@ -34,18 +34,19 @@ create_bucket_and_apply_policy() {
     # Create the bucket policy
     cat <<EoF > bucket-policy.json
     {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Principal": {
-                    "AWS": "arn:aws:iam::${ELB_ACCOUNT_ID}:root"
-                },
-                "Action": "s3:PutObject",
-                "Resource": "arn:aws:s3:::${BUCKET_NAME}/AWSLogs/${AWS_ACCOUNT_ID}/*"
-            }
-        ]
-    }
+    	"Version": "2012-10-17",
+    	"Statement": [
+    		{
+    			"Effect": "Allow",
+    			"Principal": {
+    				"AWS": "arn:aws:iam::${ELB_ACCOUNT_ID}:root"
+    			},
+    			"Action": "s3:PutObject",
+    			"Resource": "arn:aws:s3:::${BUCKET_NAME}/AWSLogs/${AWS_ACCOUNT_ID/*"
+    		}
+    	]
+    }    
+    EoF
 
 
     # Apply the bucket policy
