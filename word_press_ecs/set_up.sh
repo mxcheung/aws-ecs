@@ -3,7 +3,7 @@
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/user_credentials
 . ./set_up.sh
 
-sleep .5 # Waits 0.5 second.
+sleep 5 # Waits 5 seconds.
 
 aws logs create-log-group --log-group-name /ecs/wordpress-td
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/networks
