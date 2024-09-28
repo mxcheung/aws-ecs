@@ -4,6 +4,9 @@ https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/users/detail
 
 # create aws_access_key_id and aws_secret_access_key via cloudshell
 ```
+git clone https://github.com/mxcheung/aws-ecs.git
+cd /home/cloudshell-user/aws-ecs/word_press_ecs/user_credentials/
+
 response=$(aws iam create-access-key --output json)
 
 # Write the response to a JSON file
@@ -25,7 +28,7 @@ aws_secret_access_key=$(echo $response | jq -r '.AccessKey.SecretAccessKey')
 echo "Access Key ID: $aws_access_key_id"
 echo "Secret Access Key: $aws_secret_access_key"
 
-git clone https://github.com/mxcheung/aws-ecs.git
+
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/user_credentials/
 . ./set_up.sh
 read -p "Press enter to continue"
