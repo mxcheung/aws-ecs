@@ -33,7 +33,7 @@ create_bucket_and_apply_policy() {
                 "AWS": "arn:aws:iam::${ELB_ACCOUNT_ID}:root"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${BUCKET_NAME}/AWSLogs/${AWS_ACCOUNT_ID}/*"
+            "Resource": "arn:aws:s3:::${bucket_name}/AWSLogs/${AWS_ACCOUNT_ID}/*"
         }
     ]
 }
