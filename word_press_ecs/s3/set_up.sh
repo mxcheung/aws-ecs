@@ -12,6 +12,7 @@ VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your 
 # Define the bucket names (for access logs and connection logs)
 export ACCESS_LOGS_BUCKET=my-loadbalancer-access-logs-${AWS_ACCOUNT_ID}
 export CONNECTION_LOGS_BUCKET=my-loadbalancer-connection-logs-${AWS_ACCOUNT_ID}
+export FLOW_LOGS_BUCKET=flow-logs-${AWS_ACCOUNT_ID}
 
 # Define the Load Balancer ARN
 export LOAD_BALANCER_ARN=$(aws elbv2 describe-load-balancers \
@@ -76,4 +77,14 @@ LOAD_BALANCE_MODIFY_OUTPUT=$(aws elbv2 modify-load-balancer-attributes \
     Key=connection_logs.s3.bucket,Value=${CONNECTION_LOGS_BUCKET} 
 )
 
- 
+
+
+# Enable VPC Flow Logs for connection logs
+FLOW_LOGS_OUTPUT=$(aws ec2 create-flow-logs \
+    --resource-type VPC \
+    --resource-id ${VPC_ID} \
+    --traffic-type ALL \
+    --log-destination-type s3 \
+    --log-destination arn:aws:s3:::${FLOW_LOGS_BUCKET} \
+    --region ${AWS_REGION}
+) 
