@@ -14,7 +14,11 @@ export ACCESS_LOGS_BUCKET=my-loadbalancer-access-logs-${AWS_ACCOUNT_ID}
 export CONNECTION_LOGS_BUCKET=my-loadbalancer-connection-logs-${AWS_ACCOUNT_ID}
 
 # Define the Load Balancer ARN
-export LOAD_BALANCER_ARN=arn:aws:elasticloadbalancing:us-east-1:${AWS_ACCOUNT_ID}:loadbalancer/app/OurApplicationLoadBalancer/db8639bd5df9f98b
+export LOAD_BALANCER_ARN=$(aws elbv2 describe-load-balancers \
+    --names OurApplicationLoadBalancer \
+    --query "LoadBalancers[0].LoadBalancerArn" \
+    --output text)
+
 
 # Function to create S3 bucket and apply bucket policy
 create_bucket_and_apply_policy() {
