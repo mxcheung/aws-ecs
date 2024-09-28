@@ -20,10 +20,6 @@ secret_access_key=$(jq -r '.AccessKey.SecretAccessKey' access-key-response.json)
 echo "AccessKeyId: $access_key_id"
 echo "SecretAccessKey: $secret_access_key"
 
-# Print the keys to verify
-echo "Access Key ID: $aws_access_key_id"
-echo "Secret Access Key: $aws_secret_access_key"
-
 
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/user_credentials/
 . ./set_up.sh
