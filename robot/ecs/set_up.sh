@@ -10,9 +10,7 @@ APP_SG_ID_2=$(aws ec2 describe-security-groups --filters Name=group-name,Values=
 
 echo $APP_SG_ID_2
 
-TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups --names wordpress-tg --query "TargetGroups[0].TargetGroupArn" --output text)
 
-echo $TARGET_GROUP_ARN
 
 
 # Get Subnet ID for Private Subnet AZ A
