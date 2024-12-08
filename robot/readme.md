@@ -92,5 +92,15 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 MySQL [(none)]>
 ```
 
+```
+CloudWatch >> Log groups >> /ecs/robot-td >> ecs/hello-world-container/732c2ac0722c4fd4b0557d9f8bb29dae
+
+2024-12-08T06:41:36.534Z
+Hello, World!
+
+Hello, World!
+```
+
+
 # Reference
 https://github.com/pluralsight-cloud/aws-certified-solutions-architect-associate/tree/main/bootcamp-hands-on-labs/04-week-4/4.3%20-%20Hosting%20a%20Wordpress%20Application%20on%20ECS%20Fargate%20with%20RDS%20DB%20and%20Parameter%20Store
