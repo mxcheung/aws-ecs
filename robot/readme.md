@@ -23,8 +23,9 @@ echo "SecretAccessKey: $secret_access_key"
 
 cd /home/cloudshell-user/aws-ecs/robot/user_credentials/
 . ./set_up.sh
-cd /home/cloudshell-user/aws-ecs/robot/ecs/
+cd /home/cloudshell-user/aws-ecs/robot/
 . ./set_up.sh
+
 
 ```
 
