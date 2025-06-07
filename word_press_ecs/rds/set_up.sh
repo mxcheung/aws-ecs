@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-   
 # Get Subnet ID for Database Subnet AZ A
 subnet_a=$(aws ec2 describe-subnets \
     --filters "Name=tag:Name,Values=Database Subnet AZ A" "Name=availability-zone,Values=us-east-1a" \
@@ -39,29 +37,11 @@ RDS_KMS_KEY_ID=$(aws kms describe-key \
 echo "aws kms describe-key --> key-id alias/aws/rds"
 echo $RDS_KMS_KEY_ID
 
-DB_SECURITY_GROUP_ID=$(aws ec2 create-security-group \
-    --group-name database-sg \
-    --description "Security group for RDS instance" \
-    --vpc-id "$VPC_ID" \
-    --query "GroupId" \
-    --output text)
-
 echo "aws ec2 describe-security-groups -> database-sg"
 
 DATABASE_SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=database-sg --query "SecurityGroups[0].GroupId" --output text)
 
 echo $DATABASE_SG_ID
-
-echo "Allow MySQL access from VPC ->aws ec2 authorize-security-group-ingress"
-
-
-DB_SECURITY_GROUP_ID_INGRESS=$(aws ec2 authorize-security-group-ingress \
-   --group-id $DATABASE_SG_ID \
-   --ip-permissions IpProtocol=tcp,FromPort=3306,ToPort=3306,IpRanges="[{CidrIp=10.0.0.0/16,Description='Allow MySQL access from VPC'}]")
-
-
-
-DATABASE_SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=database-sg --query "SecurityGroups[0].GroupId" --output text)
 
 echo "Create the RDS Instance -> aws rds create-db-instance"
 
