@@ -3,14 +3,6 @@
 # Assign the VPC ID to a variable
 VPC_ID=$(aws ec2 describe-vpcs --query "Vpcs[?Tags[?Key=='Name' && Value=='Your Custom VPC']].{VpcId:VpcId}" --output text)
 
-# Get the Security Group ID for ALBAllowHttp
-ALB_ALLOW_HTTP_SG_ID=$(aws ec2 describe-security-groups \
-    --filters Name=group-name,Values=ALBAllowHttp \
-    --query 'SecurityGroups[0].GroupId' \
-    --output text)
-
-echo $ALB_ALLOW_HTTP_SG_ID
-
 APP_SG_ID=$(aws ec2 describe-security-groups --filters Name=group-name,Values=app-sg --query "SecurityGroups[0].GroupId" --output text)
 
 echo $APP_SG_ID
