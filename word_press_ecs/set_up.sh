@@ -3,6 +3,8 @@
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/user_credentials
 . ./set_up.sh
 aws logs create-log-group --log-group-name /ecs/wordpress-td
+cd /home/cloudshell-user/aws-ecs/word_press_ecs/security_group
+. ./set_up.sh
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/networks
 . ./set_up.sh
 cd /home/cloudshell-user/aws-ecs/word_press_ecs/rds
