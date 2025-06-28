@@ -1,7 +1,9 @@
-from aws_cdk import Stack, aws_codebuild as codebuild
+from aws_cdk import Stack, Stage
 from aws_cdk.pipelines import CodePipeline, CodePipelineSource, ShellStep, CodeBuildStep
+from aws_cdk import aws_codebuild as codebuild
 from constructs import Construct
-from ecs_stack import EcsServiceStack
+from ecs_cluster_stack import EcsClusterStack
+from ecs_service_stack import EcsServiceStack
 
 
 class PipelineStack(Stack):
@@ -16,8 +18,7 @@ class PipelineStack(Stack):
         repo_uri = ecr_cfg["repositoryUri"]
         tag = ecr_cfg["tag"]
 
-        # Synth step
-        synth = ShellStep("Synth", 
+        synth = ShellStep("Synth",
             input=CodePipelineSource.code_commit(
                 repository_name=source_cfg["repositoryName"],
                 branch=source_cfg["branch"]
@@ -30,23 +31,32 @@ class PipelineStack(Stack):
 
         pipeline = CodePipeline(self, "Pipeline", synth=synth)
 
-        # Add ECR Build step BEFORE ECS deploy stage
+        # Build + Push Docker image
         pipeline.add_wave("BuildAndPush").add_post(
             CodeBuildStep(
                 "DockerBuildAndPush",
-                input=synth.input,  # reuse same CodeCommit input
+                input=synth.input,
                 commands=[
-                    "echo Logging in to Amazon ECR...",
                     f"aws ecr get-login-password --region {region} | docker login --username AWS --password-stdin {repo_uri.split('/')[0]}",
-                    "echo Building Docker image...",
                     f"docker build -t {repo_uri}:{tag} .",
-                    "echo Pushing Docker image...",
                     f"docker push {repo_uri}:{tag}"
                 ],
                 build_environment=codebuild.BuildEnvironment(
-                    privileged=True  # Required for Docker in CodeBuild
+                    privileged=True
                 )
             )
         )
 
+        # ECS deployment stage
         pipeline.add_stage(EcsDeployStage(self, "Deploy", config=config))
+
+
+class EcsDeployStage(Stage):
+    def __init__(self, scope: Construct, id: str, config: dict, **kwargs):
+        super().__init__(scope, id, **kwargs)
+
+        # First: create VPC + cluster
+        cluster_stack = EcsClusterStack(self, "ClusterStack", config=config)
+
+        # Then: create service using cluster from above
+        EcsServiceStack(self, "ServiceStack", config=config, cluster=cluster_stack.cluster)
