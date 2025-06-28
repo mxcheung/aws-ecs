@@ -9,6 +9,7 @@ class EcsServiceStack(Stack):
 
         vpc_cfg = config["vpc"]
         ecs_cfg = config["ecs"]
+        ecr_cfg = config["ecr"]
 
         vpc = Vpc(self, "Vpc", max_azs=vpc_cfg["maxAzs"])
 
@@ -27,7 +28,7 @@ class EcsServiceStack(Stack):
         task_def = Ec2TaskDefinition(self, "TaskDef")
         task_def.add_container(
             "AppContainer",
-            image=ContainerImage.from_registry(ecs_cfg["dockerImage"]),
+            image=ContainerImage.from_registry(f"{ecr_cfg['repositoryUri']}:{ecr_cfg['tag']}"),
             memory_limit_mib=256
         )
 
