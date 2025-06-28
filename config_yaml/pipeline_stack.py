@@ -1,36 +1,52 @@
-from aws_cdk import Stack
-from aws_cdk.pipelines import CodePipeline, CodePipelineSource, ShellStep
+from aws_cdk import Stack, aws_codebuild as codebuild
+from aws_cdk.pipelines import CodePipeline, CodePipelineSource, ShellStep, CodeBuildStep
 from constructs import Construct
 from ecs_stack import EcsServiceStack
+
 
 class PipelineStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, config: dict, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
 
-        source = config["source"]
+        source_cfg = config["source"]["codeCommit"]
+        ecr_cfg = config["ecr"]
+        account = config["env"]["account"]
+        region = config["env"]["region"]
 
-        pipeline = CodePipeline(
-            self,
-            "Pipeline",
-            pipeline_name="MyAppPipeline",
-            synth=ShellStep(
-                "Synth",
-                input=CodePipelineSource.code_commit(
-                    repository_name=source["repositoryName"],
-                    branch=source["branch"]
-                ),
+        repo_uri = ecr_cfg["repositoryUri"]
+        tag = ecr_cfg["tag"]
+
+        # Synth step
+        synth = ShellStep("Synth", 
+            input=CodePipelineSource.code_commit(
+                repository_name=source_cfg["repositoryName"],
+                branch=source_cfg["branch"]
+            ),
+            commands=[
+                "pip install -r requirements.txt",
+                "cdk synth"
+            ]
+        )
+
+        pipeline = CodePipeline(self, "Pipeline", synth=synth)
+
+        # Add ECR Build step BEFORE ECS deploy stage
+        pipeline.add_wave("BuildAndPush").add_post(
+            CodeBuildStep(
+                "DockerBuildAndPush",
+                input=synth.input,  # reuse same CodeCommit input
                 commands=[
-                    "pip install -r requirements.txt",
-                    "cdk synth"
-                ]
+                    "echo Logging in to Amazon ECR...",
+                    f"aws ecr get-login-password --region {region} | docker login --username AWS --password-stdin {repo_uri.split('/')[0]}",
+                    "echo Building Docker image...",
+                    f"docker build -t {repo_uri}:{tag} .",
+                    "echo Pushing Docker image...",
+                    f"docker push {repo_uri}:{tag}"
+                ],
+                build_environment=codebuild.BuildEnvironment(
+                    privileged=True  # Required for Docker in CodeBuild
+                )
             )
         )
 
-        deploy_stage = EcsDeployStage(self, "Deploy", config=config)
-        pipeline.add_stage(deploy_stage)
-
-
-class EcsDeployStage(Stack):
-    def __init__(self, scope: Construct, construct_id: str, config: dict):
-        super().__init__(scope, construct_id)
-        EcsServiceStack(self, "EcsServiceStack", config=config)
+        pipeline.add_stage(EcsDeployStage(self, "Deploy", config=config))
