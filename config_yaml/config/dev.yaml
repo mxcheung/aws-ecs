@@ -2,6 +2,9 @@ env:
   account: "123456789012"
   region: "ap-southeast-2"
 
+pipeline:
+  name: "MyAppPipeline"
+
 source:
   codeCommit:
     repositoryName: "my-cdk-app"
@@ -10,6 +13,7 @@ source:
 ecr:
   repositoryUri: "123456789012.dkr.ecr.ap-southeast-2.amazonaws.com/my-app"
   tag: "latest"
+  dockerContext: "."         # relative path to Dockerfile
 
 vpc:
   maxAzs: 2
@@ -18,3 +22,4 @@ ecs:
   clusterName: "my-cluster"
   serviceName: "my-service"
   instanceType: "t3.micro"
+  memory: 256                # container memory (MiB)
