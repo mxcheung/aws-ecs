@@ -7,21 +7,19 @@ from ecs_service_stack import EcsServiceStack
 
 
 class PipelineStack(Stack):
-    def __init__(self, scope: Construct, construct_id: str, config: dict, **kwargs):
-        super().__init__(scope, construct_id, **kwargs)
+    def __init__(self, scope: Construct, id: str, config: dict, **kwargs):
+        super().__init__(scope, id, **kwargs)
 
-        source_cfg = config["source"]["codeCommit"]
-        ecr_cfg = config["ecr"]
-        account = config["env"]["account"]
-        region = config["env"]["region"]
+        repo = config["source"]["codeCommit"]
+        ecr = config["ecr"]
+        pipeline_cfg = config["pipeline"]
+        env_cfg = config["env"]
 
-        repo_uri = ecr_cfg["repositoryUri"]
-        tag = ecr_cfg["tag"]
-
+        # CDK synth step
         synth = ShellStep("Synth",
             input=CodePipelineSource.code_commit(
-                repository_name=source_cfg["repositoryName"],
-                branch=source_cfg["branch"]
+                repository_name=repo["repositoryName"],
+                branch=repo["branch"]
             ),
             commands=[
                 "pip install -r requirements.txt",
@@ -29,17 +27,20 @@ class PipelineStack(Stack):
             ]
         )
 
-        pipeline = CodePipeline(self, "Pipeline", synth=synth)
+        pipeline = CodePipeline(self, "Pipeline",
+            pipeline_name=pipeline_cfg["name"],
+            synth=synth
+        )
 
-        # Build + Push Docker image
+        # Build + Push Docker image to ECR
         pipeline.add_wave("BuildAndPush").add_post(
             CodeBuildStep(
-                "DockerBuildAndPush",
+                "DockerBuild",
                 input=synth.input,
                 commands=[
-                    f"aws ecr get-login-password --region {region} | docker login --username AWS --password-stdin {repo_uri.split('/')[0]}",
-                    f"docker build -t {repo_uri}:{tag} .",
-                    f"docker push {repo_uri}:{tag}"
+                    f"aws ecr get-login-password --region {env_cfg['region']} | docker login --username AWS --password-stdin {ecr['repositoryUri'].split('/')[0]}",
+                    f"docker build -t {ecr['repositoryUri']}:{ecr['tag']} {ecr['dockerContext']}",
+                    f"docker push {ecr['repositoryUri']}:{ecr['tag']}"
                 ],
                 build_environment=codebuild.BuildEnvironment(
                     privileged=True
@@ -47,16 +48,12 @@ class PipelineStack(Stack):
             )
         )
 
-        # ECS deployment stage
-        pipeline.add_stage(EcsDeployStage(self, "Deploy", config=config))
+        pipeline.add_stage(EcsDeployStage(self, "EcsDeployStage", config=config))
 
 
 class EcsDeployStage(Stage):
     def __init__(self, scope: Construct, id: str, config: dict, **kwargs):
         super().__init__(scope, id, **kwargs)
 
-        # First: create VPC + cluster
         cluster_stack = EcsClusterStack(self, "ClusterStack", config=config)
-
-        # Then: create service using cluster from above
         EcsServiceStack(self, "ServiceStack", config=config, cluster=cluster_stack.cluster)
