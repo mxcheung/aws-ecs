@@ -1,11 +1,6 @@
 from aws_cdk import Stack
 from aws_cdk.aws_ec2 import InstanceType
-from aws_cdk.aws_ecs import (
-    Ec2Service,
-    Ec2TaskDefinition,
-    ContainerImage,
-    Cluster
-)
+from aws_cdk.aws_ecs import Ec2Service, Ec2TaskDefinition, ContainerImage, Cluster
 from constructs import Construct
 
 
@@ -16,9 +11,8 @@ class EcsServiceStack(Stack):
         ecs_cfg = config["ecs"]
         ecr_cfg = config["ecr"]
 
-        # Add EC2 capacity to existing cluster
         cluster.add_capacity(
-            "DefaultAutoScalingGroup",
+            "DefaultASG",
             instance_type=InstanceType(ecs_cfg["instanceType"])
         )
 
@@ -26,12 +20,12 @@ class EcsServiceStack(Stack):
         task_def.add_container(
             "AppContainer",
             image=ContainerImage.from_registry(f"{ecr_cfg['repositoryUri']}:{ecr_cfg['tag']}"),
-            memory_limit_mib=256
+            memory_limit_mib=ecs_cfg["memory"]
         )
 
         Ec2Service(
             self,
-            "EcsService",
+            "Service",
             cluster=cluster,
             task_definition=task_def,
             service_name=ecs_cfg["serviceName"]
