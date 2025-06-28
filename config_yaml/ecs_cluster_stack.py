@@ -3,6 +3,7 @@ from aws_cdk.aws_ec2 import Vpc
 from aws_cdk.aws_ecs import Cluster
 from constructs import Construct
 
+
 class EcsClusterStack(Stack):
     def __init__(self, scope: Construct, id: str, config: dict, **kwargs):
         super().__init__(scope, id, **kwargs)
@@ -19,5 +20,4 @@ class EcsClusterStack(Stack):
             cluster_name=ecs_cfg["clusterName"]
         )
 
-        # Output ARN to pass to other stacks (if needed)
         CfnOutput(self, "ClusterName", value=self.cluster.cluster_name)
