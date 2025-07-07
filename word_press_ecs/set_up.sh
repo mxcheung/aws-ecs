@@ -6,8 +6,15 @@ echo $AWS_ACCESS_KEY_ID
 
 #cd $MY_ENV_DIR/aws-ecs/word_press_ecs/user_credentials
 #. ./set_up.sh
+
+
 # cd $MY_ENV_DIR/aws-ecs/word_press_ecs/aws-profile
 # . ./set_up.sh
+
+
+cd $MY_ENV_DIR/aws-ecs/word_press_ecs/user_credentials
+. ./set_up_no_create_access_key.sh
+
 
 aws logs create-log-group --log-group-name /ecs/wordpress-td
 cd $MY_ENV_DIR/aws-ecs/word_press_ecs/security_group
