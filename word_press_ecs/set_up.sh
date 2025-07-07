@@ -19,6 +19,10 @@ cd $MY_ENV_DIR/aws-ecs/word_press_ecs/s3
 . ./set_up.sh
 cd $MY_ENV_DIR/aws-ecs/word_press_ecs/ecs-cluster
 . ./set_up.sh
+
+cd $MY_ENV_DIR/aws-ecs/word_press_ecs/aws-profile
+. ./set_up.sh
+
 cd $MY_ENV_DIR/aws-ecs/word_press_ecs/ecr
 . ./set_up.sh
 cd $MY_ENV_DIR/aws-ecs/word_press_ecs/ecs-task-definition
