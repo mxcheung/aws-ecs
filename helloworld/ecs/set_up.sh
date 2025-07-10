@@ -8,6 +8,6 @@ NEW_TASK_DEF=$(aws ecs describe-task-definition \
 
 # Update the ECS service to use the new task definition
 aws ecs update-service \
-  --cluster my-cluster \
-  --service my-service \
+  --cluster Wordpress-Cluster  \
+  --service wordpress-service \
   --task-definition "$NEW_TASK_DEF"
