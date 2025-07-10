@@ -8,12 +8,12 @@ ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text --profile
 
 # Step 1: Create CodeCommit repo
 echo "🔧 Creating CodeCommit repository: $REPO_NAME"
-aws codecommit create-repository \
+REPO_URL=$(aws codecommit create-repository \
   --repository-name "$REPO_NAME" \
   --repository-description "Hello ECS Python App" \
   --region $REGION \
-  --profile $PROFILE || echo "✅ Repo already exists."
-
+  --profile $PROFILE || echo "✅ Repo already exists.")
+    
 # Step 2: Setup Git remote
 REPO_URL="https://git-codecommit.$REGION.amazonaws.com/v1/repos/$REPO_NAME"
 
