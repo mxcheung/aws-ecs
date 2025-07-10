@@ -9,7 +9,7 @@ image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${REPO_NAME}:latest
 container_definitions=$(cat <<EOF
 [
   {
-    "name": "helloworld",
+    "name": "wordpress",
     "image": "$image_uri",
     "essential": true,
     "portMappings": [
