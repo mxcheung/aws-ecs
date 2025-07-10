@@ -9,7 +9,7 @@ image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${REPO_NAME}:latest
 container_definitions=$(cat <<EOF
 [
   {
-    "name": "wordpress",
+    "name": "helloworld",
     "image": "$image_uri",
     "essential": true,
     "portMappings": [
@@ -40,7 +40,7 @@ EOF
 echo "Create Task Definition"
 
 ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
-    --family wordpress-td \
+    --family helloword-td \
     --network-mode awsvpc \
     --requires-compatibilities FARGATE \
     --cpu "1024" \
