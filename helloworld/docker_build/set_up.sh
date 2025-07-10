@@ -4,8 +4,12 @@ AWS_REGION=us-east-1
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 ECR_URI="${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPO_NAME}"
 
-# Create ECR repo if not exists
-aws ecr create-repository --repository-name $REPO_NAME --region $AWS_REGION || true
+REPOSITORY_URI=$(aws ecr describe-repositories \
+  --repository-names "$REPO_NAME" \
+  --query "repositories[0].repositoryUri" \
+  --output text)
+
+echo "🔗 Repository URI: $REPOSITORY_URI"
 
 # Login to ECR
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URI
