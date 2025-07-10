@@ -37,6 +37,8 @@ echo "$DB_HOST"
 
 # Helloworld in cloud 9
 ```
+export AWS_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxx
+export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 export MY_ENV_DIR="$HOME/environment"
 cd $MY_ENV_DIR/aws-ecs/helloworld/
 . ./set_up.sh
