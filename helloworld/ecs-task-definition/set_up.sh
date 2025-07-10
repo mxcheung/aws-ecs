@@ -1,8 +1,9 @@
 #!/bin/bash
 
+REPO_NAME=hello-ecs
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 
-image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/wordpress:latest"
+image_uri="${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${REPO_NAME}:latest"
 
 
 container_definitions=$(cat <<EOF
