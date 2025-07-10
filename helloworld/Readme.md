@@ -34,3 +34,10 @@ echo "$DB_HOST"
 . ./set_up.sh
 
 ```
+
+# Helloworld in cloud 9
+```
+export MY_ENV_DIR="$HOME/environment"
+cd $MY_ENV_DIR/aws-ecs/helloword/
+. ./set_up.sh
+```
