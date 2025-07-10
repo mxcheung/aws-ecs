@@ -14,4 +14,9 @@ REPOSITORY_URI=$(aws ecr create-repository \
   --encryption-configuration encryptionType=AES256 \
   --output text \
   --query 'repository.repositoryUri' 2>/dev/null || \
-  
+  aws ecr describe-repositories \
+    --region "$AWS_REGION" \
+    --repository-names "$REPO_NAME" \
+    --output text \
+    --query 'repositories[0].repositoryUri')
+
