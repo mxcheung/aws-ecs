@@ -41,3 +41,8 @@ export MY_ENV_DIR="$HOME/environment"
 cd $MY_ENV_DIR/aws-ecs/helloworld/
 . ./set_up.sh
 ```
+# Cloud watch log
+
+```
+2025-07-10T13:23:09.192Z    Hello, world from CodeCommit and ECS!
+```
