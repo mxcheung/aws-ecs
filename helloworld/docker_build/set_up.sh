@@ -14,6 +14,8 @@ echo "🔗 Repository URI: $REPOSITORY_URI"
 # Login to ECR
 aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URI
 
+cp $MY_ENV_DIR/aws-ecs/helloworld/hello-ecs .
+
 # Build and push
 docker build -t $REPO_NAME .
 docker tag $REPO_NAME:latest $ECR_URI:latest
