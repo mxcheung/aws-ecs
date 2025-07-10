@@ -37,7 +37,7 @@ git remote add origin "$REPO_URL"
   
 git add .
 git commit -m "Initial commit: Python ECS hello app"
-git push --set-upstream origin main
+git push --set-upstream origin master
 
 
 echo "✅ Code pushed to CodeCommit: $REPO_URL"
