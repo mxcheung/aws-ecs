@@ -46,7 +46,7 @@ ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
     --cpu "1024" \
     --memory "3072" \
     --execution-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskExecutionRole \
-    --task-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskRole \
+    --task-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/OurEcsTaskRole \    
     --runtime-platform '{
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
