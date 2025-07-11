@@ -2,6 +2,7 @@
 
 
 CLUSTER_NAME="Wordpress-Cluster"
+OLD_SERVICE_NAME="wordpress-service"
 SERVICE_NAME="wordpress-service"
 TASK_DEF_NAME="helloword-td"
 
@@ -48,7 +49,26 @@ ECS_DELETE_OUTPUT=$(aws ecs delete-service \
   --service "$SERVICE_NAME" \
   --force)
 
-# Step 2: Recreate the service WITHOUT a load balancer
+# Step 2: Wait for draining to complete
+echo "⏳ Waiting for tasks to drain..."
+while true; do
+  TASKS_RUNNING=$(aws ecs describe-services \
+    --cluster "$CLUSTER_NAME" \
+    --services "$OLD_SERVICE_NAME" \
+    --query "services[0].runningCount" \
+    --output text)
+
+  echo "🟡 Running tasks: $TASKS_RUNNING"
+
+  if [ "$TASKS_RUNNING" -eq 0 ]; then
+    echo "✅ All tasks drained."
+    break
+  fi
+
+  sleep 10
+done  
+
+3 Step 2: Recreate the service WITHOUT a load balancer
 ECS_RECREATE_OUTPUT=$(aws ecs create-service \
   --cluster "$CLUSTER_NAME" \
   --service-name "$SERVICE_NAME" \
