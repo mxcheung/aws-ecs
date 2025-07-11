@@ -38,18 +38,18 @@ NEW_TASK_DEF=$(aws ecs describe-task-definition \
   
 
 # Step 1: Delete the existing service
-aws ecs update-service \
+ECS_UPDATE_OUTPUT=$(aws ecs update-service \
   --cluster "$CLUSTER_NAME" \
   --service "$SERVICE_NAME" \
-  --desired-count 0
+  --desired-count 0)
 
-aws ecs delete-service \
+ECS_DELETE_OUTPUT=$(aws ecs delete-service \
   --cluster "$CLUSTER_NAME" \
   --service "$SERVICE_NAME" \
-  --force
+  --force)
 
 # Step 2: Recreate the service WITHOUT a load balancer
-ECS_SERVICE_OUTPUT=$(aws ecs create-service \
+ECS_RECREATE_OUTPUT=$(aws ecs create-service \
   --cluster "$CLUSTER_NAME" \
   --service-name "$SERVICE_NAME" \
   --launch-type FARGATE \
