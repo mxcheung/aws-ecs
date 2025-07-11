@@ -1,11 +1,10 @@
-# Use an official Python runtime
-FROM python:3.10-slim
+FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy code
-COPY main.py .
+COPY . /app
+RUN pip install flask
 
-# Run app
-CMD ["python", "main.py"]
+EXPOSE 80
+
+CMD ["python", "app.py"]
