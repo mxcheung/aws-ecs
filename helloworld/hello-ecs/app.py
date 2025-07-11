@@ -15,7 +15,8 @@ def favicon():
 # Serve wordpress logo (for legacy health checks)
 @app.route('/wp-admin/images/wordpress-logo.svg')
 def wordpress_logo():
-    return send_from_directory('static/wp-admin/images', 'wordpress-logo.svg')
+    return send_from_directory('static/wp-admin/images', 'wordpress-logo.svg', mimetype='image/svg+xml')
+    
 
 # Default route
 @app.route('/')
