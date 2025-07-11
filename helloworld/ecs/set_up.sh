@@ -68,7 +68,7 @@ while true; do
   sleep 10
 done  
 
-3 Step 2: Recreate the service WITHOUT a load balancer
+# Step 3: Recreate the service WITHOUT a load balancer
 ECS_RECREATE_OUTPUT=$(aws ecs create-service \
   --cluster "$CLUSTER_NAME" \
   --service-name "$SERVICE_NAME" \
