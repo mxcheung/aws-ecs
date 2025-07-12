@@ -74,6 +74,6 @@ ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
   --execution-role-arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/OurEcsTaskExecutionRole" \
   --task-role-arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/OurEcsTaskRole" \
   --runtime-platform "${RUNTIME_PLATFORM}" \
-  --container-definitions "${CONTAINER_DEFINITIONS}")
+  --container-definitions "${container_definitions}")
 
 echo "✅ Task definition ${FAMILY_NAME} registered."
