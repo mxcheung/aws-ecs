@@ -56,7 +56,6 @@ echo "SecretAccessKey: $secret_access_key"
 export AWS_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxx
 export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 git clone https://github.com/mxcheung/aws-ecs.git
-git clone https://github.com/mxcheung/aws_mysql_bulkload.git
 export MY_ENV_DIR="$HOME/environment"
 export MY_ENV_ROOT_DIR="$HOME/environment/aws-ecs/hellocodedeploy"
 cd $MY_ENV_DIR/aws-ecs/word_press_ecs/
