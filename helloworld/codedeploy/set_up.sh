@@ -10,7 +10,9 @@ echo "📦 Creating CodeDeploy application..."
 AWS_CODE_DEPLOY_APP=$(aws deploy create-application \
   --application-name hello-ecs-app \
   --compute-platform ECS)
-  
+
+echo "🔐 Using AWS CodeDeploy application: $AWS_CODE_DEPLOY_APP"
+
 # Create CodeDeploy deployment group
 echo "🚀 Creating CodeDeploy deployment group..."
 
