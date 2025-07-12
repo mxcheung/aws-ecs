@@ -4,8 +4,8 @@
 CLUSTER_NAME="Wordpress-Cluster"
 OLD_SERVICE_NAME="wordpress-service"
 SERVICE_NAME="wordpress-service"
-TASK_DEF_NAME="helloword-td"
-TASK_FAMILY="helloword-td"
+TASK_DEF_NAME="helloworld-td"
+TASK_FAMILY="helloworld-td"
 
 # SUBNET_ID="subnet-xxxxxx"  # Replace with a real subnet ID
 
