@@ -1,0 +1,10 @@
+version: 1
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "helloworld-td"
+        LoadBalancerInfo:
+          ContainerName: "wordpress"
+          ContainerPort: 80
+        PlatformVersion: "LATEST"

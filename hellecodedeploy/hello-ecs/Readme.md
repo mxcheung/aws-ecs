@@ -6,7 +6,9 @@ hello-ecs/
 ├── app.py
 ├── Dockerfile
 ├── requirements.txt
-├── buildspec.yml  ← for CodeBuild/ECR
+├── buildspec.yml        # builds image, renders taskdef.json
+├── taskdef.json.tpl     # template w/ placeholders for image URI & tag
+├── appspec.yaml         # CodeDeploy instructions
 └── static/
     ├── favicon.ico
     └── wp-admin/
