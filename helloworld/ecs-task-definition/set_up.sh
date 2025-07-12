@@ -35,7 +35,9 @@ read -r -d '' CONTAINER_DEFINITIONS <<EOF
         "awslogs-create-group": "true",
         "awslogs-region": "${REGION}",
         "awslogs-stream-prefix": "ecs",
-        "awslogs-max-buffer-size": "25m"
+        "awslogs-stream-prefix": "ecs",
+        "mode": "non-blocking",
+        "max-buffer-size": "25m"
       }
     },
     "healthCheck": {
