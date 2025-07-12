@@ -5,6 +5,18 @@ This project aims to
  - Create new task definition with new image
  - Update ECS service with new task definition.
 
+# Code build prerequisites
+ - Add buildspec.yml
+ - Add codebuild-hello-ecs-role
+ - Add hello-ecs-build
+ - Delete docker_build
+
+# Expect results
+
+```
+http://ourapplicationloadbalancer-1246702962.us-east-1.elb.amazonaws.com/
+Hello Code build from Flask on ECS!
+```
 # Bootstrap
 Use existing project ECS aws-ecs Wordpress to bootstrap a fully working ECS deployment.
 
