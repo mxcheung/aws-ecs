@@ -6,6 +6,8 @@ OLD_SERVICE_NAME="wordpress-service"
 SERVICE_NAME="wordpress-service"
 TASK_DEF_NAME="helloworld-td"
 TASK_FAMILY="helloworld-td"
+SLEEP_SECONDS=10
+MAX_EVENTS=5   # how many events to print each loop
 
 # SUBNET_ID="subnet-xxxxxx"  # Replace with a real subnet ID
 
@@ -32,15 +34,15 @@ echo "⏳ Waiting for ECS service deployment to stabilize..."
 while true; do
   # Get rollout state of the PRIMARY deployment
   ROLLOUT_STATE=$(aws ecs describe-services \
-      --cluster "$CLUSTER" \
-      --services "$SERVICE" \
+      --cluster "$CLUSTER_NAME" \
+      --services "$SERVICE_NAME" \
       --query 'services[0].deployments[?status==`PRIMARY`].rolloutState' \
       --output text)
 
   # Fetch recent events (time stamp, id, message)
   read -r -d '' EVENTS <<<"$(aws ecs describe-services \
-      --cluster "$CLUSTER" \
-      --services "$SERVICE" \
+      --cluster "$CLUSTER_NAME" \
+      --services "$SERVICE_NAME" \
       --query "services[0].events[0:${MAX_EVENTS}].[createdAt, id, message]" \
       --output text)"
 
