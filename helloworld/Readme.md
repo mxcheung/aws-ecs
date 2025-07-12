@@ -5,6 +5,14 @@ This project aims to
  - Create new task definition with new image
  - Update ECS service with new task definition.
 
+# Completed Result
+
+```
+http://ourapplicationloadbalancer-1246702962.us-east-1.elb.amazonaws.com/
+Hello World from Flask on ECS!
+```
+
+
 # Bootstrap
 Use existing project ECS aws-ecs Wordpress to bootstrap a fully working ECS deployment.
 
