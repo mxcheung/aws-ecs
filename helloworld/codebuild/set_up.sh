@@ -37,26 +37,29 @@ CODEBUILD_PROJECT=$(aws codebuild create-project \
 
 echo "✅ CodeBuild project '${PROJECT_NAME}' created successfully."
 
-START_CODEBUILD_PROJECT=$(aws codebuild start-build --project-name hello-ecs-build)
 
-# Start the build and capture the build ID
-echo "🚀 Starting build for $PROJECT_NAME..."
+# Start build and capture build ID
+echo "🚀 Starting build for project: $PROJECT_NAME..."
+BUILD_ID=$(aws codebuild start-build --project-name "$PROJECT_NAME" --query 'build.id' --output text)
 
+echo "🔄 Build started: $BUILD_ID"
 echo "📡 Waiting for build to complete..."
-aws codebuild batch-get-builds --ids "$BUILD_ID" \
-  --query 'builds[0].buildStatus' --output text
 
-# Poll until the build completes
+# Poll until the build shows up
+until aws codebuild batch-get-builds --ids "$BUILD_ID" --query 'builds[0]' --output text >/dev/null 2>&1; do
+  echo "⏳ Waiting for build to be registered..."
+  sleep 3
+done
+
+# Now poll for build status
 while true; do
-  STATUS=$(aws codebuild batch-get-builds --ids "$BUILD_ID" \
-    --query 'builds[0].buildStatus' --output text)
-  
+  STATUS=$(aws codebuild batch-get-builds --ids "$BUILD_ID" --query 'builds[0].buildStatus' --output text)
   echo "🕒 Build status: $STATUS"
 
   if [[ "$STATUS" == "SUCCEEDED" ]]; then
     echo "✅ Build succeeded: $BUILD_ID"
     break
-  elif [[ "$STATUS" == "FAILED" || "$STATUS" == "FAULT" || "$STATUS" == "TIMED_OUT" || "$STATUS" == "STOPPED" ]]; then
+  elif [[ "$STATUS" =~ ^(FAILED|FAULT|TIMED_OUT|STOPPED)$ ]]; then
     echo "❌ Build failed with status: $STATUS"
     exit 1
   fi
