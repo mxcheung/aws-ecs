@@ -13,7 +13,7 @@ ECS_SERVICE_NAME="hello-ecs-service"
 BLUE_TG_NAME="ecs-blue-tg"
 GREEN_TG_NAME="ecs-green-tg"
 
-
+TARGET_GROUP_NAME="wordpress-tg"
 TASK_DEFINITION="helloworld-td:2"
 CONTAINER_NAME="wordpress"
 CONTAINER_PORT="80"
@@ -46,6 +46,14 @@ echo "🔐 Using AWS CodeDeploy application: $AWS_CODE_DEPLOY_APP"
 echo "🚀 Creating ECS deployment group: $DEPLOYMENT_GROUP_NAME"
 
 
+cat > lb-info.json <<EOF
+{
+  "targetGroupInfoList": [
+    { "name": "${TARGET_GROUP_NAME}" }
+  ]
+}
+EOF
+
 
 # Create the deployment group without blue/green
 AWS_CODE_DEPLOY_GROUP=$(aws deploy create-deployment-group \
@@ -53,7 +61,8 @@ AWS_CODE_DEPLOY_GROUP=$(aws deploy create-deployment-group \
   --deployment-group-name "$DEPLOYMENT_GROUP_NAME" \
   --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
   --service-role-arn "$SERVICE_ROLE_ARN" \
-  --ecs-services "[{\"serviceName\":\"$ECS_SERVICE_NAME\",\"clusterName\":\"$ECS_CLUSTER_NAME\"}]"
+  --ecs-services "[{\"serviceName\":\"$ECS_SERVICE_NAME\",\"clusterName\":\"$ECS_CLUSTER_NAME\"}]" \
+  --load-balancer-info      file://lb-info.json
 )
 
 echo "🔐 AWS_CODE_DEPLOY_GROUP: $AWS_CODE_DEPLOY_GROUP"
