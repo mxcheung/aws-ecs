@@ -1,9 +1,6 @@
 #!/bin/bash
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-ROLE_NAME="CodeDeployECSRole"
-TRUST_POLICY_FILE="codedeploy-trust-policy.json"
-
 
 echo "🚀 Create role codebuild-hello-ecs-role: $AWS_ACCOUNT_ID"
 CODEBUILD_ROLE=$(aws iam create-role \
@@ -38,44 +35,3 @@ echo "🚀 attach-role-policy AWSCodeCommitReadOnly codebuild-hello-ecs-role: $A
 
 CODEBUILD_ROLE_3=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
   --policy-arn arn:aws:iam::aws:policy/AWSCodeCommitReadOnly)
-
-echo "🚀 Create role codedeploy: $AWS_ACCOUNT_ID"
-
-echo "🚀 Creating trust policy JSON file..."
-cat > $TRUST_POLICY_FILE <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "codedeploy.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-
-echo "🔍 Checking if role $ROLE_NAME exists..."
-if aws iam get-role --role-name "$ROLE_NAME" > /dev/null 2>&1; then
-  echo "⚠️ Role $ROLE_NAME already exists. Skipping creation."
-else
-  echo "🛠 Creating IAM role $ROLE_NAME..."
-  CODEDEPLOY_ROLE=$(aws iam create-role \
-    --role-name "$ROLE_NAME" \
-    --assume-role-policy-document file://$TRUST_POLICY_FILE)
-  echo "✅ Role $ROLE_NAME created."
-fi
-
-echo "📎 Attaching AWSCodeDeployRoleForECS managed policy..."
-CODEDEPLOY_ROLE_1=$(aws iam attach-role-policy \
-  --role-name "$ROLE_NAME" \
-  --policy-arn arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS)
-
-echo "✅ Managed policy attached to $ROLE_NAME."
-
-echo "IAM Role ARN:"
-echo "arn:aws:iam::$AWS_ACCOUNT_ID:role/$ROLE_NAME"
-
-echo "🎉 Done."
