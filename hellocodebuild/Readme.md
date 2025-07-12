@@ -9,12 +9,13 @@ This project aims to
  - Add buildspec.yml
  - Add codebuild-hello-ecs-role
  - Add hello-ecs-build
+ - Add start build
  - Delete docker_build
 
 # Expect results
 
 ```
-http://ourapplicationloadbalancer-1246702962.us-east-1.elb.amazonaws.com/
+http://ourapplicationloadbalancer-1557104776.us-east-1.elb.amazonaws.com/
 Hello Code build from Flask on ECS!
 https://us-east-1.console.aws.amazon.com/codesuite/codebuild/749739615299/projects/hello-ecs-build/
 [Container] 2025/07/12 10:55:30.777044 Running command echo Build completed successfully. Image $IMAGE_URI
@@ -56,7 +57,7 @@ export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 git clone https://github.com/mxcheung/aws-ecs.git
 git clone https://github.com/mxcheung/aws_mysql_bulkload.git
 export MY_ENV_DIR="$HOME/environment"
-export MY_ENV_ROOT_DIR="$HOME/environment/aws-ecs/hellocodebuild/"
+export MY_ENV_ROOT_DIR="$HOME/environment/aws-ecs/hellocodebuild"
 cd $MY_ENV_DIR/aws-ecs/word_press_ecs/
 . ./set_up.sh
 

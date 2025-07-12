@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo $MY_ENV_DIR
+echo $MY_ENV_ROOT_DIR
 echo $AWS_ACCESS_KEY_ID
 
 cd $MY_ENV_ROOT_DIR/user_credentials
