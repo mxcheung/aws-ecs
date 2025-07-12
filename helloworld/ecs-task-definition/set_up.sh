@@ -19,7 +19,7 @@ container_definitions=$(cat <<EOF
 [
   {
     "name": "wordpress",
-    "image": "$image_uri",
+    "image": "$IMAGE_URI",
     "essential": true,
     "portMappings": [
       {
