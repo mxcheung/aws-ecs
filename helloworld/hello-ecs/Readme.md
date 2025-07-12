@@ -6,6 +6,7 @@ hello-ecs/
 ├── app.py
 ├── Dockerfile
 ├── requirements.txt
+├── buildspec.yml  ← for CodeBuild/ECR
 └── static/
     ├── favicon.ico
     └── wp-admin/
