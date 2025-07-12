@@ -48,3 +48,17 @@ cd $MY_ENV_DIR/aws-ecs/helloworld/
 ```
 2025-07-10T13:23:09.192Z    Hello, world from CodeCommit and ECS!
 ```
+
+
+# ECS Deployment
+```
+ Task definition helloworld-td registered.
+cloud_user:~/environment/aws-ecs/helloworld/ecs-task-definition (main) $ 
+cloud_user:~/environment/aws-ecs/helloworld/ecs-task-definition (main) $ cd $MY_ENV_DIR/aws-ecs/helloworld/ecs
+cloud_user:~/environment/aws-ecs/helloworld/ecs (main) $ . ./set_up.sh
+🔍 Getting latest task definition ARN...
+🚀 Updating service to use: arn:aws:ecs:us-east-1:850576533876:task-definition/helloworld-td:8
+⏳ Waiting for ECS service deployment to stabilize...
+⌛ Current rollout state: IN_PROGRESS... waiting 10s
+⌛ Current rollout state: IN_PROGRESS... waiting 10s
+```
