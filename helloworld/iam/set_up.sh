@@ -37,7 +37,7 @@ CODEBUILD_ROLE_2=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-ro
 echo "🚀 attach-role-policy AWSCodeCommitReadOnly codebuild-hello-ecs-role: $AWS_ACCOUNT_ID"
 
 CODEBUILD_ROLE_3=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
-  --policy-arn arn:aws:iam::aws:policy/AWSCodeCommitReadOnly
+  --policy-arn arn:aws:iam::aws:policy/AWSCodeCommitReadOnly)
 
 echo "🚀 Create role codedeploy: $AWS_ACCOUNT_ID"
 
