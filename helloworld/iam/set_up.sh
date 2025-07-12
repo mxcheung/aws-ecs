@@ -79,4 +79,3 @@ echo "IAM Role ARN:"
 echo "arn:aws:iam::$AWS_ACCOUNT_ID:role/$ROLE_NAME"
 
 echo "🎉 Done."
-  
