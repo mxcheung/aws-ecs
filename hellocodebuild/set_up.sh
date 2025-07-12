@@ -3,29 +3,29 @@
 echo $MY_ENV_DIR
 echo $AWS_ACCESS_KEY_ID
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/user_credentials
+cd $MY_ENV_ROOT_DIR/user_credentials
 . ./set_up.sh
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/iam
+cd $MY_ENV_ROOT_DIR/iam
 . ./set_up.sh
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/codecommit
+cd $MY_ENV_ROOT_DIR/codecommit
 . ./set_up.sh
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/ecr
+cd $MY_ENV_ROOT_DIR/ecr
 . ./set_up.sh
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/codebuild
+cd $MY_ENV_ROOT_DIR/codebuild
 . ./set_up.sh
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/startbuild
+cd $MY_ENV_ROOT_DIR/startbuild
 . ./set_up.sh
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/docker_build
+cd $MY_ENV_ROOT_DIR/docker_build
 . ./set_up.sh
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/ecs-task-definition
+cd $MY_ENV_ROOT_DIR/ecs-task-definition
 . ./set_up.sh
 
-cd $MY_ENV_DIR/aws-ecs/helloworld/ecs
+cd $MY_ENV_ROOT_DIR/ecs
 . ./set_up.sh

@@ -36,13 +36,11 @@ export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 git clone https://github.com/mxcheung/aws-ecs.git
 git clone https://github.com/mxcheung/aws_mysql_bulkload.git
 export MY_ENV_DIR="$HOME/environment"
+export MY_ENV_ROOT_DIR="$HOME/environment/aws-ecs/hellocodebuild/"
 cd $MY_ENV_DIR/aws-ecs/word_press_ecs/
 . ./set_up.sh
-# cd $MY_ENV_DIR/aws_mysql_bulkload/
-# source envvars.sh
-# echo "$DB_HOST"
-# . ./set_up.sh
-cd $MY_ENV_DIR/aws-ecs/helloworld/
+
+cd $MY_ENV_ROOT_DIR
 . ./set_up.sh
 
 ```
@@ -52,7 +50,7 @@ cd $MY_ENV_DIR/aws-ecs/helloworld/
 export AWS_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxx
 export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 export MY_ENV_DIR="$HOME/environment"
-cd $MY_ENV_DIR/aws-ecs/helloworld/
+cd $MY_ENV_DIR/aws-ecs/hellocodebuild/
 . ./set_up.sh
 ```
 # Cloud watch log
