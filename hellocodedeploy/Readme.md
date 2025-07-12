@@ -17,6 +17,11 @@ This project aims to
  - Add appspec.yaml                  # CodeDeploy instructions 
  - Add taskdef.json.tpl              # template w/ placeholders for image URI & tag
  - Add AWSCodeDeployRoleForECS
+ - Add ECS deployment-controller type=CODE_DEPLOY   
+ 
+ # By default, ECS services use the ECS controller — but blue/green deployments with CodeDeploy require CODE_DEPLOY as the controller.
+
+
 
 
 

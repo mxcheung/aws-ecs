@@ -1,10 +1,7 @@
 #!/bin/bash
 
-echo $MY_ENV_DIR
+echo $MY_ENV_ROOT_DIR
 echo $AWS_ACCESS_KEY_ID
-
-cd $MY_ENV_ROOT_DIR/user_credentials
-. ./set_up.sh
 
 cd $MY_ENV_ROOT_DIR/user_credentials
 . ./set_up.sh
@@ -27,8 +24,6 @@ cd $MY_ENV_ROOT_DIR/codedeploy
 cd $MY_ENV_ROOT_DIR/startbuild
 . ./set_up.sh
 
-cd $MY_ENV_ROOT_DIR/docker_build
-. ./set_up.sh
 
 cd $MY_ENV_ROOT_DIR/ecs-task-definition
 . ./set_up.sh

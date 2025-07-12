@@ -18,12 +18,58 @@ NEW_TASK_DEF=$(aws ecs describe-task-definition \
   --query "taskDefinition.taskDefinitionArn" \
   --output text)
 
+AWS_DELETE_SERVICE=$(aws ecs delete-service \
+  --cluster "$CLUSTER_NAME" \
+  --service "$SERVICE_NAME" \
+  --force)
 
 echo "🚀 Updating service to use: $NEW_TASK_DEF"
 ECS_UPDATE_SERVICE_OUTPUT=$(aws ecs update-service \
   --cluster "$CLUSTER_NAME" \
   --service "$SERVICE_NAME" \
   --task-definition "$NEW_TASK_DEF")
+
+
+
+# Get Subnet ID for Private Subnet AZ A
+subnet_a=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=Private Subnet AZ A" "Name=availability-zone,Values=us-east-1a" \
+    --query "Subnets[0].SubnetId" --output text)
+
+# Get Subnet ID for Private Subnet AZ B
+subnet_b=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=Private Subnet AZ B" "Name=availability-zone,Values=us-east-1b" \
+    --query "Subnets[0].SubnetId" --output text)
+
+# Get Subnet ID for Private Subnet AZ C
+subnet_c=$(aws ec2 describe-subnets \
+    --filters "Name=tag:Name,Values=Private Subnet AZ C" "Name=availability-zone,Values=us-east-1c" \
+    --query "Subnets[0].SubnetId" --output text)
+
+
+APP_SG_ID_2=$(aws ec2 describe-security-groups --filters Name=group-name,Values=app-sg --query "SecurityGroups[0].GroupId" --output text)
+
+echo $APP_SG_ID_2
+
+
+TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups --names wordpress-tg --query "TargetGroups[0].TargetGroupArn" --output text)
+
+echo $TARGET_GROUP_ARN
+
+CONTAINER_NAME="wordpress"
+CONTAINER_PORT=80
+
+ECS_CREATE_SERVICE_OUTPUT=$(aws ecs create-service \
+  --cluster Wordpress-Cluster \
+  --service-name hello-ecs-service \
+  --task-definition "$NEW_TASK_DEF" \
+  --load-balancers "targetGroupArn=$TARGET_GROUP_ARN,containerName=$CONTAINER_NAME,containerPort=$CONTAINER_PORT" \  
+  --launch-type FARGATE \
+  --deployment-controller type=CODE_DEPLOY \
+  --desired-count 1 \
+  --network-configuration "awsvpcConfiguration={subnets=[$subnet_a,$subnet_b,$subnet_c],securityGroups=[$APP_SG_ID_2],assignPublicIp=ENABLED}"
+)
+ 
 
 #echo "⏳ Waiting for deployment to complete..."
 #ECS_UPDATE_SERVICE_OUTPUT=$(aws ecs wait services-stable \
