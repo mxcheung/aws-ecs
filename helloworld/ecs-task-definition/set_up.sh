@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+# set -euo pipefail
 
 ### ────────────────── Config ──────────────────
 REGION="us-east-1"
@@ -15,17 +15,19 @@ IMAGE_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPO_NAME}:latest
 # aws ecr describe-images --repository-name "${REPO_NAME}" --image-ids imageTag=latest --region "${REGION}" >/dev/null
 
 ### ────────────────── JSON blobs ──────────────────
-read -r -d '' CONTAINER_DEFINITIONS <<EOF
+container_definitions=$(cat <<EOF
 [
   {
     "name": "wordpress",
-    "image": "${IMAGE_URI}",
+    "image": "$image_uri",
     "essential": true,
     "portMappings": [
       {
+        "name": "wordpress-80-tcp",
         "containerPort": 80,
         "hostPort": 80,
-        "protocol": "tcp"
+        "protocol": "tcp",
+        "appProtocol": "http"
       }
     ],
     "logConfiguration": {
@@ -33,21 +35,26 @@ read -r -d '' CONTAINER_DEFINITIONS <<EOF
       "options": {
         "awslogs-group": "/ecs/wordpress-td",
         "awslogs-create-group": "true",
-        "awslogs-region": "${REGION}",
+        "awslogs-region": "us-east-1",
         "awslogs-stream-prefix": "ecs",
         "mode": "non-blocking",
         "max-buffer-size": "25m"
       }
     },
     "healthCheck": {
-      "command": [ "CMD-SHELL", "curl -f http://localhost:80/ || exit 1" ],
+      "command": [
+        "CMD-SHELL",
+        "curl -f http://localhost:80/ || exit 1"
+      ],
       "interval": 30,
       "timeout": 5,
       "retries": 3
-    }
+    },
   }
 ]
 EOF
+)
+
 
 read -r -d '' RUNTIME_PLATFORM <<EOF
 {
