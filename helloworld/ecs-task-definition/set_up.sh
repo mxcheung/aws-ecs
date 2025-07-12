@@ -58,7 +58,7 @@ read -r -d '' RUNTIME_PLATFORM <<EOF
 EOF
 
 ### ────────────────── Register TD ──────────────────
-aws ecs register-task-definition \
+ECS_TASK_DEFINITION=$(aws ecs register-task-definition \
   --region "${REGION}" \
   --family "${FAMILY_NAME}" \
   --network-mode "awsvpc" \
@@ -68,6 +68,6 @@ aws ecs register-task-definition \
   --execution-role-arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/OurEcsTaskExecutionRole" \
   --task-role-arn "arn:aws:iam::${AWS_ACCOUNT_ID}:role/OurEcsTaskRole" \
   --runtime-platform "${RUNTIME_PLATFORM}" \
-  --container-definitions "${CONTAINER_DEFINITIONS}"
+  --container-definitions "${CONTAINER_DEFINITIONS}")
 
 echo "✅ Task definition ${FAMILY_NAME} registered."
