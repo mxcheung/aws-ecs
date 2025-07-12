@@ -18,14 +18,14 @@ NEW_TASK_DEF=$(aws ecs describe-task-definition \
 
 
 echo "🚀 Updating service to use: $NEW_TASK_DEF"
-aws ecs update-service \
+ECS_UPDATE_SERVICE_OUTPUT=$(aws ecs update-service \
   --cluster "$CLUSTER_NAME" \
   --service "$SERVICE_NAME" \
-  --task-definition "$NEW_TASK_DEF"
+  --task-definition "$NEW_TASK_DEF")
 
 echo "⏳ Waiting for deployment to complete..."
-aws ecs wait services-stable \
+ECS_UPDATE_SERVICE_OUTPUT=$(aws ecs wait services-stable \
   --cluster "$CLUSTER_NAME" \
-  --services "$SERVICE_NAME"
+  --services "$SERVICE_NAME")
 
 echo "✅ Service updated successfully."
