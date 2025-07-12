@@ -1,3 +1,13 @@
+# Introduction
+This project aims to
+ - Build container image via codecommit
+ - Storage container image via new ecr repo. 
+ - Create new task definition with new image
+ - Update ECS service with new task definition.
+
+# Bootstrap
+Use existing project ECS aws-ecs Wordpress to bootstrap a fully working ECS deployment.
+
 # Quick start 
 Use existing project for scaffold in ECS - Word press
 
