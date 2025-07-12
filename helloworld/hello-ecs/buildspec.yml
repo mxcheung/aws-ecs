@@ -1,0 +1,29 @@
+version: 0.2
+
+env:
+  variables:
+    REPO_NAME: "hello-ecs"
+    IMAGE_TAG: "latest"
+  # Uncomment if using CodeBuild to create the log group (for ECS logging)
+  # privileged: true
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+      - REGION=us-east-1
+      - IMAGE_URI=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t $IMAGE_URI .
+      - docker tag $IMAGE_URI $IMAGE_URI
+
+  post_build:
+    commands:
+      - echo Pushing image to ECR...
+      - docker push $IMAGE_URI
+      - echo Build completed successfully. Image: $IMAGE_URI
