@@ -29,26 +29,38 @@ ECS_UPDATE_SERVICE_OUTPUT=$(aws ecs update-service \
 #  --services "$SERVICE_NAME")
 
 echo "⏳ Waiting for ECS service deployment to stabilize..."
-
 while true; do
-  STATUS=$(aws ecs describe-services \
-    --cluster "$CLUSTER_NAME" \
-    --services "$SERVICE_NAME" \
-    --query 'services[0].deployments[?status==`PRIMARY`].rolloutState' \
-    --output text)
+  # Get rollout state of the PRIMARY deployment
+  ROLLOUT_STATE=$(aws ecs describe-services \
+      --cluster "$CLUSTER" \
+      --services "$SERVICE" \
+      --query 'services[0].deployments[?status==`PRIMARY`].rolloutState' \
+      --output text)
 
-  if [[ "$STATUS" == "COMPLETED" ]]; then
-    echo "✅ Deployment completed."
-    break
+  # Fetch recent events (time stamp, id, message)
+  read -r -d '' EVENTS <<<"$(aws ecs describe-services \
+      --cluster "$CLUSTER" \
+      --services "$SERVICE" \
+      --query "services[0].events[0:${MAX_EVENTS}].[createdAt, id, message]" \
+      --output text)"
+
+  # Render events like the console
+  printf "\n%-8s %-27s %-40s %s\n" "EVENTS" "TIMESTAMP" "ID" "MESSAGE"
+  echo "$EVENTS" | while IFS=$'\t' read -r TS ID MSG; do
+      printf "%-8s %-27s %-40s %s\n" "EVENTS" "$TS" "$ID" "$MSG"
+  done
+
+  # Decide what to do based on rollout state
+  if [[ "$ROLLOUT_STATE" == "COMPLETED" ]]; then
+      echo -e "\n✅ Deployment completed.\n"
+      break
+  elif [[ "$ROLLOUT_STATE" == "FAILED" ]]; then
+      echo -e "\n❌ Deployment failed! See events above.\n"
+      exit 1
+  else
+      echo -e "\n⌛ Rollout state: $ROLLOUT_STATE – checking again in ${SLEEP_SECONDS}s…"
+      sleep "$SLEEP_SECONDS"
   fi
-
-  if [[ "$STATUS" == "FAILED" ]]; then
-    echo "❌ Deployment failed!"
-    exit 1
-  fi
-
-  echo "⌛ Current rollout state: $STATUS... waiting 10s"
-  sleep 10
-done  
+done
 
 echo "✅ Service updated successfully."
