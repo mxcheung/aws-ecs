@@ -62,16 +62,16 @@ if aws iam get-role --role-name "$ROLE_NAME" > /dev/null 2>&1; then
   echo "⚠️ Role $ROLE_NAME already exists. Skipping creation."
 else
   echo "🛠 Creating IAM role $ROLE_NAME..."
-  aws iam create-role \
+  CODEDEPLOY_ROLE=$(aws iam create-role \
     --role-name "$ROLE_NAME" \
-    --assume-role-policy-document file://$TRUST_POLICY_FILE
+    --assume-role-policy-document file://$TRUST_POLICY_FILE)
   echo "✅ Role $ROLE_NAME created."
 fi
 
 echo "📎 Attaching AWSCodeDeployRoleForECS managed policy..."
-aws iam attach-role-policy \
+CODEDEPLOY_ROLE_1=$(aws iam attach-role-policy \
   --role-name "$ROLE_NAME" \
-  --policy-arn arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS
+  --policy-arn arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS)
 
 echo "✅ Managed policy attached to $ROLE_NAME."
 
