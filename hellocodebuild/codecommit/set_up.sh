@@ -20,9 +20,9 @@ REPO_URL="https://git-codecommit.$REGION.amazonaws.com/v1/repos/$REPO_NAME"
 
 # Step 3: Prepare project files
 
-mkdir -p $MY_ENV_DIR/hello-ecs/helloworld/hello-ecs/
-cd $MY_ENV_DIR/hello-ecs/helloworld/hello-ecs/
-cp -r $MY_ENV_DIR/aws-ecs/helloworld/hello-ecs/* .
+mkdir -p $MY_ENV_ROOT_DIR/hello-ecs/
+cd $MY_ENV_ROOT_DIR/hello-ecs/
+cp -r $MY_ENV_ROOT_DIR/hello-ecs/* .
 
 # Step 4: Git init and push
 

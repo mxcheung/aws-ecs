@@ -50,7 +50,7 @@ cd $MY_ENV_ROOT_DIR
 export AWS_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxx
 export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 export MY_ENV_DIR="$HOME/environment"
-cd $MY_ENV_DIR/aws-ecs/hellocodebuild/
+cd $MY_ENV_ROOT_DIR
 . ./set_up.sh
 ```
 # Cloud watch log

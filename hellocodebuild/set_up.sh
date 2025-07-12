@@ -21,9 +21,6 @@ cd $MY_ENV_ROOT_DIR/codebuild
 cd $MY_ENV_ROOT_DIR/startbuild
 . ./set_up.sh
 
-cd $MY_ENV_ROOT_DIR/docker_build
-. ./set_up.sh
-
 cd $MY_ENV_ROOT_DIR/ecs-task-definition
 . ./set_up.sh
 
