@@ -62,7 +62,21 @@ AWS_CODE_DEPLOY_GROUP=$(aws deploy create-deployment-group \
   --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
   --service-role-arn "$SERVICE_ROLE_ARN" \
   --ecs-services "[{\"serviceName\":\"$ECS_SERVICE_NAME\",\"clusterName\":\"$ECS_CLUSTER_NAME\"}]" \
-  --load-balancer-info      file://lb-info.json
+  --load-balancer-info      file://lb-info.json \
+  --deployment-style '{
+    "deploymentType": "BLUE_GREEN",
+    "deploymentOption": "WITH_TRAFFIC_CONTROL"
+  }' \
+  --blue-green-deployment-configuration '{
+    "terminateBlueInstancesOnDeploymentSuccess": {
+      "action": "TERMINATE",
+      "terminationWaitTimeInMinutes": 0
+    },
+    "deploymentReadyOption": {
+      "actionOnTimeout": "CONTINUE_DEPLOYMENT",
+      "waitTimeInMinutes": 0
+    }
+  }'
 )
 
 echo "🔐 AWS_CODE_DEPLOY_GROUP: $AWS_CODE_DEPLOY_GROUP"

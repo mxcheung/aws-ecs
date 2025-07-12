@@ -107,3 +107,28 @@ EVENTS   2025-07-12T04:25:32.630000+00:00 544b06c0-c979-4f67-97d4-58292f57c288  
 EVENTS   2025-07-12T04:24:42.635000+00:00 0d13563b-8dfe-4125-8076-5ef1e1e25e94     (service wordpress-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-1:850576533876:targetgroup/wordpress-tg/a12a24f1cb3ecdb0)
 
 ```
+
+
+## Simpler ECS deployment strategy
+You can avoid CodeDeploy altogether and use the built-in ECS rolling update, which:
+
+Requires only one target group
+
+Doesn’t need CodeDeploy, deployment groups, or complex JSON configs
+
+Uses the ECS service’s own deployment controller (ECS) to manage task replacements
+
+✅ Simpler Deployment Option: ECS Rolling Update
+You only need:
+A service linked to a single target group
+
+A new task definition revision
+
+Run:
+
+```
+aws ecs update-service \
+  --cluster "$ECS_CLUSTER_NAME" \
+  --service "$ECS_SERVICE_NAME" \
+  --task-definition "$NEW_TASK_DEF_ARN"
+```
