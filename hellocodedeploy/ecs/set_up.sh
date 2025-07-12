@@ -23,13 +23,6 @@ AWS_DELETE_SERVICE=$(aws ecs delete-service \
   --service "$SERVICE_NAME" \
   --force)
 
-echo "🚀 Updating service to use: $NEW_TASK_DEF"
-ECS_UPDATE_SERVICE_OUTPUT=$(aws ecs update-service \
-  --cluster "$CLUSTER_NAME" \
-  --service "$SERVICE_NAME" \
-  --task-definition "$NEW_TASK_DEF")
-
-
 
 # Get Subnet ID for Private Subnet AZ A
 subnet_a=$(aws ec2 describe-subnets \
