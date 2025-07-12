@@ -33,7 +33,7 @@ CODEBUILD_PROJECT=$(aws codebuild create-project \
   --environment type=LINUX_CONTAINER,computeType=BUILD_GENERAL1_SMALL,image=aws/codebuild/standard:7.0,privilegedMode=true \
   --service-role "${ROLE_ARN}" \
   --region "${REGION}" \
-  --tags Key=Name,Value="${PROJECT_NAME}")
+  --tags key=Name,value="${PROJECT_NAME}")
 
 echo "✅ CodeBuild project '${PROJECT_NAME}' created successfully."
   
