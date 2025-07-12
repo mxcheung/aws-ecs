@@ -52,13 +52,26 @@ cd $MY_ENV_DIR/aws-ecs/helloworld/
 
 # ECS Deployment
 ```
- Task definition helloworld-td registered.
-cloud_user:~/environment/aws-ecs/helloworld/ecs-task-definition (main) $ 
-cloud_user:~/environment/aws-ecs/helloworld/ecs-task-definition (main) $ cd $MY_ENV_DIR/aws-ecs/helloworld/ecs
-cloud_user:~/environment/aws-ecs/helloworld/ecs (main) $ . ./set_up.sh
 🔍 Getting latest task definition ARN...
-🚀 Updating service to use: arn:aws:ecs:us-east-1:850576533876:task-definition/helloworld-td:8
+🚀 Updating service to use: arn:aws:ecs:us-east-1:850576533876:task-definition/helloworld-td:10
 ⏳ Waiting for ECS service deployment to stabilize...
-⌛ Current rollout state: IN_PROGRESS... waiting 10s
-⌛ Current rollout state: IN_PROGRESS... waiting 10s
+
+EVENTS   TIMESTAMP                   ID                                       MESSAGE
+EVENTS   2025-07-12T04:25:42.978000+00:00 f9a9f036-e702-41fd-b909-6e83c940c92e     (service wordpress-service, taskSet ecs-svc/4034032221499882557) has begun draining connections on 1 tasks.
+EVENTS   2025-07-12T04:25:42.974000+00:00 c2757223-51e9-49e9-8278-9fa8ed63c0a2     (service wordpress-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-1:850576533876:targetgroup/wordpress-tg/a12a24f1cb3ecdb0)
+EVENTS   2025-07-12T04:25:32.630000+00:00 544b06c0-c979-4f67-97d4-58292f57c288     (service wordpress-service) has stopped 1 running tasks: (task 218dcf0765ba4c97a2eeb1f06a0e913b).
+EVENTS   2025-07-12T04:24:42.635000+00:00 0d13563b-8dfe-4125-8076-5ef1e1e25e94     (service wordpress-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-1:850576533876:targetgroup/wordpress-tg/a12a24f1cb3ecdb0)
+EVENTS   2025-07-12T04:24:22.779000+00:00 a0a9b534-b087-4bd8-b54f-52266a8f93e0     (service wordpress-service) has started 1 tasks: (task 2c47373308424022880765916ed57a9d).
+
+ Rollout state: IN_PROGRESS – checking again in 10s…
+
+EVENTS   TIMESTAMP                   ID                                       MESSAGE
+EVENTS   2025-07-12T04:26:44.270000+00:00 0e5c8d0d-6fa3-402b-a475-586eff5f3b1e     (service wordpress-service) has started 1 tasks: (task 916b9b68e6b441d9a1049958af5c0833).
+EVENTS   2025-07-12T04:25:42.978000+00:00 f9a9f036-e702-41fd-b909-6e83c940c92e     (service wordpress-service, taskSet ecs-svc/4034032221499882557) has begun draining connections on 1 tasks.
+EVENTS   2025-07-12T04:25:42.974000+00:00 c2757223-51e9-49e9-8278-9fa8ed63c0a2     (service wordpress-service) deregistered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-1:850576533876:targetgroup/wordpress-tg/a12a24f1cb3ecdb0)
+EVENTS   2025-07-12T04:25:32.630000+00:00 544b06c0-c979-4f67-97d4-58292f57c288     (service wordpress-service) has stopped 1 running tasks: (task 218dcf0765ba4c97a2eeb1f06a0e913b).
+EVENTS   2025-07-12T04:24:42.635000+00:00 0d13563b-8dfe-4125-8076-5ef1e1e25e94     (service wordpress-service) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-1:850576533876:targetgroup/wordpress-tg/a12a24f1cb3ecdb0)
+
+
+
 ```
