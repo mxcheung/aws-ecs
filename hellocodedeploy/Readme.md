@@ -1,9 +1,24 @@
 # Introduction
 This project aims to
- - Build container image via codecommit
+ - Build container image via CdoeBuild
+ - Deploycontainer image via CdoeDeploy
  - Storage container image via new ecr repo. 
- - Create new task definition with new image
+ - Create new task definition with template taskdef.json.tpl   
  - Update ECS service with new task definition.
+
+# Code build prerequisites
+ - Add buildspec.yml                 # builds image, renders taskdef.json
+ - Add codebuild-hello-ecs-role
+ - Add hello-ecs-build
+ - Add start build
+ - Delete docker_build
+
+# Code deploy prerequisites
+ - Add appspec.yaml                  # CodeDeploy instructions 
+ - Add taskdef.json.tpl              # template w/ placeholders for image URI & tag
+ - Add AWSCodeDeployRoleForECS
+
+
 
 # Bootstrap
 Use existing project ECS aws-ecs Wordpress to bootstrap a fully working ECS deployment.
