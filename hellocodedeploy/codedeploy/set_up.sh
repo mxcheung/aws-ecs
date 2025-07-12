@@ -36,7 +36,7 @@ echo "🔐 Using ALB_LISTENER_ARN: $ALB_LISTENER_ARN"
 
 # Create CodeDeploy application
 echo "📦 Creating CodeDeploy application..."
-AWS_CODE_DEPLOY_GROUP=$(aws deploy create-application \
+AWS_CODE_DEPLOY_APP=$(aws deploy create-application \
   --application-name hello-ecs-app \
   --compute-platform ECS)
 
