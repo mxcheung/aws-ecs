@@ -36,4 +36,6 @@ CODEBUILD_PROJECT=$(aws codebuild create-project \
   --tags key=Name,value="${PROJECT_NAME}")
 
 echo "✅ CodeBuild project '${PROJECT_NAME}' created successfully."
+
+START_CODEBUILD_PROJECT=$(aws codebuild start-build --project-name hello-ecs-build)
   
