@@ -31,7 +31,7 @@ read -r -d '' CONTAINER_DEFINITIONS <<EOF
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "/ecs/${FAMILY_NAME}",
+        "awslogs-group": "/ecs/wordpress-td",
         "awslogs-create-group": "true",
         "awslogs-region": "${REGION}",
         "awslogs-stream-prefix": "ecs",
