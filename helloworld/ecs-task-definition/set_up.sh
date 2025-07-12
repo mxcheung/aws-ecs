@@ -33,14 +33,14 @@ container_definitions=$(cat <<EOF
       }
     },
     "healthCheck": {
-        "command": [
-            "CMD-SHELL",
-            "curl -f http://localhost:80/ || exit 1"
-        ],
-        "interval": 30,
-        "timeout": 5,
-        "retries": 3
-    }    
+      "command": [
+        "CMD-SHELL",
+        "curl -f http://localhost:80/ || exit 1"
+      ],
+      "interval": 30,
+      "timeout": 5,
+      "retries": 3
+    }
   }
 ]
 EOF
