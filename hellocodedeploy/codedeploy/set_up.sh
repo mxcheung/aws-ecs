@@ -13,13 +13,18 @@ ECS_SERVICE_NAME="hello-ecs-service"
 BLUE_TG_NAME="ecs-blue-tg"
 GREEN_TG_NAME="ecs-green-tg"
 
+
+TASK_DEFINITION="helloworld-td:2"
+CONTAINER_NAME="wordpress"
+CONTAINER_PORT="80"
+
 ALB_NAME="OurApplicationLoadBalancer"
 ALB_ARN=$(aws elbv2 describe-load-balancers \
   --query "LoadBalancers[?LoadBalancerName=='$ALB_NAME'].LoadBalancerArn" \
   --output text)
 
 ALB_LISTENER_ARN=$(aws elbv2 describe-listeners \
-  --load-balancer-arn  $ALB_LISTENER_ARN \
+  --load-balancer-arn  $ALB_ARN \
   --query "Listeners[*].ListenerArn" \
   --output text)
 
@@ -41,7 +46,7 @@ echo "🔐 Using AWS CodeDeploy application: $AWS_CODE_DEPLOY_APP"
 echo "🚀 Creating ECS deployment group: $DEPLOYMENT_GROUP_NAME"
 
 
-AWS_CODE_DEPLOY_APP=$(aws deploy create-deployment-group \
+AWS_CODE_DEPLOY_GROUP=$(aws deploy create-deployment-group \
   --application-name "$APPLICATION_NAME" \
   --deployment-group-name "$DEPLOYMENT_GROUP_NAME" \
   --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
@@ -82,5 +87,37 @@ EOF
 )
 
 echo "🔐 AWS_CODE_DEPLOY_GROUP: $AWS_CODE_DEPLOY_GROUP"
+
+
+# Create the AppSpec content as plain YAML
+APPSPEC_YAML=$(cat <<EOF
+version: 1
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: $TASK_DEFINITION
+        LoadBalancerInfo:
+          ContainerName: $CONTAINER_NAME
+          ContainerPort: $CONTAINER_PORT
+EOF
+)
+
+# Convert YAML content to JSON-safe string
+ENCODED_CONTENT=$(echo "$APPSPEC_YAML" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
+
+# Run the deployment command
+AWS_CREATE_DEPLOYMENT=$(aws deploy create-deployment \
+  --application-name "$APPLICATION_NAME" \
+  --deployment-group-name "$DEPLOYMENT_GROUP_NAME" \
+  --revision "{
+    \"revisionType\": \"AppSpecContent\",
+    \"appSpecContent\": {
+      \"content\": $ENCODED_CONTENT
+    }
+  }")
+
+echo "🔐 AWS_CREATE_DEPLOYMENT: $AWS_CREATE_DEPLOYMENT"
+
 
 echo "✅ CodeDeploy setup complete."
