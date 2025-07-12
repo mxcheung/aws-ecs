@@ -1,5 +1,7 @@
 #!/bin/bash
 
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
 # a) create application
 CODEDEPLOY_CREATE_APP=$(aws deploy create-application \
   --application-name hello-ecs-app \
