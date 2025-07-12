@@ -8,16 +8,30 @@ APPLICATION_NAME="hello-ecs-app"
 DEPLOYMENT_GROUP_NAME="hello-ecs-dg"
 SERVICE_ROLE_ARN="arn:aws:iam::$AWS_ACCOUNT_ID:role/CodeDeployECSRole"
 ECS_CLUSTER_NAME="Wordpress-Cluster"
-ECS_SERVICE_NAME="wordpress-service"
-ALB_LISTENER_ARN="arn:aws:elasticloadbalancing:$REGION:$AWS_ACCOUNT_ID:listener/app/your-alb/your-listener-id"
+ECS_SERVICE_NAME="hello-ecs-service"
+#ALB_LISTENER_ARN="arn:aws:elasticloadbalancing:$REGION:$AWS_ACCOUNT_ID:loadbalancer/app/your-alb/your-listener-id"
 BLUE_TG_NAME="ecs-blue-tg"
 GREEN_TG_NAME="ecs-green-tg"
 
+ALB_NAME="OurApplicationLoadBalancer"
+ALB_ARN=$(aws elbv2 describe-load-balancers \
+  --query "LoadBalancers[?LoadBalancerName=='$ALB_NAME'].LoadBalancerArn" \
+  --output text)
+
+ALB_LISTENER_ARN=$(aws elbv2 describe-listeners \
+  --load-balancer-arn  $ALB_LISTENER_ARN \
+  --query "Listeners[*].ListenerArn" \
+  --output text)
+
+
 echo "🔐 Using AWS Account: $AWS_ACCOUNT_ID"
+
+echo "🔐 Using ALB_LISTENER_ARN: $ALB_LISTENER_ARN"
+
 
 # Create CodeDeploy application
 echo "📦 Creating CodeDeploy application..."
-AWS_CODE_DEPLOY_APP=$(aws deploy create-application \
+AWS_CODE_DEPLOY_GROUP=$(aws deploy create-application \
   --application-name hello-ecs-app \
   --compute-platform ECS)
 
@@ -27,8 +41,7 @@ echo "🔐 Using AWS CodeDeploy application: $AWS_CODE_DEPLOY_APP"
 echo "🚀 Creating ECS deployment group: $DEPLOYMENT_GROUP_NAME"
 
 
-
-aws deploy create-deployment-group \
+AWS_CODE_DEPLOY_APP=$(aws deploy create-deployment-group \
   --application-name "$APPLICATION_NAME" \
   --deployment-group-name "$DEPLOYMENT_GROUP_NAME" \
   --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
@@ -43,9 +56,6 @@ aws deploy create-deployment-group \
   "deploymentReadyOption": {
     "actionOnTimeout": "CONTINUE_DEPLOYMENT",
     "waitTimeInMinutes": 0
-  },
-  "greenFleetProvisioningOption": {
-    "action": "DISCOVER_EXISTING"
   }
 }
 EOF
@@ -69,5 +79,8 @@ EOF
 }
 EOF
 )"
+)
+
+echo "🔐 AWS_CODE_DEPLOY_GROUP: $AWS_CODE_DEPLOY_GROUP"
 
 echo "✅ CodeDeploy setup complete."

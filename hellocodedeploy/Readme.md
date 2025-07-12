@@ -18,6 +18,8 @@ This project aims to
  - Add taskdef.json.tpl              # template w/ placeholders for image URI & tag
  - Add AWSCodeDeployRoleForECS
  - Add ECS deployment-controller type=CODE_DEPLOY   
+ - Recreate ECS Service as hello-ecs-service
+ - Lookup ALB_LISTENER_ARN           # CodeDeploy requires a Listener ARN,
  
  # By default, ECS services use the ECS controller — but blue/green deployments with CodeDeploy require CODE_DEPLOY as the controller.
 

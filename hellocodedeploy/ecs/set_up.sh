@@ -56,7 +56,7 @@ ECS_CREATE_SERVICE_OUTPUT=$(aws ecs create-service \
   --cluster Wordpress-Cluster \
   --service-name hello-ecs-service \
   --task-definition "$NEW_TASK_DEF" \
-  --load-balancers "targetGroupArn=$TARGET_GROUP_ARN,containerName=$CONTAINER_NAME,containerPort=$CONTAINER_PORT" \  
+  --load-balancers "targetGroupArn=$TARGET_GROUP_ARN,containerName=$CONTAINER_NAME,containerPort=$CONTAINER_PORT" \
   --launch-type FARGATE \
   --deployment-controller type=CODE_DEPLOY \
   --desired-count 1 \
