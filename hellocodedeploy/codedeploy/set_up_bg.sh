@@ -46,14 +46,44 @@ echo "🔐 Using AWS CodeDeploy application: $AWS_CODE_DEPLOY_APP"
 echo "🚀 Creating ECS deployment group: $DEPLOYMENT_GROUP_NAME"
 
 
-
-# Create the deployment group without blue/green
 AWS_CODE_DEPLOY_GROUP=$(aws deploy create-deployment-group \
   --application-name "$APPLICATION_NAME" \
   --deployment-group-name "$DEPLOYMENT_GROUP_NAME" \
   --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
   --service-role-arn "$SERVICE_ROLE_ARN" \
-  --ecs-services "[{\"serviceName\":\"$ECS_SERVICE_NAME\",\"clusterName\":\"$ECS_CLUSTER_NAME\"}]"
+  --deployment-style deploymentType=BLUE_GREEN,deploymentOption=WITH_TRAFFIC_CONTROL \
+  --blue-green-deployment-configuration "$(cat <<EOF
+{
+  "terminateBlueInstancesOnDeploymentSuccess": {
+    "action": "TERMINATE",
+    "terminationWaitTimeInMinutes": 5
+  },
+  "deploymentReadyOption": {
+    "actionOnTimeout": "CONTINUE_DEPLOYMENT",
+    "waitTimeInMinutes": 0
+  }
+}
+EOF
+)" \
+  --ecs-services "[{\"serviceName\":\"$ECS_SERVICE_NAME\",\"clusterName\":\"$ECS_CLUSTER_NAME\"}]" \
+  --load-balancer-info "$(cat <<EOF
+{
+  "targetGroupPairInfoList": [
+    {
+      "targetGroups": [
+        { "name": "$BLUE_TG_NAME" },
+        { "name": "$GREEN_TG_NAME" }
+      ],
+      "prodTrafficRoute": {
+        "listenerArns": [
+          "$ALB_LISTENER_ARN"
+        ]
+      }
+    }
+  ]
+}
+EOF
+)"
 )
 
 echo "🔐 AWS_CODE_DEPLOY_GROUP: $AWS_CODE_DEPLOY_GROUP"
