@@ -1,27 +1,44 @@
 version: 0.2
-
 env:
   variables:
-    REPO_NAME: "hello-ecs"
-    IMAGE_TAG: "latest"
-
+    REPO_NAME: hello-ecs
+    IMAGE_TAG: latest
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - REGION=us-east-1
       - IMAGE_URI=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
-
   build:
     commands:
-      - echo Building Docker image...
       - docker build -t $IMAGE_URI .
-      - docker tag $IMAGE_URI $IMAGE_URI
-
   post_build:
     commands:
-      - echo Pushing image to ECR...
+      # 1. push image
       - docker push $IMAGE_URI
-      - echo Build completed successfully. Image $IMAGE_URI      
+      # 2. render taskdef.json from template
+      - sed "s|\${ACCOUNT_ID}|$ACCOUNT_ID|g; s|\${IMAGE_URI}|$IMAGE_URI|g" taskdef.json.tpl > taskdef.json
+      # 3. register new task definition revision
+      - TASK_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://taskdef.json --query 'taskDefinition.taskDefinitionArn' --output text)
+      # 4. create CodeDeploy deployment
+      - DEPLOYMENT_ID=$(aws deploy create-deployment \
+          --application-name hello-ecs-app \
+          --deployment-group-name hello-ecs-dg \
+          --revision revisionType=AppSpecContent,appSpecContent="{\"content\": \"$(base64 appspec.yaml)\",\"sha256\": \"$(sha256sum appspec.yaml | cut -d' ' -f1)\"}" \
+          --description "Image $IMAGE_URI" \
+          --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
+          --output text --query deploymentId)
+      - echo "Started deployment $DEPLOYMENT_ID"
+      # 5. wait for deployment to finish
+      - |
+        while true; do
+          STATUS=$(aws deploy get-deployment --deployment-id $DEPLOYMENT_ID --query 'deploymentInfo.status' --output text)
+          echo "Deployment status: $STATUS"
+          [[ "$STATUS" =~ ^(Succeeded|Failed|Stopped)$ ]] && break
+          sleep 15
+        done
+artifacts:
+  files:
+    - taskdef.json
+    - appspec.yaml
