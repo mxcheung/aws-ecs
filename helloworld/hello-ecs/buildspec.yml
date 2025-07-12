@@ -4,8 +4,6 @@ env:
   variables:
     REPO_NAME: "hello-ecs"
     IMAGE_TAG: "latest"
-  # Uncomment if using CodeBuild to create the log group (for ECS logging)
-  # privileged: true
 
 phases:
   pre_build:
@@ -26,4 +24,4 @@ phases:
     commands:
       - echo Pushing image to ECR...
       - docker push $IMAGE_URI
-      - echo Build completed successfully. Image: $IMAGE_URI
+      - echo Build completed successfully. Image $IMAGE_URI      
