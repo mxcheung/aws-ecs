@@ -18,6 +18,8 @@ cd $MY_ENV_DIR/aws-ecs/helloworld/ecr
 cd $MY_ENV_DIR/aws-ecs/helloworld/codebuild
 . ./set_up.sh
 
+cd $MY_ENV_DIR/aws-ecs/helloworld/startbuild
+. ./set_up.sh
 
 cd $MY_ENV_DIR/aws-ecs/helloworld/docker_build
 . ./set_up.sh
