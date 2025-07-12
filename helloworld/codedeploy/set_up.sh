@@ -1,19 +1,24 @@
 #!/bin/bash
+set -euo pipefail
 
+# Get AWS account ID
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+echo "🔐 Using AWS Account: $AWS_ACCOUNT_ID"
 
-# a) create application
-CODEDEPLOY_CREATE_APP=$(aws deploy create-application \
+# Create CodeDeploy application
+echo "📦 Creating CodeDeploy application..."
+aws deploy create-application \
   --application-name hello-ecs-app \
-  --compute-platform ECS)
+  --compute-platform ECS
 
-# b) create deployment group (blue/green example)
+# Create CodeDeploy deployment group
+echo "🚀 Creating CodeDeploy deployment group..."
 
-CODEDEPLOY_CREATE_DEPLOY_GROUP=$(aws deploy create-deployment-group \
+aws deploy create-deployment-group \
   --application-name hello-ecs-app \
   --deployment-group-name hello-ecs-dg \
   --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
-  --service-role-arn arn:aws:iam::<ACCOUNT_ID>:role/CodeDeployECSRole \
+  --service-role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/CodeDeployECSRole \
   --deployment-style deploymentType=BLUE_GREEN,deploymentOption=WITH_TRAFFIC_CONTROL \
   --blue-green-deployment-configuration '{
       "terminateBlueInstancesOnDeploymentSuccess": {
@@ -29,19 +34,20 @@ CODEDEPLOY_CREATE_DEPLOY_GROUP=$(aws deploy create-deployment-group \
       }
     }' \
   --ecs-services '[{"serviceName":"hello-ecs-service","clusterName":"hello-ecs-cluster"}]' \
-  --load-balancer-info '{
-      "targetGroupPairInfoList": [
+  --load-balancer-info "{
+      \"targetGroupPairInfoList\": [
         {
-          "targetGroups": [
-            { "name": "ecs-blue-tg" },
-            { "name": "ecs-green-tg" }
+          \"targetGroups\": [
+            { \"name\": \"ecs-blue-tg\" },
+            { \"name\": \"ecs-green-tg\" }
           ],
-          "prodTrafficRoute": {
-            "listenerArns": [
-              "arn:aws:elasticloadbalancing:us-east-1:<ACCOUNT_ID>:listener/app/your-alb/your-listener-id"
+          \"prodTrafficRoute\": {
+            \"listenerArns\": [
+              \"arn:aws:elasticloadbalancing:us-east-1:$AWS_ACCOUNT_ID:listener/app/your-alb/your-listener-id\"
             ]
           }
         }
       ]
-    }'
-)
+    }"
+
+echo "✅ CodeDeploy setup complete."
