@@ -40,7 +40,7 @@ container_definitions=$(cat <<EOF
         "interval": 30,
         "timeout": 5,
         "retries": 3
-    },    
+    }    
   }
 ]
 EOF
