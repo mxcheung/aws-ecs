@@ -9,10 +9,25 @@
       "essential": true,
       "portMappings": [
         {
+          "name": "wordpress-80-tcp",
           "containerPort": 80,
-          "hostPort": 80
+          "hostPort": 80,
+          "protocol": "tcp",
+          "appProtocol": "http"
         }
-      ]
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-group": "/ecs/wordpress-td",
+            "awslogs-create-group": "true",
+            "awslogs-region": "us-east-1",
+            "awslogs-stream-prefix": "ecs",
+            "mode": "non-blocking",
+            "max-buffer-size": "25m"
+        }
+      }
     }
   ]
 }
+
