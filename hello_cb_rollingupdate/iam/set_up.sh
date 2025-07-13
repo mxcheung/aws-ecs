@@ -36,8 +36,12 @@ echo "🚀 attach-role-policy AWSCodeCommitReadOnly codebuild-hello-ecs-role: $A
 CODEBUILD_ROLE_3=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
   --policy-arn arn:aws:iam::aws:policy/AWSCodeCommitReadOnly)
 
+echo "🚀 attach-role-policy AmazonECS_FullAccess codebuild-hello-ecs-role: $AWS_ACCOUNT_ID"
+
 CODEBUILD_ROLE_4=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
   --policy-arn arn:aws:iam::aws:policy/AmazonECS_FullAccess)
+
+echo "🚀 attach-role-policy AmazonECSTaskExecutionRolePolicy codebuild-hello-ecs-role: $AWS_ACCOUNT_ID"
 
 CODEBUILD_ROLE_5=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
   --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy)
