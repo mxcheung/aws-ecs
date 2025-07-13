@@ -40,4 +40,4 @@ CODEBUILD_ROLE_4=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-ro
   --policy-arn arn:aws:iam::aws:policy/AmazonECS_FullAccess)
 
 CODEBUILD_ROLE_5=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
-  --policy-arn arn:aws:iam::aws:policy/AmazonECSTaskExecutionRolePolicy)
+  --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy)
