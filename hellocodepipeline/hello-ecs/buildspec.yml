@@ -40,9 +40,10 @@ phases:
             -e "s|<AWS_ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
             $TASK_DEF_TEMPLATE_FILE > $TASK_DEF_OUTPUT_FILE
       - TASK_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://$TASK_DEF_OUTPUT_FILE --query 'taskDefinition.taskDefinitionArn' --output text)
-      - echo Updating ECS service to use task definition $TASK_DEF_ARN
-      - aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition $TASK_DEF_ARN
+      - echo Updating ECS service with new task definition $TASK_DEF_ARN
+      - echo Creating imagedefinitions.json for CodePipeline
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$CONTAINER_NAME" "$IMAGE_URI" > imagedefinitions.json
 
 artifacts:
   files:
-    - '**/*'
+    - imagedefinitions.json
