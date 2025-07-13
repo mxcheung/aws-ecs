@@ -1,5 +1,7 @@
 {
   "family": "helloworld-td",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],  
   "containerDefinitions": [
     {
       "name": "wordpress",
@@ -30,4 +32,3 @@
     }
   ]
 }
-
