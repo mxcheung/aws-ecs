@@ -20,6 +20,8 @@ phases:
       - IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
+
+
   build:
     commands:
       - echo Building Docker image...
@@ -34,7 +36,7 @@ phases:
       - echo Registering new task definition...
       # Inject IMAGE_URI and executionRoleArn with real AWS_ACCOUNT_ID
       - |
-        sed -e "s|<IMAGE_URI>|$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG|g" \
+        sed -e "s|<IMAGE_URI>|$IMAGE_URI|g" \
             -e "s|<AWS_ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
             $TASK_DEF_TEMPLATE_FILE > $TASK_DEF_OUTPUT_FILE
       - TASK_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://$TASK_DEF_OUTPUT_FILE --query 'taskDefinition.taskDefinitionArn' --output text)
