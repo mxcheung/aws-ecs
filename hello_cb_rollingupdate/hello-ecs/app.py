@@ -21,7 +21,7 @@ def wordpress_logo():
 # Default route
 @app.route('/')
 def home():
-    return "Hello Codebuild from Flask on ECS!", 200
+    return "Hello Code Build with ECS Rolling Update from Flask on ECS!", 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
