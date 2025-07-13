@@ -55,7 +55,7 @@ CODEBUILD_ROLE_6=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-ro
 
 echo "🚀 Create role codepipeline-hello-ecs-role: $AWS_ACCOUNT_ID"
 CODEPIPELINE_ROLE=$(aws iam create-role \
-  --role-name codebuild-hello-ecs-role \
+  --role-name codepipeline-hello-ecs-role \
   --assume-role-policy-document file://<(cat <<EOF
 {
   "Version": "2012-10-17",
