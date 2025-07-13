@@ -21,21 +21,24 @@ This project aims to
  - Add codebuild-hello-ecs-role
  - Add hello-ecs-build
  - Add start build
- - Delete docker_build
+ - Delete docker_build               # Manual build docker image
+ - Delete ecs-task-definition        # Manual define task definition
+ - Delete ecs                        # Manual update ecs service
 
 # Expect results
 
 ```
-http://ourapplicationloadbalancer-1557104776.us-east-1.elb.amazonaws.com/
-Hello Code build from Flask on ECS!
-https://us-east-1.console.aws.amazon.com/codesuite/codebuild/749739615299/projects/hello-ecs-build/
-[Container] 2025/07/12 10:55:30.777044 Running command echo Build completed successfully. Image $IMAGE_URI
-Build completed successfully. Image 749739615299.dkr.ecr.us-east-1.amazonaws.com/hello-ecs:latest
-[Container] 2025/07/12 10:55:30.783172 Phase complete: POST_BUILD State: SUCCEEDED
-[Container] 2025/07/12 10:55:30.783237 Phase context status code:  Message: 
-[Container] 2025/07/12 10:55:30.831157 Report auto-discover file discovery took 0.005590 seconds
-[Container] 2025/07/12 10:55:30.831174 Phase complete: UPLOAD_ARTIFACTS State: SUCCEEDED
-[Container] 2025/07/12 10:55:30.831243 Phase context status code:  Message: 
+http://ourapplicationloadbalancer-293886622.us-east-1.elb.amazonaws.com/
+Hello Code Build with ECS Rolling Update from Flask on ECS!
+https://us-east-1.console.aws.amazon.com/codesuite/codebuild/400874991066/projects/hello-ecs-build
+
+
+[Container] 2025/07/13 05:34:54.773369 Running command echo Build completed successfully. Image $IMAGE_URI
+Build completed successfully. Image 400874991066.dkr.ecr.us-east-1.amazonaws.com/hello-ecs:latest
+[Container] 2025/07/13 05:34:56.980581 Report auto-discover file discovery took 0.005648 seconds
+[Container] 2025/07/13 05:34:56.980623 Phase complete: UPLOAD_ARTIFACTS State: SUCCEEDED
+[Container] 2025/07/13 05:34:56.980630 Phase context status code:  Message: 
+
 ```
 # Bootstrap
 Use existing project ECS aws-ecs Wordpress to bootstrap a fully working ECS deployment.
