@@ -2,7 +2,7 @@
   "family": "helloworld-td",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],  
-  "executionRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/ecsTaskExecutionRole",  
+  "executionRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/OurEcsTaskExecutionRole",  
   "cpu": "256",
   "memory": "512",  
   "containerDefinitions": [
