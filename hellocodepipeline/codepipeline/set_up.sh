@@ -119,3 +119,8 @@ fi
 
 echo "✅ Pipeline ready: ${PIPELINE_NAME}"
 
+aws codepipeline put-pipeline-permission \
+  --pipeline-name "${PIPELINE_NAME}" \
+  --principal events.amazonaws.com \
+  --statement-id AllowEventBridgeStart \
+  --action codepipeline:StartPipelineExecution
