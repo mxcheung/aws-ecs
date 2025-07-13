@@ -45,3 +45,9 @@ echo "🚀 attach-role-policy AmazonECSTaskExecutionRolePolicy codebuild-hello-e
 
 CODEBUILD_ROLE_5=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
   --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy)
+
+
+echo "🚀 attach-role-policy AWSCodeBuildDeveloperAccess codebuild-hello-ecs-role: $AWS_ACCOUNT_ID"
+
+CODEBUILD_ROLE_6=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
+  --policy-arn arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess)
