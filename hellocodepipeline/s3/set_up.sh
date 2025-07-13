@@ -17,3 +17,5 @@ S3_CREATE_S3=$$(aws s3api head-bucket --bucket "$ARTIFACT_BUCKET" 2>/dev/null ||
   echo "Creating S3 bucket $ARTIFACT_BUCKET"
   aws s3 mb "s3://$ARTIFACT_BUCKET" --region "$REGION"
 })
+
+echo "✅ Created Artifact Bucket: ${ARTIFACT_BUCKET}"

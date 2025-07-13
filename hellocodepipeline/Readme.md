@@ -21,11 +21,10 @@ This project aims to
  - Add codebuild-hello-ecs-role
  - Add codepipeline-hello-ecs-role
  - Add hello-ecs-build
- - Add start build
  - Delete docker_build               # Manual build docker image
  - Delete ecs-task-definition        # Manual define task definition
  - Delete ecs                        # Manual update ecs service
-
+ - Delete start                      # Manual start build
 # Codepipeline prerequisites
 - Add S3                             # Required for code build artifacts
 - Add Codepipeline
