@@ -52,7 +52,6 @@ echo "🚀 attach-role-policy AWSCodeBuildDeveloperAccess codebuild-hello-ecs-ro
 CODEBUILD_ROLE_6=$(aws iam attach-role-policy --role-name codebuild-hello-ecs-role \
   --policy-arn arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess)
 
-
 echo "🚀 Create role codepipeline-hello-ecs-role: $AWS_ACCOUNT_ID"
 CODEPIPELINE_ROLE=$(aws iam create-role \
   --role-name codepipeline-hello-ecs-role \
@@ -62,7 +61,7 @@ CODEPIPELINE_ROLE=$(aws iam create-role \
   "Statement": [
     {
       "Effect": "Allow",
-      "Principal": { "Service": "codebuild.amazonaws.com" },
+      "Principal": { "Service": "codepipeline.amazonaws.com" },
       "Action": "sts:AssumeRole"
     }
   ]
@@ -70,4 +69,5 @@ CODEPIPELINE_ROLE=$(aws iam create-role \
 EOF
 )
 )
+
 

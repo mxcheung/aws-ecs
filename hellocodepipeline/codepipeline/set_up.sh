@@ -5,13 +5,13 @@
 PROJECT_NAME="hello-ecs-build"
 REPO_NAME="hello-ecs"
 REGION="us-east-1"
-ROLE_NAME="CodePipelineServiceRole"
+ROLE_NAME="codepipeline-hello-ecs-role"
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 BRANCH="master"                                # branch you want to watch
 PIPELINE_NAME="hello-ecs-pipeline"
 ARTIFACT_BUCKET="codepipeline-artifacts-${AWS_ACCOUNT_ID}"
-CLUSTER_NAME="hello-cluster"
-SERVICE_NAME="hello-service"
+CLUSTER_NAME="Wordpress-Cluster"
+SERVICE_NAME="wordpress-service"
 
 ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${ROLE_NAME}"
 CODECOMMIT_REPO_NAME="${REPO_NAME}"
