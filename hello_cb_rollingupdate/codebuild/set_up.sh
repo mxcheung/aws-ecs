@@ -7,6 +7,7 @@ REPO_NAME="hello-ecs"
 REGION="us-east-1"
 ROLE_NAME="codebuild-hello-ecs-role"
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+BRANCH=master                                # branch you want to watch
 
 # ──────────────── Fetch Account Info ────────────────
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
@@ -37,9 +38,23 @@ CODEBUILD_PROJECT=$(aws codebuild create-project \
 
 echo "✅ CodeBuild project '${PROJECT_NAME}' created successfully."
 
-# ──────────────── Create CodeBuild Webhook ────────────────
 
-CODEBUILD_PROJECT_WEBHOOK=$(aws codebuild create-webhook \
-  --project-name "${PROJECT_NAME}")
+# ──────────────── Create CodeBuild commit triggger ────────────────
+
+cat > triggers.json <<EOF
+{
+  "buildType": "BUILD",
+  "filterGroups": [[
+    { "type": "EVENT",    "pattern": "PUSH" },
+    { "type": "HEAD_REF", "pattern": "refs/heads/${BRANCH}" }
+  ]]
+}
+EOF
+
+aws codebuild update-project \
+  --name "$PROJECT_NAME" \
+  --triggers file://triggers.json
+
+
 
 echo "✅ CodeBuild project '${PROJECT_NAME}' webhook '${CODEBUILD_PROJECT_WEBHOOK}' created successfully."
