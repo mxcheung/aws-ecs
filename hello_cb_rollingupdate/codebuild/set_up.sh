@@ -40,6 +40,6 @@ echo "✅ CodeBuild project '${PROJECT_NAME}' created successfully."
 # ──────────────── Create CodeBuild Webhook ────────────────
 
 CODEBUILD_PROJECT_WEBHOOK=$(aws codebuild create-webhook \
-  --project-name your-codebuild-project-name)
+  --project-name "${PROJECT_NAME}")
 
 echo "✅ CodeBuild project '${PROJECT_NAME}' webhook '${CODEBUILD_PROJECT_WEBHOOK}' created successfully."
