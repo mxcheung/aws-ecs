@@ -8,6 +8,7 @@ ARTIFACT_BUCKET="codepipeline-artifacts-${AWS_ACCOUNT_ID}"
 BUILD_PROJECT_NAME="hello-ecs-build"
 CODE_BUILD_ROLE_NAME="codebuild-hello-ecs-role"
 CODE_PIPELINE_ROLE_NAME="codepipeline-hello-ecs-role"
+EVENTBRIDGE_ROLE_NAME="EventBridge_Invoke_CodePipeline_Role"  # New role for EventBridge
 
 # ──────────────── CodeBuild Role ────────────────
 echo "🚀 Creating IAM Role: ${CODE_BUILD_ROLE_NAME}"
@@ -26,7 +27,7 @@ if ! aws iam get-role --role-name "${CODE_BUILD_ROLE_NAME}" >/dev/null 2>&1; the
   ]
 }
 EOF
-)
+) >/dev/null 2>&1
 else
   echo "ℹ️ Role ${CODE_BUILD_ROLE_NAME} already exists"
 fi
@@ -169,3 +170,43 @@ aws iam put-role-policy \
   }' >/dev/null 2>&1
 
 echo "✅ IAM roles successfully created and configured."
+
+# ──────────────── EventBridge Role for starting CodePipeline ────────────────
+echo "🚀 Creating IAM Role for EventBridge to start CodePipeline: ${EVENTBRIDGE_ROLE_NAME}"
+
+if ! aws iam get-role --role-name "${EVENTBRIDGE_ROLE_NAME}" >/dev/null 2>&1; then
+  aws iam create-role --role-name "${EVENTBRIDGE_ROLE_NAME}" \
+    --assume-role-policy-document file://<(cat <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": { "Service": "events.amazonaws.com" },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+) >/dev/null 2>&1
+else
+  echo "ℹ️ Role ${EVENTBRIDGE_ROLE_NAME} already exists"
+fi
+
+echo "🔐 Attaching policy to ${EVENTBRIDGE_ROLE_NAME} to allow StartPipelineExecution"
+PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${REPO_NAME}"
+aws iam put-role-policy --role-name "${EVENTBRIDGE_ROLE_NAME}" --policy-name StartPipelinePolicy --policy-document "{
+  \"Version\": \"2012-10-17\",
+  \"Statement\": [
+    {
+      \"Effect\": \"Allow\",
+      \"Action\": \"codepipeline:StartPipelineExecution\",
+      \"Resource\": \"${PIPELINE_ARN}\"
+    }
+  ]
+}" >/dev/null 2>&1
+
+echo "✅ EventBridge IAM role created and configured."
+
+# You can now use this role ARN when adding the CodePipeline as a target to an EventBridge rule:
+# Role ARN: arn:aws:iam::${AWS_ACCOUNT_ID}:role/${EVENTBRIDGE_ROLE_NAME}
