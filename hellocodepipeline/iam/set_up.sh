@@ -10,6 +10,11 @@ CODE_BUILD_ROLE_NAME="codebuild-hello-ecs-role"
 CODE_PIPELINE_ROLE_NAME="codepipeline-hello-ecs-role"
 EVENTBRIDGE_ROLE_NAME="eventbridge-hello-ecs-role"  # New role for EventBridge
 PIPELINE_NAME="hello-ecs-pipeline"
+REPO_NAME="hello-ecs"
+DLQ_NAME="eventbridge-dlq"
+RULE_NAME="CodeCommitPushTriggerRule"
+CODE_COMMIT_TRIGGER_RULE_ARN="arn:aws:events:${REGION}:${AWS_ACCOUNT_ID}:rule/${RULE_NAME}"
+
 
 # ──────────────── CodeBuild Role ────────────────
 echo "🚀 Creating IAM Role: ${CODE_BUILD_ROLE_NAME}"
@@ -64,7 +69,7 @@ aws iam put-role-policy \
         \"Resource\": \"arn:aws:s3:::${ARTIFACT_BUCKET}/*\"
       }
     ]
-  }" >/dev/null 2>&1
+  }"
 
 # ──────────────── CodePipeline Role ────────────────
 echo "🚀 Creating IAM Role: ${CODE_PIPELINE_ROLE_NAME}"
@@ -92,23 +97,26 @@ fi
 echo "🔐 Adding inline policy to ${CODE_PIPELINE_ROLE_NAME} for CodeCommit access"
 aws iam put-role-policy \
   --role-name "${CODE_PIPELINE_ROLE_NAME}" \
-  --policy-name CodePipelineCodeCommitAccess \
-  --policy-document "{
-    \"Version\": \"2012-10-17\",
-    \"Statement\": [
-      {
-        \"Effect\": \"Allow\",
-        \"Action\": [
-          \"codecommit:GetBranch\",
-          \"codecommit:GetCommit\",
-          \"codecommit:UploadArchive\",
-          \"codecommit:GetUploadArchiveStatus\",
-          \"codecommit:CancelUploadArchive\"
-        ],
-        \"Resource\": \"arn:aws:codecommit:${REGION}:${AWS_ACCOUNT_ID}:${REPO_NAME}\"
-      }
-    ]
-  }" >/dev/null 2>&1
+  --policy-name AllowCodeCommitAccess \
+  --policy-document file://<(cat <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "codecommit:GetBranch",
+        "codecommit:GetCommit",
+        "codecommit:UploadArchive",
+        "codecommit:GetUploadArchiveStatus",
+        "codecommit:CancelUploadArchive"
+      ],
+      "Resource": "arn:aws:codecommit:${REGION}:${AWS_ACCOUNT_ID}:${REPO_NAME}"
+    }
+  ]
+}
+EOF
+)
 
 # Inline policy for S3 access in pipeline role
 aws iam put-role-policy \
@@ -211,6 +219,32 @@ aws iam put-role-policy --role-name "${EVENTBRIDGE_ROLE_NAME}" --policy-name Sta
     }
   ]
 }" 
+
+echo "🔐 Attaching policy to ${EVENTBRIDGE_ROLE_NAME} to allow sends the failed event message to your DLQ"
+
+cat > sqs-policy.json <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowEventBridgeSendMessage",
+      "Effect": "Allow",
+      "Principal": { "Service": "events.amazonaws.com" },
+      "Action": "sqs:SendMessage",
+      "Resource": "$DLQ_ARN",
+      "Condition": { 
+          "ArnEquals": { 
+            "aws:SourceArn": "$CODE_COMMIT_TRIGGER_RULE_ARN" 
+          } 
+      }
+    }
+  ]
+}
+EOF
+
+aws sqs set-queue-attributes \
+  --queue-url "$DLQ_URL" \
+  --attributes file://sqs-policy.json
 
 
 echo "✅ EventBridge IAM role created and configured."

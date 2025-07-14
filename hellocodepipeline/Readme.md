@@ -118,6 +118,21 @@ cd $MY_ENV_ROOT_DIR
 2025-07-10T13:23:09.192Z    Hello, world from CodeCommit and ECS!
 ```
 
+# Security
+```
+ Creating IAM Role: codebuild-hello-ecs-role
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/AWSCodeCommitReadOnly
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/AmazonECS_FullAccess
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
+🚀 Creating IAM Role: codepipeline-hello-ecs-role
+
+🔐 Adding inline policy to codepipeline-hello-ecs-role for CodeCommit access
+
+✅ IAM roles successfully created and configured.
+```
 
 # ECS Deployment
 ```
