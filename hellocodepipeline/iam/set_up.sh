@@ -88,7 +88,7 @@ if ! aws iam get-role --role-name "${CODE_PIPELINE_ROLE_NAME}" >/dev/null 2>&1; 
   ]
 }
 EOF
-) >/dev/null 2>&1
+) 
 else
   echo "ℹ️ Role ${CODE_PIPELINE_ROLE_NAME} already exists"
 fi
