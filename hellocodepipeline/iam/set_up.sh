@@ -14,6 +14,7 @@ REPO_NAME="hello-ecs"
 DLQ_NAME="eventbridge-dlq"
 RULE_NAME="CodeCommitPushTriggerRule"
 CODE_COMMIT_TRIGGER_RULE_ARN="arn:aws:events:${REGION}:${AWS_ACCOUNT_ID}:rule/${RULE_NAME}"
+PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}"
 
 
 # ──────────────── CodeBuild Role ────────────────
@@ -207,8 +208,8 @@ fi
 
 # ──────────────── Grant EventBridge Role Permission to Trigger CodePipeline ────────────────
 
-echo "🔐 Attaching policy to ${EVENTBRIDGE_ROLE_NAME} to allow StartPipelineExecution"
-PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}"
+echo "🔐 Attaching policy to ${EVENTBRIDGE_ROLE_NAME} with resource ${PIPELINE_ARN} to allow StartPipelineExecution"
+
 aws iam put-role-policy --role-name "${EVENTBRIDGE_ROLE_NAME}" --policy-name StartPipelinePolicy --policy-document "{
   \"Version\": \"2012-10-17\",
   \"Statement\": [

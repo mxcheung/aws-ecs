@@ -131,7 +131,16 @@ cd $MY_ENV_ROOT_DIR
 
 🔐 Adding inline policy to codepipeline-hello-ecs-role for CodeCommit access
 
+🔐 Attaching policy to eventbridge-hello-ecs-role: arn:aws:codepipeline:us-east-1:036912808834:hello-ecs-pipeline to allow StartPipelineExecution
+
 ✅ IAM roles successfully created and configured.
+
+```
+# Event Bridge Trigger
+```
+Creating EventBridge rule CodeCommitPushTriggerRule...
+EventBridge rule created: arn:aws:events:us-east-1:036912808834:rule/CodeCommitPushTriggerRule
+
 ```
 
 # ECS Deployment
