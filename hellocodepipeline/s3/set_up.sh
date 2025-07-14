@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -euo pipefail
+
+trap 'echo "❌ Script failed at line $LINENO. Exiting."' ERR
+
 # ──────────────── Configuration ────────────────
 REGION="us-east-1"
 

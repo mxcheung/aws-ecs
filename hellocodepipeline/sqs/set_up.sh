@@ -1,5 +1,10 @@
 #!/bin/bash
 
+set -euo pipefail
+
+trap 'echo "❌ Script failed at line $LINENO. Exiting."' ERR
+
+
 # ──────────────── Configuration ────────────────
 REGION="us-east-1"
 EVENTBRIDGE_ROLE_NAME="eventbridge-hello-ecs-role"  # New role for EventBridge

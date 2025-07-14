@@ -1,6 +1,10 @@
 
 #!/bin/bash
 
+set -euo pipefail
+
+trap 'echo "❌ Error in ${BASH_SOURCE[0]} on line $LINENO"; exit 1' ERR
+
 
 # ──────────────── Configuration ────────────────
 PROJECT_NAME="hello-ecs-build"

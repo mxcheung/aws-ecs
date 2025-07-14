@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -euo pipefail
+
+trap 'echo "❌ Script failed at line $LINENO. Exiting."' ERR
 
 # ──────────────── Configuration ────────────────
 PROJECT_NAME="hello-ecs-build"

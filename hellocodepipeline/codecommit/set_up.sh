@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -euo pipefail
+
+trap 'echo "❌ Script failed at line $LINENO. Exiting."' ERR
+
 REPO_NAME="hello-ecs"
 REGION="us-east-1"
 PROFILE="cloud_user"  # or your AWS profile

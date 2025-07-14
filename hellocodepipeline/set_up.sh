@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -euo pipefail
+
+trap 'echo "❌ Script failed at line $LINENO. Exiting."' ERR
+
 echo $MY_ENV_ROOT_DIR
 echo $AWS_ACCESS_KEY_ID
 

@@ -108,7 +108,7 @@ export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 export MY_ENV_DIR="$HOME/environment"
 export MY_ENV_ROOT_DIR="$HOME/environment/aws-ecs/hellocodepipeline/"
 cd $MY_ENV_ROOT_DIR
-. ./set_up.sh
+. ./set_up.sh  2>&1 | tee script.log
 
 
 . ./set_up.sh
