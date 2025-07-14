@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+trap 'echo "❌ Script failed at line $LINENO. Exiting."' ERR
+
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 REGION="us-east-1"
 
@@ -18,7 +20,7 @@ PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}"
 
 
 
-echo "🚀 Creating CodeBuild project: ${PROJECT_NAME}"
+echo "🚀 Creating CodeBuild project: ${BUILD_PROJECT_NAME}"
 echo "🧾 Account ID: ${AWS_ACCOUNT_ID}"
 echo "🔐 Code Commit Trigger Rule: ${CODE_COMMIT_TRIGGER_RULE_ARN}"
 echo "🔐 Event Bridge Role: ${EVENTBRIDGE_ROLE_NAME}"

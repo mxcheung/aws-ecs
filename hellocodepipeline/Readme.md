@@ -102,6 +102,7 @@ cd $MY_ENV_ROOT_DIR
 
 # Hellocodebuild in cloud 9
 ```
+screen -S myscript
 export AWS_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxx
 export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 export MY_ENV_DIR="$HOME/environment"
