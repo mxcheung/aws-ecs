@@ -11,7 +11,7 @@ CODE_PIPELINE_ROLE_NAME="codepipeline-hello-ecs-role"
 EVENTBRIDGE_ROLE_NAME="eventbridge-hello-ecs-role"  # New role for EventBridge
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 BRANCH=master                                # branch you want to watch
-RULE_NAME="trigger-codepipeline-on-push"
+EVENTBRIDGE_RULE_NAME="trigger-codepipeline-on-push"
 DLQ_NAME="eventbridge-dlq"
 DLQ_ARN="arn:aws:sqs:${REGION}:${AWS_ACCOUNT_ID}:${DLQ_NAME}"
 PIPELINE_NAME="hello-ecs-pipeline"
@@ -25,16 +25,17 @@ CODE_PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_N
 echo "🚀 Creating CodeBuild project: ${PROJECT_NAME}"
 echo "🧾 Account ID: ${AWS_ACCOUNT_ID}"
 echo "🔐 Code pipeline Role: ${CODE_PIPELINE_ROLE_ARN}"
-
+echo "🔐 Event Bridge Role: ${EVENTBRIDGE_ROLE_ARN}"
+echo "🔐 Event Bridge Rule Name: ${EVENTBRIDGE_RULE_NAME}"
 
 # ──────────────── Create EventBridge rule for CodeCommit pushes ────────────────
 # Create EventBridge rule for CodeCommit push to specific branch
 
-echo "Creating EventBridge rule ${RULE_NAME}..."
+echo "Creating EventBridge rule ${EVENTBRIDGE_RULE_NAME}..."
 
 RULE_ARN=$(aws events put-rule \
-  --name "${RULE_NAME}" \
-  --role-arn "${EVENTBRIDGE_ROLE_ARN}"  
+  --name "${EVENTBRIDGE_RULE_NAME}" \
+  --role-arn "${EVENTBRIDGE_ROLE_ARN}" \
   --event-pattern "{
     \"source\": [\"aws.codecommit\"],
     \"detail-type\": [\"CodeCommit Repository State Change\"],
@@ -54,8 +55,8 @@ echo "EventBridge rule created: ${RULE_ARN}"
 # Add the CodePipeline as a target of this rule
 echo "Adding CodePipeline ${PIPELINE_NAME} as target to rule..."
 aws events put-targets \
-  --rule "${RULE_NAME}" \
-  --targets "Id"="1","Arn"="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}","RoleArn"="${ROLE_ARN}"
+  --rule "${EVENTBRIDGE_RULE_NAME}" \
+  --targets "Id"="1","Arn"="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}","RoleArn"="${EVENTBRIDGE_ROLE_ARN}"
 
 
 
@@ -66,7 +67,7 @@ aws events put-targets \
     {
       \"Id\": \"TriggerCodePipeline\",
       \"Arn\": \"${CODE_PIPELINE_ARN}\"
-      \"RoleArn\": \"${ROLEEVENTBRIDGE_ROLE_ARN_ARN}\",
+      \"RoleArn\": \"${EVENTBRIDGE_ROLE_ARN}\",
       \"DeadLetterConfig\": {
         \"Arn\": \"${DLQ_ARN}\"
       }
