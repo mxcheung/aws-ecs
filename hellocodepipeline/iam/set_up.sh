@@ -3,12 +3,13 @@ set -euo pipefail
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 REGION="us-east-1"
-REPO_NAME="hello-ecs"
+
 ARTIFACT_BUCKET="codepipeline-artifacts-${AWS_ACCOUNT_ID}"
 BUILD_PROJECT_NAME="hello-ecs-build"
 CODE_BUILD_ROLE_NAME="codebuild-hello-ecs-role"
 CODE_PIPELINE_ROLE_NAME="codepipeline-hello-ecs-role"
-EVENTBRIDGE_ROLE_NAME="EventBridge_Invoke_CodePipeline_Role"  # New role for EventBridge
+EVENTBRIDGE_ROLE_NAME="eventbridge-hello-ecs-role"  # New role for EventBridge
+PIPELINE_NAME="hello-ecs-pipeline"
 
 # ──────────────── CodeBuild Role ────────────────
 echo "🚀 Creating IAM Role: ${CODE_BUILD_ROLE_NAME}"
@@ -129,7 +130,7 @@ aws iam put-role-policy \
         ]
       }
     ]
-  }" >/dev/null 2>&1
+  }" 
 
 # Inline policy for CodeBuild access from pipeline role
 aws iam put-role-policy \
@@ -147,7 +148,7 @@ aws iam put-role-policy \
         \"Resource\": \"arn:aws:codebuild:${REGION}:${AWS_ACCOUNT_ID}:project/${BUILD_PROJECT_NAME}\"
       }
     ]
-  }" >/dev/null 2>&1
+  }"  
 
 # Inline policy for ECS deployment permissions in pipeline role
 aws iam put-role-policy \
@@ -167,9 +168,12 @@ aws iam put-role-policy \
         "Resource": "*"
       }
     ]
-  }' >/dev/null 2>&1
+  }'  
 
 echo "✅ IAM roles successfully created and configured."
+
+# ──────────────── Role Role ────────────────
+
 
 # ──────────────── EventBridge Role for starting CodePipeline ────────────────
 echo "🚀 Creating IAM Role for EventBridge to start CodePipeline: ${EVENTBRIDGE_ROLE_NAME}"
@@ -188,13 +192,15 @@ if ! aws iam get-role --role-name "${EVENTBRIDGE_ROLE_NAME}" >/dev/null 2>&1; th
   ]
 }
 EOF
-) >/dev/null 2>&1
+) 
 else
   echo "ℹ️ Role ${EVENTBRIDGE_ROLE_NAME} already exists"
 fi
 
+# ──────────────── Grant EventBridge Role Permission to Trigger CodePipeline ────────────────
+
 echo "🔐 Attaching policy to ${EVENTBRIDGE_ROLE_NAME} to allow StartPipelineExecution"
-PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${REPO_NAME}"
+PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}"
 aws iam put-role-policy --role-name "${EVENTBRIDGE_ROLE_NAME}" --policy-name StartPipelinePolicy --policy-document "{
   \"Version\": \"2012-10-17\",
   \"Statement\": [
@@ -204,7 +210,8 @@ aws iam put-role-policy --role-name "${EVENTBRIDGE_ROLE_NAME}" --policy-name Sta
       \"Resource\": \"${PIPELINE_ARN}\"
     }
   ]
-}" >/dev/null 2>&1
+}" 
+
 
 echo "✅ EventBridge IAM role created and configured."
 

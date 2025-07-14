@@ -18,16 +18,26 @@ This project aims to
 # Code build prerequisites
  - Add buildspec.yml
  - Add taskdef.json
- - Add codebuild-hello-ecs-role
+ - Add codebuild-hello-ecs-role      # Required to build docker image
  - Add codepipeline-hello-ecs-role
  - Add hello-ecs-build
  - Delete docker_build               # Manual build docker image
  - Delete ecs-task-definition        # Manual define task definition
  - Delete ecs                        # Manual update ecs service
  - Delete start                      # Manual start build
+
 # Codepipeline prerequisites
 - Add S3                             # Required for code build artifacts
 - Add Codepipeline
+- Add codepipeline-hello-ecs-role    # Required to run codepipeline
+
+
+# Event Bridge prerequisites
+- Add SQS                                     # Required for eventbridge-dlq
+- Add Codepipeline
+- Add EventBridge_Invoke_CodePipeline_Role    # Required to trigger codepipeline
+- Add eventbridge-dlq                         # Dead‑letter queue (DLQ) for EventBridge
+
 
 # Summary 
 Piece	What it does
