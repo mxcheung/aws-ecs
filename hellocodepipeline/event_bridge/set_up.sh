@@ -66,7 +66,7 @@ aws events put-targets \
 
 # Put EventBridge target (CodePipeline project)
 aws events put-targets \
-  --rule "${RULE_NAME}" \
+  --rule "${EVENTBRIDGE_RULE_NAME}" \
   --targets "[
     {
       \"Id\": \"TriggerCodePipeline\",
