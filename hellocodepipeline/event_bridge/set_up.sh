@@ -72,7 +72,7 @@ aws events put-targets \
   --targets "[
     {
       \"Id\": \"TriggerCodePipeline\",
-      \"Arn\": \"${CODE_PIPELINE_ARN}\"
+      \"Arn\": \"${CODE_PIPELINE_ARN}\",
       \"RoleArn\": \"${EVENTBRIDGE_ROLE_ARN}\",
       \"DeadLetterConfig\": {
         \"Arn\": \"${DLQ_ARN}\"
