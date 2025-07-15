@@ -3,6 +3,8 @@
 # Bootstrap all environment components by running each component’s set_up.sh
 # ---------------------------------------------------------------------------
 
+find . -type f -name set_up.sh -exec chmod +x {} \;
+
 set -Eeuo pipefail            # -E propagates ERR trap into subshells
 shopt -s inherit_errexit      # for Bash ≥ 5.0: pipelines respect -e
 
