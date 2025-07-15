@@ -79,4 +79,4 @@ echo "🧪 DLQ_POLICY_JSON=$POLICY_JSON"
 echo "🔐 Setting DLQ policy..."
 aws sqs set-queue-attributes \
   --queue-url "$DLQ_URL" \
-  --attributes "Policy=$POLICY_JSON"
+  --attributes Policy=$POLICY_JSON
