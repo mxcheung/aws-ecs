@@ -72,6 +72,9 @@ POLICY_JSON=$(jq -n -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_T
   ]
 }')
 
+echo "🧪 DLQ_POLICY_JSON=$POLICY_JSON"
+
+
 # ───────── Set queue policy ─────────
 echo "🔐 Setting DLQ policy..."
 aws sqs set-queue-attributes \
