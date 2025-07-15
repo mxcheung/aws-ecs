@@ -42,31 +42,26 @@ echo "📬 DLQ_URL: ${DLQ_URL}"
 echo "🔐 Set DLQ queue attributes ${DLQ_ARN} to allow event bridge to send the failed event message to DLQ"
 
 
-POLICY=$(cat <<EOF
-{
+POLICY_JSON='{
   "Version": "2012-10-17",
   "Id": "EventBridgeSendMessagePolicy",
   "Statement": [
     {
       "Sid": "AllowEventBridgeSendMessage",
       "Effect": "Allow",
-      "Principal": {
-        "Service": "events.amazonaws.com"
-      },
+      "Principal": {"Service": "events.amazonaws.com"},
       "Action": "sqs:SendMessage",
-      "Resource": "${DLQ_ARN}",
+      "Resource": "arn:aws:sqs:us-east-1:263585924271:eventbridge-dlq",
       "Condition": {
         "ArnEquals": {
-          "aws:SourceArn": "${CODE_COMMIT_TRIGGER_RULE_ARN}"
+          "aws:SourceArn": "arn:aws:events:us-east-1:263585924271:rule/CodeCommitPushTriggerRule"
         }
       }
     }
   ]
-}
-EOF
-)
+}'
 
 aws sqs set-queue-attributes \
   --queue-url "$DLQ_URL" \
-  --attributes Policy="$POLICY"
+  --attributes Policy="$POLICY_JSON"
 
