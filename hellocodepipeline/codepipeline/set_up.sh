@@ -1,7 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-trap 'echo "❌ Script failed at line $LINENO. Exiting."' ERR
+# Get the absolute path of this script, even if invoked via a relative path or symlink
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+
+trap 'echo "❌ Error in ${SCRIPT_PATH} on line $LINENO"; exit 1' ERR
 
 # ──────────────── Configuration ────────────────
 PROJECT_NAME="hello-ecs-build"
