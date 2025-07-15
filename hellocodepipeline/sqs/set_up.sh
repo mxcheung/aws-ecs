@@ -1,74 +1,78 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# Creates an SQS dead‑letter queue (DLQ) and attaches an EventBridge‑only send
+# policy.  Any attribute whose value is itself JSON (Policy, RedrivePolicy, …)
+# is automatically escaped; scalars stay unescaped.
 
 set -euo pipefail
 
-# Get the absolute path of this script
-SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
-trap 'echo "❌ Error in ${SCRIPT_PATH} on line $LINENO"; exit 1' ERR
+# ─────────────── Helpers & cleanup ───────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+trap 'echo "❌ Error in ${BASH_SOURCE[0]} on line $LINENO"; exit 1' ERR
+ATTR_FILE="$(mktemp)"                    # temp file for set‑queue‑attributes
+cleanup() { rm -f "$ATTR_FILE"; }
+trap cleanup EXIT
 
-# ──────────────── Configuration ────────────────
-REGION="us-east-1"
-EVENTBRIDGE_ROLE_NAME="eventbridge-hello-ecs-role"
+# ─────────────── Configuration (override via env) ───────────────
+REGION="${REGION:-us-east-1}"
+DLQ_NAME="${DLQ_NAME:-eventbridge-dlq}"
+PIPELINE_NAME="${PIPELINE_NAME:-hello-ecs-pipeline}"
+EVENTBRIDGE_ROLE_NAME="${EVENTBRIDGE_ROLE_NAME:-eventbridge-hello-ecs-role}"
+VISIBILITY_TIMEOUT="${VISIBILITY_TIMEOUT:-60}"
 
-# ──────────────── Fetch Account Info ────────────────
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-echo "🧾 Account ID: ${AWS_ACCOUNT_ID}"
+# ─────────────── AWS context ───────────────
+AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+echo "🧾 AWS account: $AWS_ACCOUNT_ID"
 
-# ──────────────── DLQ Setup ────────────────
-DLQ_NAME="eventbridge-dlq"
-RULE_NAME="TriggerPipelineOnPush"
-PIPELINE_NAME="hello-ecs-pipeline"
-PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}"
-EVENTBRIDGE_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${EVENTBRIDGE_ROLE_NAME}"
 DLQ_ARN="arn:aws:sqs:${REGION}:${AWS_ACCOUNT_ID}:${DLQ_NAME}"
 CODE_COMMIT_RULE_NAME="CodeCommitPushTriggerRule"
 CODE_COMMIT_TRIGGER_RULE_ARN="arn:aws:events:${REGION}:${AWS_ACCOUNT_ID}:rule/${CODE_COMMIT_RULE_NAME}"
 
-echo "📬 Creating SQS DLQ: ${DLQ_NAME}"
-DLQ_URL=$(aws sqs create-queue --queue-name "${DLQ_NAME}" \
-  --attributes VisibilityTimeout=60 \
-  --output text --query 'QueueUrl')
+# ─────────────── Create DLQ ───────────────
+echo "📬 Creating SQS DLQ: $DLQ_NAME"
+DLQ_URL="$(aws sqs create-queue \
+  --queue-name "$DLQ_NAME" \
+  --attributes "VisibilityTimeout=$VISIBILITY_TIMEOUT" \
+  --query QueueUrl --output text)"
+echo "🧾 DLQ URL: $DLQ_URL"
 
-echo "📬 DLQ_URL: ${DLQ_URL}"
-echo "🔐 Set DLQ queue attributes ${DLQ_ARN} to allow EventBridge to send failed events to DLQ"
-
-# ───────── Check required vars ─────────
-if [[ -z "${DLQ_ARN:-}" || -z "${CODE_COMMIT_TRIGGER_RULE_ARN:-}" ]]; then
-  echo "❌ DLQ_ARN or CODE_COMMIT_TRIGGER_RULE_ARN is not set"
-  exit 1
-fi
-
-echo "🧪 DLQ_ARN=$DLQ_ARN"
-echo "🧪 CODE_COMMIT_TRIGGER_RULE_ARN=$CODE_COMMIT_TRIGGER_RULE_ARN"
-
-# ───────── Create escaped Policy JSON string ─────────
-RAW_POLICY=$(jq -n --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_TRIGGER_RULE_ARN" '
+# ─────────────── Build nested Policy object ───────────────
+RAW_POLICY="$(jq -n --arg dlq "$DLQ_ARN" --arg src "$CODE_COMMIT_TRIGGER_RULE_ARN" '
 {
-  "Version": "2012-10-17",
-  "Id": "EventBridgeSendMessagePolicy",
-  "Statement": [
-    {
-      "Sid": "AllowEventBridgeSendMessage",
-      "Effect": "Allow",
-      "Principal": { "Service": "events.amazonaws.com" },
-      "Action": "sqs:SendMessage",
-      "Resource": $dlq_arn,
-      "Condition": {
-        "ArnEquals": {
-          "aws:SourceArn": $source_arn
-        }
-      }
-    }
-  ]
-}')
+  Version: "2012-10-17",
+  Id:      "EventBridgeSendMessagePolicy",
+  Statement: [{
+    Sid:       "AllowEventBridgeSendMessage",
+    Effect:    "Allow",
+    Principal: { Service: "events.amazonaws.com" },
+    Action:    "sqs:SendMessage",
+    Resource:  $dlq,
+    Condition: { ArnEquals: { "aws:SourceArn": $src } }
+  }]
+}')"
 
-ESCAPED_POLICY=$(jq -n --arg policy "$RAW_POLICY" '$policy' | jq @json)
+# ─────────────── Escape only JSON‑typed attributes ───────────────
+ESCAPED_POLICY="$(jq -n --arg policy "$RAW_POLICY" '$policy' | jq @json)"
 
-echo "🧪 Writing policy to set-queue-attributes.json..."
-echo "{ \"Policy\": $ESCAPED_POLICY }" > set-queue-attributes.json
+# If you need other nested‑JSON attributes (e.g. RedrivePolicy) build them
+# the same way and add them below.
 
-# ───────── Set queue policy from file ─────────
-echo "🔐 Setting DLQ policy using file..."
+# ─────────────── Assemble attribute file ───────────────
+jq -n \
+  --arg vis "$VISIBILITY_TIMEOUT" \
+  --arg policy "$ESCAPED_POLICY" '
+{
+  VisibilityTimeout: $vis,
+  Policy:            $policy      # already escaped
+}' > "$ATTR_FILE"
+
+echo "📝 Attributes file created: $ATTR_FILE"
+cat "$ATTR_FILE"
+
+# ─────────────── Apply attributes ───────────────
+echo "🔐 Applying DLQ attributes…"
 aws sqs set-queue-attributes \
   --queue-url "$DLQ_URL" \
-  --attributes file://set-queue-attributes.json
+  --attributes "file://$ATTR_FILE"
+
+echo "✅ DLQ set‑up complete."
