@@ -44,7 +44,8 @@ RAW_POLICY=$(jq -n --arg dlq "$DLQ_ARN" --arg src "$CODE_COMMIT_TRIGGER_RULE_ARN
 }')
 
 # ─────────────── Correctly escape the policy string ───────────────
-ESCAPED_POLICY=$(jq -n --argjson policy "$RAW_POLICY" '$policy' | jq -r @json)
+ESCAPED_POLICY=$(jq -n --arg policy "$RAW_POLICY" '$policy' | jq -r @json)
+
 
 # ─────────────── Write final JSON attributes file ───────────────
 cat > set-queue-attributes.json <<EOF
