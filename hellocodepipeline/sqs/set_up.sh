@@ -43,11 +43,10 @@ RAW_POLICY=$(jq -n --arg dlq "$DLQ_ARN" --arg src "$CODE_COMMIT_TRIGGER_RULE_ARN
   }]
 }')
 
-# ─────────────── Escape Policy for SQS Attributes ───────────────
-ESCAPED_POLICY=$(jq -n --arg policy "$RAW_POLICY" '$policy' | jq @json)
+# ─────────────── Correctly escape the policy string ───────────────
+ESCAPED_POLICY=$(jq -n --argjson policy "$RAW_POLICY" '$policy' | jq -r @json)
 
-# ─────────────── Write Attribute File ───────────────
-echo "📝 Writing set-queue-attributes.json..."
+# ─────────────── Write final JSON attributes file ───────────────
 cat > set-queue-attributes.json <<EOF
 {
   "VisibilityTimeout": "$VISIBILITY_TIMEOUT",
@@ -55,10 +54,10 @@ cat > set-queue-attributes.json <<EOF
 }
 EOF
 
-echo "📄 Generated set-queue-attributes.json:"
+echo "📝 Created set-queue-attributes.json:"
 cat set-queue-attributes.json
 
-# ─────────────── Apply Attributes to Queue ───────────────
+# ─────────────── Apply Attributes ───────────────
 echo "🔐 Setting DLQ attributes..."
 aws sqs set-queue-attributes \
   --queue-url "$DLQ_URL" \
