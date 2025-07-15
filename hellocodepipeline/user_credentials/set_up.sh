@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # response=$(aws iam create-access-key --output json)
 
