@@ -7,19 +7,15 @@ SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SO
 
 trap 'echo "❌ Error in ${SCRIPT_PATH} on line $LINENO"; exit 1' ERR
 
-
 # ──────────────── Configuration ────────────────
 REGION="us-east-1"
-EVENTBRIDGE_ROLE_NAME="eventbridge-hello-ecs-role"  # New role for EventBridge
+EVENTBRIDGE_ROLE_NAME="eventbridge-hello-ecs-role"
 
 # ──────────────── Fetch Account Info ────────────────
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-
 echo "🧾 Account ID: ${AWS_ACCOUNT_ID}"
 
-
-
-# ──────────────── Dead‑letter queue (DLQ) for EventBridge ────────────────
+# ──────────────── DLQ Setup ────────────────
 DLQ_NAME="eventbridge-dlq"
 RULE_NAME="TriggerPipelineOnPush"
 PIPELINE_NAME="hello-ecs-pipeline"
@@ -29,17 +25,13 @@ DLQ_ARN="arn:aws:sqs:${REGION}:${AWS_ACCOUNT_ID}:${DLQ_NAME}"
 CODE_COMMIT_RULE_NAME="CodeCommitPushTriggerRule"
 CODE_COMMIT_TRIGGER_RULE_ARN="arn:aws:events:${REGION}:${AWS_ACCOUNT_ID}:rule/${CODE_COMMIT_RULE_NAME}"
 
-
-# RULE_NAME="CodeCommitPushTriggerRule"
-# SOURCE_ARN="arn:aws:events:${REGION}:${ACCOUNT_ID}:rule/${RULE_NAME}"
-
 echo "📬 Creating SQS DLQ: ${DLQ_NAME}"
 DLQ_URL=$(aws sqs create-queue --queue-name "${DLQ_NAME}" \
           --attributes VisibilityTimeout=60 \
           --output text --query 'QueueUrl')
 
 echo "📬 DLQ_URL: ${DLQ_URL}"
-echo "🔐 Set DLQ queue attributes ${DLQ_ARN} to allow event bridge to send the failed event message to DLQ"
+echo "🔐 Set DLQ queue attributes ${DLQ_ARN} to allow EventBridge to send failed events to DLQ"
 
 # ───────── Check required vars ─────────
 if [[ -z "${DLQ_ARN:-}" || -z "${CODE_COMMIT_TRIGGER_RULE_ARN:-}" ]]; then
@@ -47,12 +39,11 @@ if [[ -z "${DLQ_ARN:-}" || -z "${CODE_COMMIT_TRIGGER_RULE_ARN:-}" ]]; then
   exit 1
 fi
 
-# ───────── Debug output ─────────
 echo "🧪 DLQ_ARN=$DLQ_ARN"
 echo "🧪 CODE_COMMIT_TRIGGER_RULE_ARN=$CODE_COMMIT_TRIGGER_RULE_ARN"
 
-# ───────── Create policy using jq ─────────
-POLICY_JSON=$(jq -n -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_TRIGGER_RULE_ARN" \
+# ───────── Create policy JSON file ─────────
+POLICY_DOCUMENT=$(jq -n -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_TRIGGER_RULE_ARN" \
 '{
   "Version": "2012-10-17",
   "Id": "EventBridgeSendMessagePolicy",
@@ -72,11 +63,11 @@ POLICY_JSON=$(jq -n -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_T
   ]
 }')
 
-echo "🧪 DLQ_POLICY_JSON=$POLICY_JSON"
+echo "🧪 Writing policy to set-queue-attributes.json..."
+echo "{\"Policy\": $POLICY_DOCUMENT}" > set-queue-attributes.json
 
-
-# ───────── Set queue policy ─────────
-echo "🔐 Setting DLQ policy..."
+# ───────── Set queue policy from file ─────────
+echo "🔐 Setting DLQ policy using file..."
 aws sqs set-queue-attributes \
   --queue-url "$DLQ_URL" \
-  --attributes Policy=$POLICY_JSON
+  --attributes file://set-queue-attributes.json
