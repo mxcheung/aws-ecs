@@ -2,9 +2,8 @@
 
 set -euo pipefail
 
-# Get the absolute path of this script, even if invoked via a relative path or symlink
+# Get the absolute path of this script
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
-
 trap 'echo "❌ Error in ${SCRIPT_PATH} on line $LINENO"; exit 1' ERR
 
 # ──────────────── Configuration ────────────────
@@ -27,8 +26,8 @@ CODE_COMMIT_TRIGGER_RULE_ARN="arn:aws:events:${REGION}:${AWS_ACCOUNT_ID}:rule/${
 
 echo "📬 Creating SQS DLQ: ${DLQ_NAME}"
 DLQ_URL=$(aws sqs create-queue --queue-name "${DLQ_NAME}" \
-          --attributes VisibilityTimeout=60 \
-          --output text --query 'QueueUrl')
+  --attributes VisibilityTimeout=60 \
+  --output text --query 'QueueUrl')
 
 echo "📬 DLQ_URL: ${DLQ_URL}"
 echo "🔐 Set DLQ queue attributes ${DLQ_ARN} to allow EventBridge to send failed events to DLQ"
@@ -42,9 +41,9 @@ fi
 echo "🧪 DLQ_ARN=$DLQ_ARN"
 echo "🧪 CODE_COMMIT_TRIGGER_RULE_ARN=$CODE_COMMIT_TRIGGER_RULE_ARN"
 
-# ───────── Create policy JSON file ─────────
-POLICY_DOCUMENT=$(jq -n -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_TRIGGER_RULE_ARN" \
-'{
+# ───────── Create escaped Policy JSON string ─────────
+RAW_POLICY=$(jq -n --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_TRIGGER_RULE_ARN" '
+{
   "Version": "2012-10-17",
   "Id": "EventBridgeSendMessagePolicy",
   "Statement": [
@@ -63,8 +62,10 @@ POLICY_DOCUMENT=$(jq -n -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMM
   ]
 }')
 
+ESCAPED_POLICY=$(jq -n --arg policy "$RAW_POLICY" '$policy' | jq @json)
+
 echo "🧪 Writing policy to set-queue-attributes.json..."
-echo "{\"Policy\": $POLICY_DOCUMENT}" > set-queue-attributes.json
+echo "{ \"Policy\": $ESCAPED_POLICY }" > set-queue-attributes.json
 
 # ───────── Set queue policy from file ─────────
 echo "🔐 Setting DLQ policy using file..."
