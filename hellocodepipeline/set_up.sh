@@ -1,42 +1,49 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# ---------------------------------------------------------------------------
+# Bootstrap all environment components by running each component’s set_up.sh
+# ---------------------------------------------------------------------------
 
-set -euo pipefail
+set -Eeuo pipefail            # -E propagates ERR trap into subshells
+shopt -s inherit_errexit      # for Bash ≥ 5.0: pipelines respect -e
 
-# Get the absolute path of this script, even if invoked via a relative path or symlink
-SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
 
-trap 'echo "❌ Error in ${SCRIPT_PATH} on line $LINENO"; exit 1' ERR
+#---------- Trap -------------------------------------------------------------
+trap 'echo "❌ Error in ${SCRIPT_PATH} on line $LINENO → ${BASH_COMMAND}" >&2' ERR
 
-echo $MY_ENV_ROOT_DIR
-echo $AWS_ACCESS_KEY_ID
+#---------- Log everything ---------------------------------------------------
+LOG_DIR="${MY_ENV_ROOT_DIR:?Unset MY_ENV_ROOT_DIR}/logs"
+mkdir -p "$LOG_DIR"
+exec > >(tee -a "${LOG_DIR}/bootstrap_$(date +%Y%m%d_%H%M%S).log") 2>&1
 
-cd $MY_ENV_ROOT_DIR/user_credentials
-. ./set_up.sh  2>&1 | tee script.log
+echo "▶ MY_ENV_ROOT_DIR=$MY_ENV_ROOT_DIR"
+echo "▶ AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-<not set>}"
+echo "▶ Starting bootstrap at $(date -Iseconds)"
+echo
 
-cd $MY_ENV_ROOT_DIR/iam
-. ./set_up.sh   2>&1 | tee script.log
+#---------- Components to initialise ----------------------------------------
+components=(
+  user_credentials
+  iam
+  codecommit
+  ecr
+  s3
+  sqs
+  codebuild
+  codepipeline
+  event_bridge
+)
 
-cd $MY_ENV_ROOT_DIR/codecommit
-. ./set_up.sh  2>&1 | tee script.log
+#---------- Main loop --------------------------------------------------------
+for comp in "${components[@]}"; do
+  echo "─── ${comp} ─────────────────────────────────────────────"
+  (
+    cd "${MY_ENV_ROOT_DIR}/${comp}"
+    # run in subshell; -E + inherit_errexit keep traps & -e behaviour
+    ./set_up.sh
+  )
+  echo "✓ ${comp} completed"
+  echo
+done
 
-cd $MY_ENV_ROOT_DIR/ecr
-. ./set_up.sh 2>&1 | tee script.log
-
-
-cd $MY_ENV_ROOT_DIR/s3
-. ./set_up.sh 2>&1 | tee script.log
-
-cd $MY_ENV_ROOT_DIR/sqs
-. ./set_up.sh 2>&1 | tee script.log
-
-cd $MY_ENV_ROOT_DIR/codebuild
-. ./set_up.sh 2>&1 | tee script.log
-
-
-cd $MY_ENV_ROOT_DIR/codepipeline
-. ./set_up.sh 2>&1 | tee script.log
-
-
-cd $MY_ENV_ROOT_DIR/event_bridge
-. ./set_up.sh 2>&1 | tee script.log
-
+echo "🎉 All components initialised successfully"
