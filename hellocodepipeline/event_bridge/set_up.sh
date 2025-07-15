@@ -60,11 +60,6 @@ echo "EventBridge rule created: ${RULE_ARN}"
 
 # Add the CodePipeline as a target of this rule
 echo "Adding CodePipeline ${PIPELINE_NAME} as target to rule..."
-aws events put-targets \
-  --rule "${EVENTBRIDGE_RULE_NAME}" \
-  --targets "Id"="1","Arn"="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}","RoleArn"="${EVENTBRIDGE_ROLE_ARN}"
-
-
 
 # Put EventBridge target (CodePipeline project)
 aws events put-targets \
