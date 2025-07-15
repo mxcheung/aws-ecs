@@ -52,8 +52,8 @@ echo "🧪 DLQ_ARN=$DLQ_ARN"
 echo "🧪 CODE_COMMIT_TRIGGER_RULE_ARN=$CODE_COMMIT_TRIGGER_RULE_ARN"
 
 # ───────── Create policy using jq ─────────
-POLICY_JSON=$(jq -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_TRIGGER_RULE_ARN" '
-{
+POLICY_JSON=$(jq -n -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_TRIGGER_RULE_ARN" \
+'{
   "Version": "2012-10-17",
   "Id": "EventBridgeSendMessagePolicy",
   "Statement": [
@@ -70,8 +70,7 @@ POLICY_JSON=$(jq -c --arg dlq_arn "$DLQ_ARN" --arg source_arn "$CODE_COMMIT_TRIG
       }
     }
   ]
-}
-')
+}')
 
 # ───────── Set queue policy ─────────
 echo "🔐 Setting DLQ policy..."
