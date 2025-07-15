@@ -1,0 +1,196 @@
+▶ MY_ENV_ROOT_DIR=/home/ec2-user/environment/aws-ecs/hellocodepipeline
+▶ AWS_ACCESS_KEY_ID=AKIASCNFTZRKDIAVGJRF
+▶ Starting bootstrap at 2025-07-15T11:59:35+00:00
+
+─── user_credentials ─────────────────────────────────────────────
+AccessKeyId: AKIAxxxxxxxxxxxxxxxx
+SecretAccessKey: 4jwYCexxxxxxxxxxxxxxxx
+{ "UserId": "AIDASxxxxxxxxxxxxx", "Account": "142618119252", "Arn": "arn:aws:iam::142618119252:user/cloud_user" }
+✓ user_credentials completed
+
+─── iam ─────────────────────────────────────────────
+🚀 Creating CodeBuild project: hello-ecs-build
+🧾 Account ID: 142618119252
+🔐 Code Commit Trigger Rule: arn:aws:events:us-east-1:142618119252:rule/CodeCommitPushTriggerRule
+🔐 Event Bridge Role: eventbridge-hello-ecs-role
+🔐 Code Pipeline ARN: arn:aws:codepipeline:us-east-1:142618119252:hello-ecs-pipeline
+🚀 Creating IAM Role: codebuild-hello-ecs-role
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/AWSCodeCommitReadOnly
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/AmazonECS_FullAccess
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+🔐 Attaching policy to codebuild-hello-ecs-role: arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
+🚀 Creating IAM Role: codepipeline-hello-ecs-role
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "codepipeline-hello-ecs-role",
+        "RoleId": "AROASCNFTZRKL2RHXG2E4",
+        "Arn": "arn:aws:iam::142618119252:role/codepipeline-hello-ecs-role",
+        "CreateDate": "2025-07-15T11:59:54+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "codepipeline.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        }
+    }
+}
+🔐 Adding inline policy to codepipeline-hello-ecs-role for CodeCommit access
+✅ IAM roles successfully created and configured.
+🚀 Creating IAM Role for EventBridge to start CodePipeline: eventbridge-hello-ecs-role
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "eventbridge-hello-ecs-role",
+        "RoleId": "AROASCNFTZRKKCVNONB7K",
+        "Arn": "arn:aws:iam::142618119252:role/eventbridge-hello-ecs-role",
+        "CreateDate": "2025-07-15T11:59:59+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "events.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        }
+    }
+}
+🔐 Attaching policy to eventbridge-hello-ecs-role with resource arn:aws:codepipeline:us-east-1:142618119252:hello-ecs-pipeline to allow StartPipelineExecution
+✅ EventBridge IAM role created and configured.
+✓ iam completed
+
+─── codecommit ─────────────────────────────────────────────
+🔍 Checking if CodeCommit repository 'hello-ecs' exists...
+🔧 Creating CodeCommit repository: hello-ecs
+{
+    "repositoryMetadata": {
+        "accountId": "142618119252",
+        "repositoryId": "e3eca5b7-5a7e-44d3-b5af-97412662d2fc",
+        "repositoryName": "hello-ecs",
+        "repositoryDescription": "Hello ECS Python App",
+        "lastModifiedDate": "2025-07-15T12:00:05.514000+00:00",
+        "creationDate": "2025-07-15T12:00:05.514000+00:00",
+        "cloneUrlHttp": "https://git-codecommit.us-east-1.amazonaws.com/v1/repos/hello-ecs",
+        "cloneUrlSsh": "ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/hello-ecs",
+        "Arn": "arn:aws:codecommit:us-east-1:142618119252:hello-ecs",
+        "kmsKeyId": "arn:aws:kms:us-east-1:142618119252:key/2148a151-8683-41ca-b0d6-56ed3f6609fb"
+    }
+}
+✅ Repository created: hello-ecs
+📁 Preparing local project directory...
+📦 Setting up Git and pushing to remote...
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+Initialized empty Git repository in /home/ec2-user/environment/hello-ecs/.git/
+[master (root-commit) 9996106] Initial commit: Python ECS hello app
+ 8 files changed, 163 insertions(+)
+ create mode 100644 Dockerfile
+ create mode 100644 Readme.md
+ create mode 100644 app.py
+ create mode 100644 buildspec.yml
+ create mode 100644 requirements.txt
+ create mode 100644 static/favicon.ico
+ create mode 100644 static/wp-admin/images/wordpress-logo.svg
+ create mode 100644 taskdef.json
+remote: Validating objects: 0%        
+remote: Validating objects: 100%        
+To https://git-codecommit.us-east-1.amazonaws.com/v1/repos/hello-ecs
+ * [new branch]      master -> master
+branch 'master' set up to track 'origin/master'.
+✅ Code pushed to CodeCommit: https://git-codecommit.us-east-1.amazonaws.com/v1/repos/hello-ecs
+✓ codecommit completed
+
+─── ecr ─────────────────────────────────────────────
+📦 Ensuring ECR repository 'hello-ecs' exists...
+✓ ecr completed
+
+─── s3 ─────────────────────────────────────────────
+🧾 Account ID: 142618119252
+🔐 Artifact Bucket: codepipeline-artifacts-142618119252
+✅ Created Artifact Bucket: codepipeline-artifacts-142618119252
+✓ s3 completed
+
+─── sqs ─────────────────────────────────────────────
+🧾 AWS Account ID: 142618119252
+📬 Creating SQS DLQ: eventbridge-dlq
+📬 DLQ URL: https://sqs.us-east-1.amazonaws.com/142618119252/eventbridge-dlq
+📝 Created set-queue-attributes.json:
+{
+  "VisibilityTimeout": "60",
+  "Policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Id\": \"EventBridgeSendMessagePolicy\",\n  \"Statement\": [\n    {\n      \"Sid\": \"AllowEventBridgeSendMessage\",\n      \"Effect\": \"Allow\",\n      \"Principal\": {\n        \"Service\": \"events.amazonaws.com\"\n      },\n      \"Action\": \"sqs:SendMessage\",\n      \"Resource\": \"arn:aws:sqs:us-east-1:142618119252:eventbridge-dlq\",\n      \"Condition\": {\n        \"ArnEquals\": {\n          \"aws:SourceArn\": \"arn:aws:events:us-east-1:142618119252:rule/CodeCommitPushTriggerRule\"\n        }\n      }\n    }\n  ]\n}"
+}
+🔐 Setting DLQ attributes...
+✅ DLQ setup complete.
+✓ sqs completed
+
+─── codebuild ─────────────────────────────────────────────
+🚀 Creating CodeBuild project: hello-ecs-build
+🧾 Account ID: 142618119252
+🔗 Repo URL: https://git-codecommit.us-east-1.amazonaws.com/v1/repos/hello-ecs
+🔐 Role: arn:aws:iam::142618119252:role/codebuild-hello-ecs-role
+✅ CodeBuild project 'hello-ecs-build' created successfully.
+✓ codebuild completed
+
+─── codepipeline ─────────────────────────────────────────────
+🚀 Creating CodePipeline: hello-ecs-pipeline
+🧾 Account ID: 142618119252
+🔗 CodeCommit Repo: hello-ecs
+🔐 Role: arn:aws:iam::142618119252:role/codepipeline-hello-ecs-role
+📦 Artifact Bucket: codepipeline-artifacts-142618119252
+✨ Creating new pipeline...
+✅ Pipeline ready: hello-ecs-pipeline
+✓ codepipeline completed
+
+─── event_bridge ─────────────────────────────────────────────
+🚀 Creating CodeBuild project: hello-ecs-build
+🧾 Account ID: 142618119252
+🔐 Code pipeline Role: arn:aws:iam::142618119252:role/codepipeline-hello-ecs-role
+🔐 Event Bridge Role: arn:aws:iam::142618119252:role/eventbridge-hello-ecs-role
+🔐 Event Bridge Rule Name: trigger-codepipeline-on-push
+Creating EventBridge rule trigger-codepipeline-on-push...
+EventBridge rule created: arn:aws:events:us-east-1:142618119252:rule/trigger-codepipeline-on-push
+Adding CodePipeline hello-ecs-pipeline as target to rule...
+{
+    "FailedEntryCount": 0,
+    "FailedEntries": []
+}
+{
+    "FailedEntryCount": 0,
+    "FailedEntries": []
+}
+Successfully added CodePipeline target to rule.
+Target added.
+✅ EventBridge trigger for CodeCommit pushes set up successfully!
+✓ event_bridge completed
+
+🎉 All components initialised successfully
+[?2004h[01;32mcloud_user[00m:[01;34m~/environment/aws-ecs/hellocodepipeline[00m (main) $ 
+[K
+[01;32mcloud_user[00m:[01;34m~/environment/aws-ecs/hellocodepipeline[00m (main) $ 
+[K
+[01;32mcloud_user[00m:[01;34m~/environment/aws-ecs/hellocodepipeline[00m (main) $ 
+[K
+[01;32mcloud_user[00m:[01;34m~/environment/aws-ecs/hellocodepipeline[00m (main) $ cd ~
+[?2004l
+[?2004h[01;32mcloud_user[00m:[01;34m~[00m $ cd aws
+[?2004l
