@@ -1,5 +1,5 @@
 ▶ MY_ENV_ROOT_DIR=/home/ec2-user/environment/aws-ecs/hellocodepipeline
-▶ AWS_ACCESS_KEY_ID=AKIASCNFTZRKDIAVGJRF
+▶ AWS_ACCESS_KEY_ID=AKIASXXXXXXXXXXX
 ▶ Starting bootstrap at 2025-07-15T11:59:35+00:00
 
 ─── user_credentials ─────────────────────────────────────────────
