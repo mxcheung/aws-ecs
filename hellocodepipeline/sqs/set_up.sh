@@ -25,6 +25,7 @@ RULE_NAME="TriggerPipelineOnPush"
 PIPELINE_NAME="hello-ecs-pipeline"
 PIPELINE_ARN="arn:aws:codepipeline:${REGION}:${AWS_ACCOUNT_ID}:${PIPELINE_NAME}"
 EVENTBRIDGE_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${EVENTBRIDGE_ROLE_NAME}"
+DLQ_ARN="arn:aws:sqs:${REGION}:${AWS_ACCOUNT_ID}:${DLQ_NAME}"
 
 echo "📬 Creating SQS DLQ: ${DLQ_NAME}"
 DLQ_URL=$(aws sqs create-queue --queue-name "${DLQ_NAME}" \
