@@ -30,12 +30,8 @@ CODE_COMMIT_RULE_NAME="CodeCommitPushTriggerRule"
 CODE_COMMIT_TRIGGER_RULE_ARN="arn:aws:events:${REGION}:${AWS_ACCOUNT_ID}:rule/${CODE_COMMIT_RULE_NAME}"
 
 
-ACCOUNT_ID="263585924271"
-REGION="us-east-1"
-QUEUE_NAME="eventbridge-dlq"
-RULE_NAME="CodeCommitPushTriggerRule"
-DLQ_ARN="arn:aws:sqs:${REGION}:${ACCOUNT_ID}:${QUEUE_NAME}"
-SOURCE_ARN="arn:aws:events:${REGION}:${ACCOUNT_ID}:rule/${RULE_NAME}"
+# RULE_NAME="CodeCommitPushTriggerRule"
+# SOURCE_ARN="arn:aws:events:${REGION}:${ACCOUNT_ID}:rule/${RULE_NAME}"
 
 echo "📬 Creating SQS DLQ: ${DLQ_NAME}"
 DLQ_URL=$(aws sqs create-queue --queue-name "${DLQ_NAME}" \
