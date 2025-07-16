@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+      docker: 20
+    commands:
+      - echo Installing Maven
+      - yum install -y maven
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 111111111111.dkr.ecr.$AWS_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - cd app
+      - mvn clean package
+      - cd ..
+      - docker build -t java-app:latest -f infra/Dockerfile .
+      - docker tag java-app:latest 111111111111.dkr.ecr.$AWS_REGION.amazonaws.com/java-app-repo:latest
+      - docker push 111111111111.dkr.ecr.$AWS_REGION.amazonaws.com/java-app-repo:latest
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: cdk.out

@@ -1,0 +1,17 @@
+{
+  "name": "cdk-cross-account-ecs-java",
+  "version": "0.1.0",
+  "bin": {
+    "cdk-cross-account-ecs-java": "bin/app.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "aws-cdk-lib": "^2.80.0",
+    "constructs": "^10.1.154",
+    "typescript": "^5.1.3"
+  }
+}
