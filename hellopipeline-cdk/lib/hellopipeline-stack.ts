@@ -59,6 +59,12 @@ export class HelloPipelineStack extends cdk.Stack {
         streamPrefix: 'hello-world',
         logGroup: logGroup,
       }),
+      environment: {
+        NODE_ENV: 'production',
+        API_URL: 'https://api.example.com',
+        LOG_LEVEL: 'info',
+        // add more variables as needed
+      },      
     });
 
     const service = new ecs.FargateService(this, 'Service', {
