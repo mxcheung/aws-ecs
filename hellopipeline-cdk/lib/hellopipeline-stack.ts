@@ -40,6 +40,11 @@ export class HelloPipelineStack extends cdk.Stack {
     });
     
     
+    // Log group for container logs
+    const logGroup = new logs.LogGroup(this, 'AppLogGroup', {
+      logGroupName: '/ecs/hello-pipeline-app',
+      removalPolicy: cdk.RemovalPolicy.DESTROY, // optional: auto-delete with stack
+    });
 
     const taskDef = new ecs.FargateTaskDefinition(this, 'TaskDef', {
       memoryLimitMiB: 3072,
@@ -49,7 +54,10 @@ export class HelloPipelineStack extends cdk.Stack {
     taskDef.addContainer('AppContainer', {
       image: ecs.ContainerImage.fromEcrRepository(repo, 'latest'),
       memoryLimitMiB: 1024,
-      logging: ecs.LogDrivers.awsLogs({ streamPrefix: 'hello-world' }),
+      logging: ecs.LogDriver.awsLogs({
+        streamPrefix: 'hello-world',
+        logGroup: logGroup,
+      }),
     });
 
     const service = new ecs.FargateService(this, 'Service', {
