@@ -19,7 +19,21 @@ phases:
       - REGION=us-east-1
       - IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+      - echo Determining latest version from ECR tags...
+      - |
+        VERSION_TAG=$(aws ecr list-images \
+          --repository-name $REPO_NAME \
+          --region $REGION \
+          --query 'imageIds[*].imageTag' \
+          --output text | tr '\t' '\n' | grep -E '^[0-9]+$' | sort -n | tail -n1)
 
+        if [ -z "$VERSION_TAG" ]; then
+          VERSION_TAG=1
+        else
+          VERSION_TAG=$((VERSION_TAG + 1))
+        fi
+        echo "Using version tag: $VERSION_TAG"
+ 
   install:
     runtime-versions:
       python: 3.11
