@@ -47,6 +47,9 @@ export class HelloPipelineStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY, // optional: auto-delete with stack
     });
 
+    const dbSecret = secretsmanager.Secret.fromSecretNameV2(this, 'DbSecret', 'MyDatabaseSecret');
+    const apiSecret = secretsmanager.Secret.fromSecretNameV2(this, 'ApiSecret', 'MyApiSecret');
+    
     const taskDef = new ecs.FargateTaskDefinition(this, 'TaskDef', {
       memoryLimitMiB: 3072,
       cpu: 1024, // You can adjust this if needed (1024 = 1 vCPU)
@@ -64,7 +67,12 @@ export class HelloPipelineStack extends cdk.Stack {
         API_URL: 'https://api.example.com',
         LOG_LEVEL: 'info',
         // add more variables as needed
-      },      
+      },
+      secrets: {
+        DB_USERNAME: ecs.Secret.fromSecretsManager(dbSecret, 'username'),
+        DB_PASSWORD: ecs.Secret.fromSecretsManager(dbSecret, 'password'),
+        API_KEY: ecs.Secret.fromSecretsManager(apiSecret, 'apiKey'),
+      },
     });
 
     const service = new ecs.FargateService(this, 'Service', {
