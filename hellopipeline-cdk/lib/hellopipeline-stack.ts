@@ -8,6 +8,7 @@ import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
 import * as cpactions from 'aws-cdk-lib/aws-codepipeline-actions';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as codecommit from 'aws-cdk-lib/aws-codecommit';
+import * as logs from 'aws-cdk-lib/aws-logs';
 
 export class HelloPipelineStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
