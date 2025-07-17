@@ -14,28 +14,48 @@ export class HelloPipelineStack extends cdk.Stack {
     super(scope, id, props);
 
     // VPC for ECS cluster
-    const vpc = new ec2.Vpc(this, 'HelloVpc', { maxAzs: 2 });
+  //  const vpc = new ec2.Vpc(this, 'HelloVpc', { maxAzs: 2 });
 
-    // ECR repository
-    const repo = new ecr.Repository(this, 'AppRepo', {
-      repositoryName: 'hello-world',
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    const vpc = ec2.Vpc.fromLookup(this, 'Your Custom VPC', {
+      isDefault: true, // or use `vpcName` or `vpcId` if not default
     });
+    // ECR repository
+//    const repo = new ecr.Repository(this, 'AppRepo', {
+//      repositoryName: 'hello-world',
+//      removalPolicy: cdk.RemovalPolicy.RETAIN,
+ //   });
+
+    // Import the ECR repository by name (assumes the repo already exists)
+    const repo = ecr.Repository.fromRepositoryName(this, 'ExistingEcrRepo', 'hello-ecs');
+
 
     // ECS cluster and task definition
-    const cluster = new ecs.Cluster(this, 'Cluster', { vpc });
+    //const cluster = new ecs.Cluster(this, 'Cluster', { vpc });
 
-    const taskDef = new ecs.FargateTaskDefinition(this, 'TaskDef');
+    const clusterName = 'Wordpress-Cluster';
+    const cluster = ecs.Cluster.fromClusterAttributes(this, 'ExistingCluster', {
+      clusterName,
+      vpc,
+      securityGroups: [], // optional: if needed
+    });
+    
+    
+
+    const taskDef = new ecs.FargateTaskDefinition(this, 'TaskDef', {
+      memoryLimitMiB: 3072,
+      cpu: 1024, // You can adjust this if needed (1024 = 1 vCPU)
+    });
+
     taskDef.addContainer('AppContainer', {
       image: ecs.ContainerImage.fromEcrRepository(repo, 'latest'),
-      memoryLimitMiB: 512,
+      memoryLimitMiB: 1024,
       logging: ecs.LogDrivers.awsLogs({ streamPrefix: 'hello-world' }),
     });
 
     const service = new ecs.FargateService(this, 'Service', {
       cluster,
       taskDefinition: taskDef,
-      desiredCount: 2,
+      desiredCount: 1,
     });
 
     // CodeCommit repository
