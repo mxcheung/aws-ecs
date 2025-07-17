@@ -2,7 +2,7 @@
 
 ```
 export MY_ENV_DIR="$HOME/environment"
-export MY_ENV_ROOT_DIR="$HOME/environment/aws-ecs
+export MY_ENV_ROOT_DIR="$HOME/environment/aws-ecs"
 cd $MY_ENV_ROOT_DIR
 mkdir HelloPipeline
 cd $MY_ENV_ROOT_DIR/HelloPipeline
