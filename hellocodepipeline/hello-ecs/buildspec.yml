@@ -2,47 +2,47 @@ version: 0.2
 
 env:
   variables:
-    REPO_NAME: "hello-ecs"
-    IMAGE_TAG: "latest"
+    REPO_NAME: hello-ecs
     CLUSTER_NAME: Wordpress-Cluster
     SERVICE_NAME: wordpress-service
     CONTAINER_NAME: wordpress
     TASK_DEF_TEMPLATE_FILE: taskdef.json
     TASK_DEF_OUTPUT_FILE: taskdef-out.json
 
-
 phases:
-  pre_build:
-    commands:
-      - echo Logging in to Amazon ECR...
-      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-      - REGION=us-east-1
-      - IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
-      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
-
   install:
     runtime-versions:
       python: 3.11
     commands:
+      - yum install -y jq
       - python --version
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+      - REGION="us-east-1"
+      - ECR_URI="$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com"
+      - REPO_URI="$ECR_URI/$REPO_NAME"
+      - LAST_TAG=$(aws ecr list-images --repository-name $REPO_NAME --region $REGION --query 'imageIds[].imageTag' --output text | grep '^v[0-9]*$' | sort -V | tail -n1 || echo "v0")
+      - VERSION_NUM=$(echo $LAST_TAG | sed 's/v//')
+      - NEXT_VERSION_NUM=$((VERSION_NUM + 1))
+      - IMAGE_TAG="v$NEXT_VERSION_NUM"
+      - IMAGE_URI="$REPO_URI:$IMAGE_TAG"
+      - echo Using IMAGE_TAG: $IMAGE_TAG
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR_URI
 
   build:
     commands:
       - echo Building Docker image...
       - docker build -t $IMAGE_URI .
-      - docker tag $IMAGE_URI $IMAGE_URI
-      - echo Pushing image to ECR...
       - docker push $IMAGE_URI
-      - echo Build completed successfully. Image $IMAGE_URI    
+      - echo Build completed successfully. Image $IMAGE_URI
 
   post_build:
     commands:
       - echo Registering new task definition...
-      # Inject IMAGE_URI and executionRoleArn with real AWS_ACCOUNT_ID
-      - |
-        sed -e "s|<IMAGE_URI>|$IMAGE_URI|g" \
-            -e "s|<AWS_ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" \
-            $TASK_DEF_TEMPLATE_FILE > $TASK_DEF_OUTPUT_FILE
+      - sed -e "s|<IMAGE_URI>|$IMAGE_URI|g" -e "s|<AWS_ACCOUNT_ID>|$AWS_ACCOUNT_ID|g" $TASK_DEF_TEMPLATE_FILE > $TASK_DEF_OUTPUT_FILE
       - TASK_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://$TASK_DEF_OUTPUT_FILE --query 'taskDefinition.taskDefinitionArn' --output text)
       - echo Updating ECS service with new task definition $TASK_DEF_ARN
       - echo Creating imagedefinitions.json for CodePipeline
