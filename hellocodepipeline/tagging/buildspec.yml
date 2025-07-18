@@ -1,0 +1,51 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Installing dependencies..."
+      - npm ci
+
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+      - echo "Generating ECR tag..."
+      - DATE_TAG=$(date +%y%m%d)
+      - echo "Today's date tag: $DATE_TAG"
+
+      - echo "Listing ECR tags that match $DATE_TAG..."
+      - EXISTING_TAGS=$(aws ecr list-images --repository-name $REPOSITORY_NAME --filter tagStatus=TAGGED --query "imageIds[?starts_with(imageTag, \`$DATE_TAG\`)].imageTag" --output text)
+      - echo "Existing tags: $EXISTING_TAGS"
+
+      - MAX_SUFFIX=$(echo "$EXISTING_TAGS" | awk -F- -v prefix=$DATE_TAG '
+          {
+            if (NF == 2 && $1 == prefix) {
+              if ($2+0 > max) max = $2+0
+            }
+          }
+          END { printf("%03d", max+1) }')
+
+      - IMAGE_TAG="$DATE_TAG-$MAX_SUFFIX"
+      - echo "Final image tag: $IMAGE_TAG"
+
+      # Export for use in later phases
+      - echo "IMAGE_TAG=$IMAGE_TAG" >> image_tag.env
+
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t $REPOSITORY_NAME:$IMAGE_TAG .
+
+  post_build:
+    commands:
+      - echo "Pushing image to ECR..."
+      - docker tag $REPOSITORY_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPOSITORY_NAME:$IMAGE_TAG
+
+artifacts:
+  files:
+    - image_tag.env
