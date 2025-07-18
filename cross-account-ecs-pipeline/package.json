@@ -1,0 +1,21 @@
+{
+  "name": "cross-account-ecs-pipeline",
+  "version": "1.0.0",
+  "bin": {
+    "hello-ecs": "bin/hello-ecs.js",
+    "hello-pipeline": "bin/hello-pipeline.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "deploy:ecs": "cdk deploy HelloEcsStack --profile dt-profile",
+    "deploy:pipeline": "cdk deploy HelloPipelineStack --profile dp-profile",
+    "bootstrap:dt": "cdk bootstrap aws://DT_ACCOUNT_ID/DT_REGION --profile dt-profile",
+    "bootstrap:dp": "cdk bootstrap aws://DP_ACCOUNT_ID/DP_REGION --profile dp-profile"
+  },
+  "devDependencies": {
+    "aws-cdk-lib": "^2.90.0",
+    "constructs": "^10.0.0",
+    "typescript": "^5.0.4"
+  }
+}
