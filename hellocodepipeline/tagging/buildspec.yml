@@ -1,5 +1,13 @@
   pre_build:
     commands:
+
+      - echo "Getting current branch..."
+      - BRANCH_NAME=$(echo ${CODEBUILD_WEBHOOK_HEAD_REF##refs/heads/})
+      - if [ -z "$BRANCH_NAME" ]; then BRANCH_NAME=${CODEBUILD_SOURCE_VERSION}; fi
+      - echo "Branch: $BRANCH_NAME"
+      - echo "BRANCH_NAME=$BRANCH_NAME" >> build.env
+
+    
       - echo "Generating date tag..."
       - DATE_TAG=$(date +%y%m%d)
       - echo "DATE_TAG=$DATE_TAG"
