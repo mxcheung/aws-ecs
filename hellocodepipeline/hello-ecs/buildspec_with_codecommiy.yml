@@ -1,15 +1,33 @@
+version: 0.2
+
 env:
   git-credential-helper: yes
 
 phases:
   install:
     commands:
+      - echo "🧹 Cleaning up existing credential helper entries"
+      - git config --global --unset-all credential.helper
+
+      - echo "⚙️ Setting AWS CodeCommit credential helper"
       - git config --global credential.helper '!aws codecommit credential-helper $@'
       - git config --global credential.UseHttpPath true
+
       - git config --global user.name "Build Bot"
       - git config --global user.email "build-bot@company.com"
 
+  pre_build:
+    commands:
+      - echo "🔐 Authenticating to ECR and building..."
+      # your ECR login, build, and tagging steps here
+
   post_build:
     commands:
-      - echo "Cloning report-service-cdk via HTTPS"
+      - echo "🔄 Cloning report-service-cdk via HTTPS"
       - git clone https://git-codecommit.$AWS_DEFAULT_REGION.amazonaws.com/v1/repos/report-service-cdk report
+      - cd report
+      - git checkout sit || git checkout -b sit
+      - echo "{\"imageUri\":\"$REPO_URI:$IMAGE_TAG\"}" > image-info.json
+      - git add image-info.json
+      - git commit -m "Update imageUri to $REPO_URI:$IMAGE_TAG" || echo "Nothing to commit"
+      - git push origin sit
