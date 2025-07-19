@@ -1,0 +1,52 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+  pre_build:
+    commands:
+      - echo "Logging in to ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION \
+        | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - REPO_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPOSITORY_NAME
+      - SHORT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-7)
+      - IMAGE_TAG=${SHORT_HASH:=latest}
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t $REPO_URI:latest .
+      - docker tag $REPO_URI:latest $REPO_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo "Pushing images to ECR..."
+      - docker push $REPO_URI:latest
+      - docker push $REPO_URI:$IMAGE_TAG
+
+      - echo "Configuring Git for CodeCommit..."
+      - git config --global credential.helper '!aws codecommit credential-helper $@'
+      - git config --global credential.UseHttpPath true
+      - git config --global user.email "build-bot@your-company.com"
+      - git config --global user.name "Build Bot"
+
+      - echo "Cloning report-service-cdk repo..."
+      - git clone https://git-codecommit.$AWS_DEFAULT_REGION.amazonaws.com/v1/repos/$SECOND_REPO report
+      - cd report
+
+      - |
+        if git show-ref --verify --quiet refs/heads/sit; then
+          echo "Checking out existing sit branch"
+          git checkout sit
+        else
+          echo "Creating sit branch"
+          git checkout -b sit
+        fi
+
+      - echo "{\"imageUri\":\"$REPO_URI:$IMAGE_TAG\"}" > image-info.json
+      - git add image-info.json
+      - git commit -m "Update imageUri to $REPO_URI:$IMAGE_TAG" || echo "No changes to commit"
+      - git push origin sit
+
+artifacts:
+  files:
+    - image-info.json
