@@ -1,46 +1,28 @@
 version: 0.2
-
 phases:
-  install:
-    runtime-versions:
-      docker: 18
   pre_build:
     commands:
-      - echo "🔐 Logging into ECR"
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION \
-        | docker login --username AWS --password-stdin \
-          $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - export REPO_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPOSITORY_NAME
-      - export BRANCH=$(echo $CODEBUILD_SOURCE_VERSION \
-          | sed -E 's#/refs/heads/##' | tr '[:lower:]' '[:upper:]')
+      - echo "Logging into ECR..."
+      - export REPO_URI=...
+      - export BRANCH=...
       - export DATE=$(date +%y%m%d)
-
       - |
-        echo "🔍 Calculating next tag"
-        TAGS=$(aws ecr describe-images \
+        COUNT=$(aws ecr describe-images \
           --repository-name $ECR_REPOSITORY_NAME \
           --filter tagStatus=TAGGED \
           --query "imageDetails[?starts_with(imageTags[0], \`${BRANCH}-${DATE}-\`)].imageTags[]" \
-          --output text)
-        LAST=$(echo "$TAGS" | sed -E "s/^$BRANCH-$DATE-([0-9]{3})$/\1/" \
-          | sort -n | tail -n1)
-        LAST_NUM=${LAST#0}
-        LAST_NUM=${LAST_NUM:-0}
-        NEXT_NUM=$((10#$LAST_NUM + 1))
-        NEXT=$(printf "%03d" "$NEXT_NUM")
-        export IMAGE_TAG="$BRANCH-$DATE-$NEXT"
-        echo "➡️ Using tag: $IMAGE_TAG"
-  build:
-    commands:
-      - echo "🛠 Building Docker image"
+          --output text | wc -w)
+        NEXT=$((COUNT + 1))
+        IMAGE_TAG=$(printf "%03d" "$NEXT")
+        export IMAGE_TAG_FULL="$BRANCH-$DATE-$IMAGE_TAG"
+        echo "Tagging image: $IMAGE_TAG_FULL"
       - docker build -t $REPO_URI:latest .
-      - docker tag $REPO_URI:latest $REPO_URI:$IMAGE_TAG
+      - docker tag $REPO_URI:latest $REPO_URI:$IMAGE_TAG_FULL
   post_build:
     commands:
-      - echo "📦 Pushing Docker images"
       - docker push $REPO_URI:latest
-      - docker push $REPO_URI:$IMAGE_TAG
-      - echo "{\"imageUri\":\"$REPO_URI:$IMAGE_TAG\"}" > image-info.json
+      - docker push $REPO_URI:$IMAGE_TAG_FULL
+      - echo "{\"imageUri\":\"$REPO_URI:$IMAGE_TAG_FULL\"}" > image-info.json
 artifacts:
   files:
     - image-info.json
