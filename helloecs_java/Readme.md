@@ -54,16 +54,19 @@ ECS (rolling‑update)	service replaces tasks in‑place; no CodeDeploy, no blue
 # Expect results
 
 ```
-http://ourapplicationloadbalancer-293886622.us-east-1.elb.amazonaws.com/
-Hello Code Build with ECS Rolling Update from Flask on ECS!
-https://us-east-1.console.aws.amazon.com/codesuite/codebuild/400874991066/projects/hello-ecs-build
 
 
-[Container] 2025/07/13 05:34:54.773369 Running command echo Build completed successfully. Image $IMAGE_URI
-Build completed successfully. Image 400874991066.dkr.ecr.us-east-1.amazonaws.com/hello-ecs:latest
-[Container] 2025/07/13 05:34:56.980581 Report auto-discover file discovery took 0.005648 seconds
-[Container] 2025/07/13 05:34:56.980623 Phase complete: UPLOAD_ARTIFACTS State: SUCCEEDED
-[Container] 2025/07/13 05:34:56.980630 Phase context status code:  Message: 
+om.example.springboot.Application for test class com.example.springboot.HelloControllerTest
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+2025-07-22T13:10:03.024Z  INFO 1327 --- [           main] c.e.springboot.HelloControllerTest       : Starting HelloControllerTest
 
 ```
 # Bootstrap
