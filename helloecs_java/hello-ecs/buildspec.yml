@@ -31,6 +31,10 @@ phases:
       - apt-get update -y
       - apt-get install -y maven
       - java --version
+      - echo Running Maven build...
+      - mvn clean install
+      - echo Listing contents of target directory
+      - ls -l target
       finally:
         - echo This always runs even if the update or install command fails 
 
