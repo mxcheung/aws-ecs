@@ -1,0 +1,49 @@
+version: 0.2
+
+env:
+  variables:
+    REPO_NAME: "hello-ecs"
+    IMAGE_TAG: "latest"
+    CLUSTER_NAME: Wordpress-Cluster
+    SERVICE_NAME: wordpress-service
+    CONTAINER_NAME: wordpress
+    TASK_DEF_TEMPLATE_FILE: taskdef.json
+    TASK_DEF_OUTPUT_FILE: taskdef-out.json
+    JAVA_HOME: "/usr/lib/jvm/java-8-openjdk-amd64"
+
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+      - REGION=us-east-1
+      - IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+      - echo Determining latest version from ECR tags...
+      - IMAGE_URI_VERSIONED=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:latest
+
+  install:
+    commands:
+      - echo Entered the install phase...
+      - apt-get update -y
+      - apt-get install -y maven
+      - java --version
+    finally:
+      - echo This always runs even if the update or install command fails 
+
+
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t $IMAGE_URI .
+      - docker tag $IMAGE_URI $IMAGE_URI_VERSIONED
+      - echo Pushing image to ECR...
+      - docker push $IMAGE_URI
+      - docker push $IMAGE_URI_VERSIONED      
+      - echo Build completed successfully. Image $IMAGE_URI and  $IMAGE_URI_VERSIONED  
+
+
+artifacts:
+  files:
+    - imagedefinitions.json
