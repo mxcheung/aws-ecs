@@ -1,6 +1,7 @@
 # Introduction
 
 https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-java-microservices-on-amazon-ecs-using-aws-fargate.html
+https://spring.io/guides/gs/spring-boot
 
 
 ✅ Use CodeBuild + aws ecs update-service
