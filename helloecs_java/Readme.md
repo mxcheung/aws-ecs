@@ -68,6 +68,10 @@ om.example.springboot.Application for test class com.example.springboot.HelloCon
 
 2025-07-22T13:10:03.024Z  INFO 1327 --- [           main] c.e.springboot.HelloControllerTest       : Starting HelloControllerTest
 
+
+2025-07-22T13:58:45.513Z
+welcomePageNotAcceptableHandlerMapping
+
 ```
 
 # Check Docker image
