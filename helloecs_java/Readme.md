@@ -69,6 +69,20 @@ om.example.springboot.Application for test class com.example.springboot.HelloCon
 2025-07-22T13:10:03.024Z  INFO 1327 --- [           main] c.e.springboot.HelloControllerTest       : Starting HelloControllerTest
 
 ```
+
+# Check Docker image
+
+```
+cloud_user:~/environment/aws-ecs/helloecs_java (main) $ docker pull openjdk:17-jdk-slim
+17-jdk-slim: Pulling from library/openjdk
+1fe172e4850f: Pulling fs layer
+44d3aa8d0766: Pulling fs layer
+44d3aa8d0766: Pull complete
+6ce99fdf16e8: Pull complete
+Digest: sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774
+Status: Downloaded newer image for openjdk:17-jdk-slim
+```
+
 # Bootstrap
 Use existing project ECS aws-ecs Wordpress to bootstrap a fully working ECS deployment.
 
