@@ -26,7 +26,10 @@ phases:
       - echo using IMAGE_URI_VERSIONED $IMAGE_URI_VERSIONED  
 
   install:
-      commands:
+    runtime-versions:
+      java: corretto17  # or corretto11 / openjdk8 depending on your version
+
+    commands:
       - echo Entered the install phase...
       - apt-get update -y
       - apt-get install -y maven
@@ -35,8 +38,8 @@ phases:
       - mvn clean install
       - echo Listing contents of target directory
       - ls -l target
-      finally:
-        - echo This always runs even if the update or install command fails 
+    finally:
+      - echo This always runs even if the update or install command fails 
 
   build:
     commands:
