@@ -9,8 +9,6 @@ env:
     CONTAINER_NAME: wordpress
     TASK_DEF_TEMPLATE_FILE: taskdef.json
     TASK_DEF_OUTPUT_FILE: taskdef-out.json
-    JAVA_HOME: "/usr/lib/jvm/java-8-openjdk-amd64"
-
 
 phases:
   pre_build:
