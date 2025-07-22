@@ -81,6 +81,15 @@ cloud_user:~/environment/aws-ecs/helloecs_java (main) $ docker pull openjdk:17-j
 6ce99fdf16e8: Pull complete
 Digest: sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774
 Status: Downloaded newer image for openjdk:17-jdk-slim
+
+
+docker pull public.ecr.aws/amazoncorretto/amazoncorretto:17
+docker pull public.ecr.aws/docker/library/openjdk:17-jdk-slim
+
+
+#4 [1/2] FROM public.ecr.aws/docker/library/openjdk:17-jdk-slim@sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774
+#4 resolve public.ecr.aws/docker/library/openjdk:17-jdk-slim@sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774 0.0s done
+
 ```
 
 # Bootstrap
