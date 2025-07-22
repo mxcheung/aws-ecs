@@ -20,8 +20,10 @@ phases:
       - REGION=us-east-1
       - IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+      - IMAGE_URI_VERSIONED=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
       - echo Determining latest version from ECR tags...
-      - IMAGE_URI_VERSIONED=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:latest
+      - echo using IMAGE_URI $IMAGE_URI  
+      - echo using IMAGE_URI_VERSIONED $IMAGE_URI_VERSIONED  
 
   install:
       commands:
@@ -29,25 +31,14 @@ phases:
       - apt-get update -y
       - apt-get install -y maven
       - java --version
-    finally:
-      - echo This always runs even if the update or install command fails 
-
-  pre_build:
-    commands:
-      - mvn clean install
-      - echo Logging in to Amazon ECR...
-      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-      - REGION=us-east-1
-      - IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
-      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
-      - echo using IMAGE_URI $IMAGE_URI  
-
+      finally:
+        - echo This always runs even if the update or install command fails 
 
   build:
     commands:
       - echo Building Docker image...
       - docker build -t $IMAGE_URI .
-      - docker tag $IMAGE_URI
+      - docker tag $IMAGE_URI $IMAGE_URI_VERSIONED 
       - echo Pushing image to ECR...
       - docker push $IMAGE_URI
       - docker push $IMAGE_URI_VERSIONED      
