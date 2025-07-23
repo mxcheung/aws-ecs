@@ -51,6 +51,13 @@ CodeBuild	    builds the image, pushes to ECR, creates imagedefinitions.json
 CodePipeline	Source → Build → Deploy
 ECS (rolling‑update)	service replaces tasks in‑place; no CodeDeploy, no blue/green
 
+# MAVEN
+
+```
+  - export MAVEN_OPTS="-Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
+  build:
+```
+
 # Expect results
 
 ```
