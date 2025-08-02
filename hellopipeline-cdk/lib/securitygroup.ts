@@ -47,6 +47,12 @@ export class MyEcsStack extends Stack {
     ec2.Port.tcp(55571),
     'Allow egress to managed prefix list on port 55571'
   );    
+
+
+const sg = ec2.SecurityGroup.fromLookupByName(this, 'ExistingSG', {
+  securityGroupName: 'my-existing-sg',
+  vpc,
+});    
     // Allow traffic on port 80
     mySecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(80), 'Allow HTTP');
 
