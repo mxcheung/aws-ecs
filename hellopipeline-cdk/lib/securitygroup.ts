@@ -32,6 +32,12 @@ export class MyEcsStack extends Stack {
       ec2.Port.tcp(55571),
       'Allow egress to TCP port 55571'
     );
+
+    mySecurityGroup.addEgressRule(
+      ec2.Peer.ipv4('10.0.0.0/16'),  // 👈 Replace with your CIDR
+      ec2.Port.tcp(55571),
+      'Allow egress to port 55571 within VPC CIDR'
+    );    
     
     // Allow traffic on port 80
     mySecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(80), 'Allow HTTP');
