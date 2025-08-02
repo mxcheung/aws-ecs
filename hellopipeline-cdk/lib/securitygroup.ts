@@ -38,7 +38,15 @@ export class MyEcsStack extends Stack {
       ec2.Port.tcp(55571),
       'Allow egress to port 55571 within VPC CIDR'
     );    
-    
+
+  // Replace with your actual managed prefix list ID (e.g., for S3 or custom list)
+  const prefixListId = 'pl-xxxxxxxxxxxxxxxxx';
+  
+  mySecurityGroup.addEgressRule(
+    ec2.Peer.prefixList(prefixListId),
+    ec2.Port.tcp(55571),
+    'Allow egress to managed prefix list on port 55571'
+  );    
     // Allow traffic on port 80
     mySecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(80), 'Allow HTTP');
 
