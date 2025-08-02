@@ -20,9 +20,23 @@ export class MyEcsStack extends Stack {
       allowAllOutbound: true,
     });
 
+    const mySecurityGroup = new ec2.SecurityGroup(this, 'MySG', {
+      vpc,
+      description: 'Allow traffic for service',
+      allowAllOutbound: false, // 👈 Disable default all-outbound
+    });
+    
+    // Allow only specific outbound port
+    mySecurityGroup.addEgressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(55571),
+      'Allow egress to TCP port 55571'
+    );
+    
     // Allow traffic on port 80
     mySecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(80), 'Allow HTTP');
 
+    
     // Task Definition
     const taskDef = new ecs.FargateTaskDefinition(this, 'TaskDef');
 
