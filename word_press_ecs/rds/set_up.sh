@@ -46,7 +46,7 @@ CREATE_RDS_OUTPUT=$(aws rds create-db-instance \
     --db-instance-class db.t4g.micro \
     --db-name wordpress \
     --engine mysql \
-    --engine-version 8.0.35 \
+    --engine-version 8.0.43 \
     --allocated-storage 20 \
     --storage-type gp3 \
     --allocated-storage 20 \
