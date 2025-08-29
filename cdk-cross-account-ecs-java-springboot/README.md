@@ -41,6 +41,11 @@ cdk deploy PipelineStack --profile account-a-profile
 
 ---
 
+### 5. Health Check:
+```
+CMD-SHELL, curl -f http://localhost:8080/actuator/health || exit 1
+```
+
 ## Notes
 
 - Replace all account IDs and repo names in CDK code with your own
