@@ -50,6 +50,12 @@ cdk deploy PipelineStack --profile account-a-profile
 </dependency>
 ```
 
+```
+@SpringBootApplication(exclude = {
+    org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration.class
+})
+
+```
 Disable via application.yml
 management.health.jms.enabled=false
 
