@@ -42,6 +42,19 @@ cdk deploy PipelineStack --profile account-a-profile
 ---
 
 ### 5. Health Check:
+
+```
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+
+```
+management.endpoints.web.exposure.include=health,info
+```
+
 ```
 CMD-SHELL, curl -f http://localhost:8080/actuator/health || exit 1
 ```
