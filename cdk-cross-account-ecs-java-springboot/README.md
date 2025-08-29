@@ -51,6 +51,8 @@ cdk deploy PipelineStack --profile account-a-profile
 ```
 
 Disable via application.yml
+management.health.jms.enabled=false
+
 ```
 management:
   health:
