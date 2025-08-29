@@ -50,7 +50,14 @@ cdk deploy PipelineStack --profile account-a-profile
 </dependency>
 ```
 
+Disable via application.yml
+```
+management:
+  health:
+    jms:
+      enabled: false
 
+```
 ```
 management.endpoints.web.exposure.include=health,info
 ```
