@@ -83,7 +83,11 @@ cd $MY_ENV_ROOT_DIR
 ```
 2025-07-10T13:23:09.192Z    Hello, world from CodeCommit and ECS!
 ```
-
+# ECR Build
+```
+latest: digest: sha256:c08d5d6615f0e18175040137bb42b4442f24399eafbe81c58cbf15b1441a0017 size: 5330
+🎉 Done! Image pushed to 143375314029.dkr.ecr.us-east-1.amazonaws.com/wordpress:latest
+```
 
 # ECS Deployment
 ```
