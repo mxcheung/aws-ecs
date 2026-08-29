@@ -12,7 +12,7 @@ This project aims to
  - Add start build
  - Delete docker_build
 
-# Expect results
+# Expected results
 
 ```
 http://ourapplicationloadbalancer-1557104776.us-east-1.elb.amazonaws.com/
